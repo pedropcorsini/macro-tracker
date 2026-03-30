@@ -13,11 +13,13 @@ function App() {
   const [abaAtiva, setAbaAtiva] = useState("hoje")
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-100 px-4 pt-4 pb-0">
+    <div className="min-h-screen bg-[#0f0f0f]">
+      <div className="border-b border-[#2a2a2a] px-4 pt-5 pb-0 bg-[#0f0f0f]">
         <div className="max-w-2xl mx-auto">
-          <h1 className="text-lg font-medium text-gray-800 mb-3">Macro Tracker</h1>
+          <div className="flex items-center gap-2 mb-4">
+            <div className="w-2 h-2 rounded-full bg-violet-400" />
+            <h1 className="text-sm font-medium text-white tracking-wide uppercase">Macro Tracker</h1>
+          </div>
           <div className="flex gap-0">
             {ABAS.map((aba) => (
               <button
@@ -25,8 +27,8 @@ function App() {
                 onClick={() => setAbaAtiva(aba.id)}
                 className={`px-4 py-2 text-sm border-b-2 transition-all ${
                   abaAtiva === aba.id
-                    ? "border-gray-800 text-gray-800 font-medium"
-                    : "border-transparent text-gray-400 hover:text-gray-600"
+                    ? "border-violet-400 text-white font-medium"
+                    : "border-transparent text-zinc-500 hover:text-zinc-300"
                 }`}
               >
                 {aba.label}
@@ -35,9 +37,7 @@ function App() {
           </div>
         </div>
       </div>
-
-      {/* Conteúdo */}
-      <div className="pt-2">
+      <div className="pt-4">
         {abaAtiva === "hoje" && <Hoje />}
         {abaAtiva === "calendario" && <Calendario />}
         {abaAtiva === "metas" && <Metas />}

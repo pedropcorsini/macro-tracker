@@ -3,17 +3,13 @@ import { useTracker } from "../context/TrackerContext"
 
 function Metas() {
   const { state, dispatch } = useTracker()
-  const { goals } = state
-
-  const [form, setForm] = useState({ ...goals })
+  const [form, setForm] = useState({ ...state.goals })
+  const [salvo, setSalvo] = useState(false)
 
   function salvar() {
     dispatch({ type: "SET_GOALS", goals: { ...form } })
-    alert("Metas salvas com sucesso!")
-  }
-
-  function atualizar(campo, valor) {
-    setForm((prev) => ({ ...prev, [campo]: Number(valor) }))
+    setSalvo(true)
+    setTimeout(() => setSalvo(false), 2000)
   }
 
   const campos = [
@@ -27,31 +23,33 @@ function Metas() {
 
   return (
     <div className="max-w-2xl mx-auto p-4">
-      <div className="bg-white rounded-xl border border-gray-100 p-6">
-        <h2 className="text-base font-medium text-gray-800 mb-6">Metas diárias</h2>
-
-        <div className="grid grid-cols-2 gap-4">
+      <div className="bg-[#1a1a1a] rounded-xl border border-[#2a2a2a] p-6">
+        <p className="text-xs text-zinc-500 uppercase tracking-wider mb-6">Metas diárias</p>
+        <div className="grid grid-cols-2 gap-5">
           {campos.map((campo) => (
-            <div key={campo.key} className="flex flex-col gap-1.5">
-              <label className="text-sm text-gray-500">{campo.label}</label>
+            <div key={campo.key}>
+              <label className="text-xs text-zinc-500 uppercase tracking-wider block mb-2">{campo.label}</label>
               <div className="flex items-center gap-2">
                 <input
                   type="number"
                   value={form[campo.key]}
-                  onChange={(e) => atualizar(campo.key, e.target.value)}
-                  className="w-28 border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 outline-none focus:border-gray-400"
+                  onChange={(e) => setForm((p) => ({ ...p, [campo.key]: Number(e.target.value) }))}
+                  className="w-32 bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg px-3 py-2 text-sm text-zinc-200 outline-none focus:border-zinc-600 transition-all"
                 />
-                <span className="text-sm text-gray-400">{campo.unit}</span>
+                <span className="text-xs text-zinc-600">{campo.unit}</span>
               </div>
             </div>
           ))}
         </div>
-
         <button
           onClick={salvar}
-          className="mt-6 bg-gray-800 text-white text-sm px-6 py-2.5 rounded-lg hover:bg-gray-700 transition-all"
+          className={`mt-8 px-6 py-2.5 rounded-lg text-sm font-medium transition-all ${
+            salvo
+              ? "bg-emerald-600 text-white"
+              : "bg-violet-600 hover:bg-violet-500 text-white"
+          }`}
         >
-          Salvar metas
+          {salvo ? "Salvo!" : "Salvar metas"}
         </button>
       </div>
     </div>
