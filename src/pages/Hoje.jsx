@@ -20,6 +20,7 @@ function Hoje() {
   const [alimentoSelecionado, setAlimentoSelecionado] = useState(null)
   const [quantidade, setQuantidade] = useState(100)
   const [mlManual, setMlManual] = useState("")
+  const [modoUnidade, setModoUnidade] = useState(false)
   const debounceRef = useRef(null)
 
   const hoje = new Date().toISOString().split("T")[0]
@@ -254,21 +255,98 @@ function Hoje() {
 
           {/* Quantidade */}
           {alimentoSelecionado && (
-            <div className="flex items-center gap-3 bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg px-3 py-2.5 mb-3">
-              <span className="text-sm text-zinc-300 flex-1 truncate">{alimentoSelecionado.name}</span>
-              <input
-                type="number"
-                value={quantidade}
-                onChange={(e) => setQuantidade(Number(e.target.value))}
-                className="w-20 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-2 py-1.5 text-sm text-zinc-200 outline-none text-center"
-              />
-              <span className="text-xs text-zinc-600">g</span>
-              <button
-                onClick={adicionarAlimento}
-                className="bg-violet-600 hover:bg-violet-500 text-white text-sm px-4 py-1.5 rounded-lg transition-all"
-              >
-                Adicionar
-              </button>
+            <div className="bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg px-3 py-3 mb-3 space-y-2">
+              <p className="text-xs text-zinc-400 truncate">{alimentoSelecionado.name}</p>
+
+              {/* Toggle gramas / unidade */}
+              {alimentoSelecionado.unit && (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => { setModoUnidade(false); setQuantidade(100) }}
+                    className={`px-3 py-1 rounded-lg text-xs border transition-all ${
+                      !modoUnidade
+                        ? "bg-violet-500/20 border-violet-500/40 text-violet-300"
+                        : "border-[#2a2a2a] text-zinc-600 hover:border-zinc-600"
+                    }`}
+                  >
+                    Gramas
+                  </button>
+                  <button
+                    onClick={() => { setModoUnidade(true); setQuantidade(1) }}
+                    className={`px-3 py-1 rounded-lg text-xs border transition-all ${
+                      modoUnidade
+                        ? "bg-violet-500/20 border-violet-500/40 text-violet-300"
+                        : "border-[#2a2a2a] text-zinc-600 hover:border-zinc-600"
+                    }`}
+                  >
+                    {alimentoSelecionado.unit.charAt(0).toUpperCase() + alimentoSelecionado.unit.slice(1)}
+                  </button>
+                </div>
+              )}
+
+              <div className="flex items-center gap-3">
+                <input
+                  type="number"
+                  value={quantidade}
+                  min={modoUnidade ? 0.5 : 1}
+                  step={modoUnidade ? 0.5 : 1}
+                  onChange={(e) => setQuantidade(Number(e.target.value))}
+                  className="w-24 bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-2 py-1.5 text-sm text-zinc-200 outline-none text-center"
+                />
+                <span className="text-xs text-zinc-600">
+                  {modoUnidade
+                    ? `${alimentoSelecionado.unit}(s) = ${Math.round(quantidade * alimentoSelecionado.gramsPerUnit)}g`
+                    : "g"
+                  }
+                </span>
+                <button
+                  onClick={() => {
+                    if (!alimentoSelecionado) return
+                    const gramas = modoUnidade
+                      ? quantidade * alimentoSelecionado.gramsPerUnit
+                      : quantidade
+                    const ratio = gramas / 100
+                    dispatch({
+                      type: "ADD_FOOD",
+                      meal: refeicaoAtiva,
+                      item: {
+                        id: Date.now(),
+                        name: alimentoSelecionado.name,
+                        qty: modoUnidade
+                          ? `${quantidade} ${alimentoSelecionado.unit}(s)`
+                          : `${quantidade}g`,
+                        cal: Math.round(alimentoSelecionado.cal * ratio),
+                        p: Math.round(alimentoSelecionado.p * ratio * 10) / 10,
+                        c: Math.round(alimentoSelecionado.c * ratio * 10) / 10,
+                        f: Math.round(alimentoSelecionado.f * ratio * 10) / 10,
+                      },
+                    })
+                    setAlimentoSelecionado(null)
+                    setQuantidade(100)
+                    setModoUnidade(false)
+                  }}
+                  className="bg-violet-600 hover:bg-violet-500 text-white text-sm px-4 py-1.5 rounded-lg transition-all ml-auto"
+                >
+                  Adicionar
+                </button>
+              </div>
+
+              {/* Preview dos macros */}
+              {quantidade > 0 && (
+                <div className="flex gap-3 pt-1">
+                  {[
+                    { lbl: "kcal", val: Math.round(alimentoSelecionado.cal * (modoUnidade ? quantidade * alimentoSelecionado.gramsPerUnit : quantidade) / 100), cor: "text-violet-400" },
+                    { lbl: "prot", val: Math.round(alimentoSelecionado.p * (modoUnidade ? quantidade * alimentoSelecionado.gramsPerUnit : quantidade) / 100 * 10) / 10 + "g", cor: "text-emerald-400" },
+                    { lbl: "carbs", val: Math.round(alimentoSelecionado.c * (modoUnidade ? quantidade * alimentoSelecionado.gramsPerUnit : quantidade) / 100 * 10) / 10 + "g", cor: "text-amber-400" },
+                    { lbl: "gord", val: Math.round(alimentoSelecionado.f * (modoUnidade ? quantidade * alimentoSelecionado.gramsPerUnit : quantidade) / 100 * 10) / 10 + "g", cor: "text-rose-400" },
+                  ].map((m) => (
+                    <div key={m.lbl}>
+                      <p className="text-[9px] text-zinc-700 uppercase">{m.lbl}</p>
+                      <p className={`text-xs font-medium ${m.cor}`}>{m.val}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
