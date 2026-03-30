@@ -14,21 +14,34 @@ function App() {
 
   return (
     <div className="min-h-screen bg-[#0f0f0f]">
-      <div className="border-b border-[#2a2a2a] px-4 pt-5 pb-0 bg-[#0f0f0f]">
-        <div className="max-w-2xl mx-auto">
-          <div className="flex items-center gap-2 mb-4">
-            <div className="w-2 h-2 rounded-full bg-violet-400" />
-            <h1 className="text-sm font-medium text-white tracking-wide uppercase">Macro Tracker</h1>
+      {/* Header */}
+      <div className="border-b border-[#2a2a2a] bg-[#0f0f0f]">
+        <div className="max-w-5xl mx-auto px-4 pt-8 pb-0 flex flex-col items-center">
+          <div className="flex items-center gap-3 mb-1">
+            <div className="flex gap-1">
+              <div className="w-2 h-2 rounded-full bg-violet-500" />
+              <div className="w-2 h-2 rounded-full bg-emerald-500" />
+              <div className="w-2 h-2 rounded-full bg-rose-500" />
+            </div>
+            <h1 className="text-xl font-semibold tracking-widest text-white uppercase">
+              Macro Tracker
+            </h1>
+            <div className="flex gap-1">
+              <div className="w-2 h-2 rounded-full bg-rose-500" />
+              <div className="w-2 h-2 rounded-full bg-emerald-500" />
+              <div className="w-2 h-2 rounded-full bg-violet-500" />
+            </div>
           </div>
+          <p className="text-xs text-zinc-600 tracking-widest mb-5">ACOMPANHE SUA NUTRIÇÃO DIÁRIA</p>
           <div className="flex gap-0">
             {ABAS.map((aba) => (
               <button
                 key={aba.id}
                 onClick={() => setAbaAtiva(aba.id)}
-                className={`px-4 py-2 text-sm border-b-2 transition-all ${
+                className={`px-6 py-2.5 text-xs tracking-widest uppercase border-b-2 transition-all ${
                   abaAtiva === aba.id
-                    ? "border-violet-400 text-white font-medium"
-                    : "border-transparent text-zinc-500 hover:text-zinc-300"
+                    ? "border-violet-500 text-violet-400 font-medium"
+                    : "border-transparent text-zinc-600 hover:text-zinc-400"
                 }`}
               >
                 {aba.label}
@@ -37,7 +50,9 @@ function App() {
           </div>
         </div>
       </div>
-      <div className="pt-4">
+
+      {/* Conteúdo */}
+      <div className="pt-6 max-w-5xl mx-auto px-4">
         {abaAtiva === "hoje" && <Hoje />}
         {abaAtiva === "calendario" && <Calendario />}
         {abaAtiva === "metas" && <Metas />}
