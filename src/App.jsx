@@ -49,7 +49,7 @@ function AppInner() {
           <div className="max-w-5xl mx-auto px-4 pt-6 pb-0 flex flex-col items-center relative">
 
             {/* Controles direita */}
-            <div className="absolute right-4 top-4 flex items-center gap-2">
+            <div className="absolute inset-x-4 top-4 flex items-center justify-between">
               {/* Toggle tema */}
               <button
                 onClick={alternarTema}
