@@ -81,14 +81,16 @@ function AppInner() {
                 <div className="w-2 h-2 rounded-full bg-emerald-500" />
                 <div className="w-2 h-2 rounded-full bg-rose-500" />
               </div>
-              <h1 className="text-base sm:text-xl font-semibold tracking-widest text-gray-900 dark:text-white uppercase">Macro Tracker</h1>
+              <h1 style={{ fontFamily: "'Bungee', cursive" }} className="text-base sm:text-xl tracking-widest       text-gray-900 dark:text-white uppercase">
+                Macro Tracker
+              </h1>
               <div className="flex gap-1">
                 <div className="w-2 h-2 rounded-full bg-rose-500" />
                 <div className="w-2 h-2 rounded-full bg-emerald-500" />
                 <div className="w-2 h-2 rounded-full bg-violet-500" />
               </div>
             </div>
-            <p className="text-[10px] text-gray-400 dark:text-zinc-600 tracking-widest mb-4">ACOMPANHE SUA NUTRIÇÃO DIÁRIA</p>
+            <p className="text-[10px] text-gray-400 dark:text-zinc-600 tracking-widest mb-4">Organize sua alimentação diária</p>
 
             {/* Abas */}
             <div className="flex gap-0 w-full sm:w-auto justify-center">

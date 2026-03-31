@@ -56,7 +56,9 @@ function Login() {
           <div className="w-2 h-2 rounded-full bg-emerald-500" />
           <div className="w-2 h-2 rounded-full bg-rose-500" />
         </div>
-        <h1 className="text-lg font-semibold tracking-widest text-white uppercase">Macro Tracker</h1>
+        <h1 style={{ fontFamily: "'Bungee', cursive" }} className="text-lg tracking-widest text-white uppercase">
+          Macro Tracker
+        </h1>
         <div className="flex gap-1">
           <div className="w-2 h-2 rounded-full bg-rose-500" />
           <div className="w-2 h-2 rounded-full bg-emerald-500" />
@@ -165,7 +167,7 @@ function Login() {
       </div>
 
       <p className="text-[10px] text-zinc-700 mt-8 tracking-wider">
-        ACOMPANHE SUA NUTRIÇÃO DIÁRIA
+        Organize sua alimentação diária.
       </p>
     </div>
   )
