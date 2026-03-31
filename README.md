@@ -10,7 +10,7 @@ App web para acompanhamento de nutrição diária com registro de refeições, c
 ### 1. Clone o projeto e instale as dependências
 
 ```bash
-git clone https://github.com/pedropcorsin/macro-tracker.git
+git clone https://github.com/pedropcorsini/macro-tracker.git
 cd macro-tracker
 npm install
 ```

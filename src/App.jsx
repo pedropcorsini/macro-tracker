@@ -66,12 +66,12 @@ function AppInner() {
                   </svg>
                 )}
               </button>
-              <button
-                onClick={sair}
-                className="text-[10px] text-gray-400 dark:text-zinc-600 hover:text-rose-400 border border-gray-200 dark:border-[#2a2a2a] hover:border-rose-400/30 px-3 py-1.5 rounded-lg uppercase tracking-widest transition-all hidden sm:block"
-              >
-                Sair
-              </button>
+                  <button
+                    onClick={sair}
+                    className="text-[10px] text-gray-400 dark:text-zinc-600 hover:text-rose-400 border border-gray-200 dark:border-[#2a2a2a] hover:border-rose-400/30 px-3 py-1.5 rounded-lg uppercase tracking-widest transition-all"
+                >
+                    Sair
+                  </button>
             </div>
 
             {/* Logo */}
