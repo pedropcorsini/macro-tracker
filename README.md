@@ -10,7 +10,7 @@ App web para acompanhamento de nutrição diária com registro de refeições, c
 ### 1. Clone o projeto e instale as dependências
 
 ```bash
-git clone https://github.com/SEU_USUARIO/macro-tracker.git
+git clone https://github.com/pedropcorsin/macro-tracker.git
 cd macro-tracker
 npm install
 ```
@@ -158,7 +158,7 @@ Todas as tabelas têm **Row Level Security** ativado — cada usuário acessa so
 - 🍽️ **Registro de refeições** — café da manhã, almoço, lanche da tarde e jantar
 - 🔍 **Busca de alimentos** — banco local em PT-BR + API USDA com 300k+ itens
 - ⚖️ **Entrada por gramas ou unidade** — ovos, fatias de pão, frutas e mais
-- 💧 **Controle de hidratação** — copos clicáveis, input manual e suporte a ml/L
+- 💧 **Controle de hidratação** — meta de copos, input manual e suporte a ml/L
 - 📊 **Macros em tempo real** — calorias, proteína, carboidratos e gordura
 - 📅 **Calendário de histórico** — visualize seus dias com indicadores coloridos
 - 🎯 **Metas personalizadas** — defina seus próprios objetivos diários
@@ -175,7 +175,6 @@ Todas as tabelas têm **Row Level Security** ativado — cada usuário acessa so
 - **Tailwind CSS** — estilização com suporte a dark mode
 - **Supabase** — banco PostgreSQL + autenticação + RLS
 - **USDA FoodData Central API** — base de dados de alimentos
-- **Google Fonts** — fonte Bungee no título
 
 ---
 
