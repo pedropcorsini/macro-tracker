@@ -13,43 +13,75 @@ function Metas() {
   }
 
   const campos = [
-    { key: "cal", label: "Calorias", unit: "kcal" },
-    { key: "p", label: "Proteína", unit: "g" },
-    { key: "c", label: "Carboidratos", unit: "g" },
-    { key: "f", label: "Gordura", unit: "g" },
-    { key: "water", label: "Água", unit: "ml" },
-    { key: "cupMl", label: "Tamanho do copo", unit: "ml por copo" },
+    { key: "cal",    label: "Calorias",         unit: "kcal",       cor: "text-violet-500" },
+    { key: "p",      label: "Proteína",          unit: "g",          cor: "text-emerald-500" },
+    { key: "c",      label: "Carboidratos",      unit: "g",          cor: "text-amber-500" },
+    { key: "f",      label: "Gordura",           unit: "g",          cor: "text-rose-500" },
+    { key: "water",  label: "Água",              unit: "ml",         cor: "text-blue-500" },
+    { key: "cupMl",  label: "Tamanho do copo",   unit: "ml por copo", cor: "text-blue-400" },
   ]
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <div className="bg-[#1a1a1a] rounded-xl border border-[#2a2a2a] p-6">
-        <p className="text-xs text-zinc-500 uppercase tracking-wider mb-6">Metas diárias</p>
-        <div className="grid grid-cols-2 gap-5">
+    <div className="max-w-2xl mx-auto">
+      <div className="bg-white dark:bg-[#1a1a1a] rounded-xl border border-gray-100 dark:border-[#2a2a2a] p-6">
+        <p className="text-[10px] text-gray-400 dark:text-zinc-500 uppercase tracking-widest mb-6">Metas diárias</p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {campos.map((campo) => (
             <div key={campo.key}>
-              <label className="text-xs text-zinc-500 uppercase tracking-wider block mb-2">{campo.label}</label>
-              <div className="flex items-center gap-2">
+              <label className={`text-xs uppercase tracking-widest block mb-2 font-medium ${campo.cor}`}>
+                {campo.label}
+              </label>
+              <div className="flex items-center gap-3">
                 <input
                   type="number"
                   value={form[campo.key]}
                   onChange={(e) => setForm((p) => ({ ...p, [campo.key]: Number(e.target.value) }))}
-                  className="w-32 bg-[#0f0f0f] border border-[#2a2a2a] rounded-lg px-3 py-2 text-sm text-zinc-200 outline-none focus:border-zinc-600 transition-all"
+                  className="w-full sm:w-36 bg-gray-50 dark:bg-[#0f0f0f] border border-gray-200 dark:border-[#2a2a2a] rounded-lg px-3 py-2.5 text-sm text-gray-700 dark:text-zinc-200 outline-none focus:border-gray-400 dark:focus:border-zinc-600 transition-all"
                 />
-                <span className="text-xs text-zinc-600">{campo.unit}</span>
+                <span className="text-xs text-gray-300 dark:text-zinc-600 whitespace-nowrap">{campo.unit}</span>
               </div>
             </div>
           ))}
         </div>
+
+        {/* Preview das metas */}
+        <div className="mt-6 bg-gray-50 dark:bg-[#0f0f0f] rounded-xl border border-gray-100 dark:border-[#2a2a2a] p-4">
+          <p className="text-[10px] text-gray-300 dark:text-zinc-600 uppercase tracking-widest mb-3">Preview</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {[
+              { lbl: "Calorias", val: form.cal, unit: "kcal", cor: "text-violet-500", bg: "bg-violet-50 dark:bg-violet-500/10" },
+              { lbl: "Proteína", val: form.p, unit: "g", cor: "text-emerald-500", bg: "bg-emerald-50 dark:bg-emerald-500/10" },
+              { lbl: "Carbs", val: form.c, unit: "g", cor: "text-amber-500", bg: "bg-amber-50 dark:bg-amber-500/10" },
+              { lbl: "Gordura", val: form.f, unit: "g", cor: "text-rose-500", bg: "bg-rose-50 dark:bg-rose-500/10" },
+            ].map((m) => (
+              <div key={m.lbl} className={`rounded-lg p-3 ${m.bg}`}>
+                <p className="text-[10px] text-gray-400 dark:text-zinc-600 uppercase tracking-wider mb-1">{m.lbl}</p>
+                <p className={`text-lg font-semibold ${m.cor}`}>{m.val}<span className="text-xs ml-1">{m.unit}</span></p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 pt-3 border-t border-gray-100 dark:border-[#2a2a2a] flex items-center justify-between flex-wrap gap-2">
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+              <span className="text-xs text-gray-400 dark:text-zinc-500">Água: <span className="text-blue-500 font-medium">{form.water}ml</span></span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+              <span className="text-xs text-gray-400 dark:text-zinc-500">Copo: <span className="text-blue-400 font-medium">{form.cupMl}ml</span> · {Math.ceil(form.water / form.cupMl)} copos/dia</span>
+            </div>
+          </div>
+        </div>
+
         <button
           onClick={salvar}
-          className={`mt-8 px-6 py-2.5 rounded-lg text-sm font-medium transition-all ${
+          className={`mt-6 w-full sm:w-auto px-8 py-3 rounded-xl text-sm font-medium transition-all ${
             salvo
               ? "bg-emerald-600 text-white"
               : "bg-violet-600 hover:bg-violet-500 text-white"
           }`}
         >
-          {salvo ? "Salvo!" : "Salvar metas"}
+          {salvo ? "Salvo com sucesso!" : "Salvar metas"}
         </button>
       </div>
     </div>
