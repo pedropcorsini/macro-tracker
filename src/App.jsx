@@ -89,7 +89,7 @@ function AppInner() {
 
   return (
     <TrackerProvider userId={usuario.id}>
-      <div className="min-h-screen bg-gray-50 dark:bg-[#0f0f0f] flex transition-colors">
+      <div className="h-screen bg-gray-50 dark:bg-[#0f0f0f] flex overflow-hidden transition-colors">
 
         {/* OVERLAY mobile */}
         {sidebarAberta && (
@@ -101,15 +101,17 @@ function AppInner() {
 
         {/* SIDEBAR */}
         <aside className={`
-          fixed top-0 left-0 h-full z-30 flex flex-col
-          w-56 bg-white dark:bg-[#111111] border-r border-gray-100 dark:border-[#2a2a2a]
-          transition-transform duration-300
+          fixed top-0 left-0 z-30 flex flex-col
+          w-56 h-screen
+          bg-white dark:bg-[#111111]
+          border-r border-gray-100 dark:border-[#2a2a2a]
+          transition-transform duration-300 flex-shrink-0
           ${sidebarAberta ? "translate-x-0" : "-translate-x-full"}
-          lg:translate-x-0 lg:static lg:z-auto
+          lg:translate-x-0 lg:relative lg:z-auto
         `}>
 
           {/* Logo */}
-          <div className="px-5 pt-7 pb-6 border-b border-gray-100 dark:border-[#2a2a2a]">
+          <div className="px-5 pt-7 pb-6 border-b border-gray-100 dark:border-[#2a2a2a] flex-shrink-0">
             <div className="flex gap-1 mb-2">
               <div className="w-1.5 h-1.5 rounded-full bg-violet-500" />
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -127,7 +129,7 @@ function AppInner() {
           </div>
 
           {/* Navegação */}
-          <nav className="flex-1 px-3 py-4 space-y-1">
+          <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
             {ABAS.map((aba) => (
               <button
                 key={aba.id}
@@ -148,13 +150,10 @@ function AppInner() {
           </nav>
 
           {/* Rodapé da sidebar */}
-          <div className="px-3 pb-5 space-y-1 border-t border-gray-100 dark:border-[#2a2a2a] pt-3">
-            {/* Email */}
+          <div className="px-3 pb-5 space-y-1 border-t border-gray-100 dark:border-[#2a2a2a] pt-3 flex-shrink-0">
             <p className="text-[10px] text-gray-300 dark:text-zinc-700 px-3 truncate mb-2">
               {usuario.email}
             </p>
-
-            {/* Toggle tema */}
             <button
               onClick={alternarTema}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 dark:text-zinc-500 hover:bg-gray-50 dark:hover:bg-[#1a1a1a] hover:text-gray-700 dark:hover:text-zinc-300 transition-all"
@@ -170,8 +169,6 @@ function AppInner() {
               )}
               {tema === "dark" ? "Modo claro" : "Modo escuro"}
             </button>
-
-            {/* Sair */}
             <button
               onClick={sair}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 dark:text-zinc-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 hover:text-rose-500 transition-all"
@@ -185,10 +182,10 @@ function AppInner() {
         </aside>
 
         {/* CONTEÚDO PRINCIPAL */}
-        <div className="flex-1 min-w-0 flex flex-col">
+        <div className="flex-1 min-w-0 flex flex-col h-screen overflow-hidden">
 
           {/* Topbar mobile */}
-          <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-white dark:bg-[#111111] border-b border-gray-100 dark:border-[#2a2a2a]">
+          <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-white dark:bg-[#111111] border-b border-gray-100 dark:border-[#2a2a2a] flex-shrink-0">
             <button
               onClick={() => setSidebarAberta(true)}
               className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 dark:border-[#2a2a2a] text-gray-500 dark:text-zinc-400"
@@ -219,8 +216,8 @@ function AppInner() {
             </button>
           </div>
 
-          {/* Página ativa */}
-          <main className="flex-1 p-4 sm:p-6 overflow-y-auto">
+          {/* Página ativa — só essa parte scrolla */}
+          <main className="flex-1 overflow-y-auto p-4 sm:p-6">
             <div className="max-w-4xl mx-auto">
               {abaAtiva === "hoje" && <Hoje />}
               {abaAtiva === "calendario" && <Calendario />}
