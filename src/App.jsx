@@ -6,6 +6,8 @@ import Login from "./pages/Login"
 import Hoje from "./pages/Hoje"
 import Calendario from "./pages/Calendario"
 import Metas from "./pages/Metas"
+import Graficos from "./pages/Graficos"
+import Favoritos from "./pages/Favoritos"
 
 const ABAS = [
   {
@@ -35,6 +37,27 @@ const ABAS = [
       </svg>
     ),
   },
+<<<<<<< HEAD
+=======
+  {
+    id: "graficos",
+    label: "Gráficos",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/>
+      </svg>
+    ),
+  },
+  {
+    id: "favoritos",
+    label: "Favoritos",
+    icon: (
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+      </svg>
+    ),
+  },
+>>>>>>> e50cdae3a3837a888cfe516b200c9cc4cd95de46
 ]
 
 function AppInner() {
@@ -69,7 +92,11 @@ function AppInner() {
 
   return (
     <TrackerProvider userId={usuario.id}>
+<<<<<<< HEAD
       <div className="min-h-screen bg-gray-50 dark:bg-[#0f0f0f] flex transition-colors">
+=======
+      <div className="h-screen bg-gray-50 dark:bg-[#0f0f0f] flex overflow-hidden transition-colors">
+>>>>>>> e50cdae3a3837a888cfe516b200c9cc4cd95de46
 
         {/* OVERLAY mobile */}
         {sidebarAberta && (
@@ -81,6 +108,7 @@ function AppInner() {
 
         {/* SIDEBAR */}
         <aside className={`
+<<<<<<< HEAD
           fixed top-0 left-0 h-full z-30 flex flex-col
           w-56 bg-white dark:bg-[#111111] border-r border-gray-100 dark:border-[#2a2a2a]
           transition-transform duration-300
@@ -90,6 +118,19 @@ function AppInner() {
 
           {/* Logo */}
           <div className="px-5 pt-7 pb-6 border-b border-gray-100 dark:border-[#2a2a2a]">
+=======
+          fixed top-0 left-0 z-30 flex flex-col
+          w-56 h-screen
+          bg-white dark:bg-[#111111]
+          border-r border-gray-100 dark:border-[#2a2a2a]
+          transition-transform duration-300 flex-shrink-0
+          ${sidebarAberta ? "translate-x-0" : "-translate-x-full"}
+          lg:translate-x-0 lg:relative lg:z-auto
+        `}>
+
+          {/* Logo */}
+          <div className="px-5 pt-7 pb-6 border-b border-gray-100 dark:border-[#2a2a2a] flex-shrink-0">
+>>>>>>> e50cdae3a3837a888cfe516b200c9cc4cd95de46
             <div className="flex gap-1 mb-2">
               <div className="w-1.5 h-1.5 rounded-full bg-violet-500" />
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -107,7 +148,11 @@ function AppInner() {
           </div>
 
           {/* Navegação */}
+<<<<<<< HEAD
           <nav className="flex-1 px-3 py-4 space-y-1">
+=======
+          <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+>>>>>>> e50cdae3a3837a888cfe516b200c9cc4cd95de46
             {ABAS.map((aba) => (
               <button
                 key={aba.id}
@@ -128,6 +173,7 @@ function AppInner() {
           </nav>
 
           {/* Rodapé da sidebar */}
+<<<<<<< HEAD
           <div className="px-3 pb-5 space-y-1 border-t border-gray-100 dark:border-[#2a2a2a] pt-3">
             {/* Email */}
             <p className="text-[10px] text-gray-300 dark:text-zinc-700 px-3 truncate mb-2">
@@ -135,6 +181,12 @@ function AppInner() {
             </p>
 
             {/* Toggle tema */}
+=======
+          <div className="px-3 pb-5 space-y-1 border-t border-gray-100 dark:border-[#2a2a2a] pt-3 flex-shrink-0">
+            <p className="text-[10px] text-gray-300 dark:text-zinc-700 px-3 truncate mb-2">
+              {usuario.email}
+            </p>
+>>>>>>> e50cdae3a3837a888cfe516b200c9cc4cd95de46
             <button
               onClick={alternarTema}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 dark:text-zinc-500 hover:bg-gray-50 dark:hover:bg-[#1a1a1a] hover:text-gray-700 dark:hover:text-zinc-300 transition-all"
@@ -150,8 +202,11 @@ function AppInner() {
               )}
               {tema === "dark" ? "Modo claro" : "Modo escuro"}
             </button>
+<<<<<<< HEAD
 
             {/* Sair */}
+=======
+>>>>>>> e50cdae3a3837a888cfe516b200c9cc4cd95de46
             <button
               onClick={sair}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 dark:text-zinc-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 hover:text-rose-500 transition-all"
@@ -165,10 +220,17 @@ function AppInner() {
         </aside>
 
         {/* CONTEÚDO PRINCIPAL */}
+<<<<<<< HEAD
         <div className="flex-1 min-w-0 flex flex-col">
 
           {/* Topbar mobile */}
           <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-white dark:bg-[#111111] border-b border-gray-100 dark:border-[#2a2a2a]">
+=======
+        <div className="flex-1 min-w-0 flex flex-col h-screen overflow-hidden">
+
+          {/* Topbar mobile */}
+          <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-white dark:bg-[#111111] border-b border-gray-100 dark:border-[#2a2a2a] flex-shrink-0">
+>>>>>>> e50cdae3a3837a888cfe516b200c9cc4cd95de46
             <button
               onClick={() => setSidebarAberta(true)}
               className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 dark:border-[#2a2a2a] text-gray-500 dark:text-zinc-400"
@@ -199,12 +261,22 @@ function AppInner() {
             </button>
           </div>
 
+<<<<<<< HEAD
           {/* Página ativa */}
           <main className="flex-1 p-4 sm:p-6 overflow-y-auto">
+=======
+          {/* Página ativa — só essa parte scrolla */}
+          <main className="flex-1 overflow-y-auto p-4 sm:p-6">
+>>>>>>> e50cdae3a3837a888cfe516b200c9cc4cd95de46
             <div className="max-w-4xl mx-auto">
               {abaAtiva === "hoje" && <Hoje />}
               {abaAtiva === "calendario" && <Calendario />}
               {abaAtiva === "metas" && <Metas />}
+<<<<<<< HEAD
+=======
+              {abaAtiva === "graficos" && <Graficos />}
+              {abaAtiva === "favoritos" && <Favoritos />}
+>>>>>>> e50cdae3a3837a888cfe516b200c9cc4cd95de46
             </div>
           </main>
         </div>

@@ -47,3 +47,18 @@ export async function carregarTodosLogs(userId) {
     .eq("user_id", userId)
   return data || []
 }
+
+export async function carregarFavoritos(userId) {
+  const { data } = await supabase
+    .from("favoritos")
+    .select("items")
+    .eq("user_id", userId)
+    .single()
+  return data?.items || []
+}
+
+export async function salvarFavoritos(userId, items) {
+  await supabase
+    .from("favoritos")
+    .upsert({ user_id: userId, items, updated_at: new Date().toISOString() }, { onConflict: "user_id" })
+}

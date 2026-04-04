@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react"
 import { useTracker } from "../context/TrackerContext"
 import { buscarAlimentos } from "../services/usda"
+import AlimentosRapidos from "../components/AlimentosRapidos"
 
 const REFEICOES = ["Café da manhã", "Almoço", "Lanche da tarde", "Jantar"]
 
@@ -68,7 +69,7 @@ function Hoje() {
 
   function adicionarAlimento() {
     if (!alimentoSelecionado) return
-    const gramas = modoUnidade ? quantidade * alimentoSelecionado.gramsPerUnit : quantidade
+    const gramas = modoUnidade ? quantidade * (alimentoSelecionado.gramsPerUnit || 100) : quantidade
     const ratio = gramas / 100
     dispatch({
       type: "ADD_FOOD",
@@ -83,6 +84,7 @@ function Hoje() {
         f: Math.round(alimentoSelecionado.f * ratio * 10) / 10,
       },
     })
+    dispatch({ type: "ADD_RECENTE", food: alimentoSelecionado })
     setAlimentoSelecionado(null)
     setQuantidade(100)
     setModoUnidade(false)
@@ -236,6 +238,10 @@ function Hoje() {
             {carregando && (
               <div className="absolute right-3 top-3 w-4 h-4 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
             )}
+            <AlimentosRapidos
+                refeicaoAtiva={refeicaoAtiva}
+                onAdicionar={() => {}}
+              />
           </div>
 
           {/* Resultados */}
