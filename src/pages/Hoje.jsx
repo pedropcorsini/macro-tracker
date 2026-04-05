@@ -14,17 +14,17 @@ const CONFIG_MACROS = [
 
 function Hoje() {
   const { state, dispatch } = useTracker()
-  const [refeicaoAtiva, setRefeicaoAtiva] = useState("Café da manhã")
+  const [refeicaoAtiva, setRefeicaoAtiva] = useState("Café da manhã") //define o café da manhã como refeição ativa ao abrir o site
   const [busca, setBusca] = useState("")
   const [resultados, setResultados] = useState([])
   const [carregando, setCarregando] = useState(false)
-  const [alimentoSelecionado, setAlimentoSelecionado] = useState(null)
-  const [quantidade, setQuantidade] = useState(100)
+  const [alimentoSelecionado, setAlimentoSelecionado] = useState(null) 
+  const [quantidade, setQuantidade] = useState(100) //quantidade padrão -> 100g
   const [modoUnidade, setModoUnidade] = useState(false)
   const [mlManual, setMlManual] = useState("")
   const debounceRef = useRef(null)
 
-  const hoje = new Date().toISOString().split("T")[0]
+  const hoje = new Date().toISOString().split("T")[0] //new Date() puxa a data atual.
   const logHoje = state.logs[hoje] || {
     "Café da manhã": [], Almoço: [], "Lanche da tarde": [], Jantar: [],
   }
