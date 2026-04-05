@@ -1,22 +1,31 @@
-import foods from "../data/foods"
+import foodsData from "../data/foods"
+import i18n from "../i18n"
 
 const API_KEY = import.meta.env.VITE_USDA_API_KEY
 const BASE_URL = "https://api.nal.usda.gov/fdc/v1"
 
+function getLang() {
+  const lang = i18n.language || "pt"
+  if (lang.startsWith("en")) return "en"
+  if (lang.startsWith("es")) return "es"
+  return "pt"
+}
+
+export function getFoods() {
+  return foodsData[getLang()] || foodsData.pt
+}
+
 export async function buscarAlimentos(query) {
   if (!query || query.trim().length < 2) return []
 
-  // Busca no banco local primeiro
   const termo = query.toLowerCase().trim()
-  const locais = foods.filter((f) =>
-    f.name.toLowerCase().includes(termo)
-  )
+  const foods = getFoods()
+  const locais = foods.filter((f) => f.name.toLowerCase().includes(termo))
 
   if (locais.length > 0) {
     return locais.map((f) => ({ ...f, fonte: "local" }))
   }
 
-  // Se não achou localmente, busca na API USDA
   try {
     const response = await fetch(
       `${BASE_URL}/foods/search?query=${encodeURIComponent(query)}&pageSize=20&api_key=${API_KEY}`

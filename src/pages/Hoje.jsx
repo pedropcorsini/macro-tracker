@@ -2,31 +2,34 @@ import { useState, useEffect, useRef } from "react"
 import { useTracker } from "../context/TrackerContext"
 import { buscarAlimentos } from "../services/usda"
 import AlimentosRapidos from "../components/AlimentosRapidos"
-
-const REFEICOES = ["Café da manhã", "Almoço", "Lanche da tarde", "Jantar"]
-
-const CONFIG_MACROS = [
-  { key: "cal", lbl: "Calorias", unit: "kcal", cor: "bg-violet-500", corTexto: "text-violet-500" },
-  { key: "p",   lbl: "Proteína", unit: "g",    cor: "bg-emerald-500", corTexto: "text-emerald-500" },
-  { key: "c",   lbl: "Carbs",    unit: "g",    cor: "bg-amber-500",   corTexto: "text-amber-500" },
-  { key: "f",   lbl: "Gordura",  unit: "g",    cor: "bg-rose-500",    corTexto: "text-rose-500" },
-]
+import { useTranslation } from "react-i18next"
 
 function Hoje() {
   const { state, dispatch } = useTracker()
-  const [refeicaoAtiva, setRefeicaoAtiva] = useState("Café da manhã") //define o café da manhã como refeição ativa ao abrir o site
+  const { t } = useTranslation()
+
+  const REFEICOES = [t("meal_breakfast"), t("meal_lunch"), t("meal_snack"), t("meal_dinner")]
+
+  const CONFIG_MACROS = [
+    { key: "cal", lbl: t("calories"), unit: "kcal", cor: "bg-violet-500", corTexto: "text-violet-500" },
+    { key: "p",   lbl: t("protein"),  unit: "g",    cor: "bg-emerald-500", corTexto: "text-emerald-500" },
+    { key: "c",   lbl: t("carbs"),    unit: "g",    cor: "bg-amber-500",   corTexto: "text-amber-500" },
+    { key: "f",   lbl: t("fat"),      unit: "g",    cor: "bg-rose-500",    corTexto: "text-rose-500" },
+  ]
+
+  const [refeicaoAtiva, setRefeicaoAtiva] = useState(REFEICOES[0])
   const [busca, setBusca] = useState("")
   const [resultados, setResultados] = useState([])
   const [carregando, setCarregando] = useState(false)
-  const [alimentoSelecionado, setAlimentoSelecionado] = useState(null) 
-  const [quantidade, setQuantidade] = useState(100) //quantidade padrão -> 100g
+  const [alimentoSelecionado, setAlimentoSelecionado] = useState(null)
+  const [quantidade, setQuantidade] = useState(100)
   const [modoUnidade, setModoUnidade] = useState(false)
   const [mlManual, setMlManual] = useState("")
   const debounceRef = useRef(null)
 
-  const hoje = new Date().toISOString().split("T")[0] //new Date() puxa a data atual.
+  const hoje = new Date().toISOString().split("T")[0]
   const logHoje = state.logs[hoje] || {
-    "Café da manhã": [], Almoço: [], "Lanche da tarde": [], Jantar: [],
+    [t("meal_breakfast")]: [], [t("meal_lunch")]: [], [t("meal_snack")]: [], [t("meal_dinner")]: [],
   }
 
   const totais = Object.values(logHoje).flat().reduce(
@@ -84,7 +87,6 @@ function Hoje() {
         f: Math.round(alimentoSelecionado.f * ratio * 10) / 10,
       },
     })
-    dispatch({ type: "ADD_RECENTE", food: alimentoSelecionado })
     setAlimentoSelecionado(null)
     setQuantidade(100)
     setModoUnidade(false)
@@ -128,7 +130,7 @@ function Hoje() {
               <div key={m.key} className="bg-white dark:bg-[#1a1a1a] rounded-xl border border-gray-100 dark:border-[#2a2a2a] p-4">
                 <p className="text-[10px] text-gray-400 dark:text-zinc-600 uppercase tracking-widest mb-3">{m.lbl}</p>
                 <p className={`text-2xl font-semibold ${m.corTexto}`}>{val}</p>
-                <p className="text-[10px] text-gray-300 dark:text-zinc-700 mb-3">de {meta} {m.unit}</p>
+                <p className="text-[10px] text-gray-300 dark:text-zinc-700 mb-3">{t("of")} {meta} {m.unit}</p>
                 <div className="h-0.5 bg-gray-100 dark:bg-[#2a2a2a] rounded-full">
                   <div className={`h-0.5 rounded-full ${m.cor} transition-all duration-500`} style={{ width: `${pct}%` }} />
                 </div>
@@ -141,7 +143,7 @@ function Hoje() {
         {/* Água */}
         <div className="bg-white dark:bg-[#1a1a1a] rounded-xl border border-gray-100 dark:border-[#2a2a2a] p-4">
           <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
-            <p className="text-[10px] text-gray-400 dark:text-zinc-600 uppercase tracking-widest">Consumo de água</p>
+            <p className="text-[10px] text-gray-400 dark:text-zinc-600 uppercase tracking-widest">{t("water_intake")}</p>
             <div className="flex items-center gap-2">
               <span className="text-xs text-blue-500 font-medium">{waterDisplay} / {waterMetaDisplay}</span>
               <div className="flex bg-gray-100 dark:bg-[#0f0f0f] rounded-lg p-0.5">
@@ -182,8 +184,8 @@ function Hoje() {
             ))}
             <span className="text-[10px] text-gray-300 dark:text-zinc-700 ml-1">
               {goals.water - aguaHoje > 0
-                ? `faltam ${waterUnit === "L" ? ((goals.water - aguaHoje) / 1000).toFixed(1) + "L" : (goals.water - aguaHoje) + "ml"}`
-                : "meta atingida!"}
+                ? `${t("missing")} ${waterUnit === "L" ? ((goals.water - aguaHoje) / 1000).toFixed(1) + "L" : (goals.water - aguaHoje) + "ml"}`
+                : t("goal_reached")}
             </span>
           </div>
 
@@ -193,16 +195,16 @@ function Hoje() {
               value={mlManual}
               onChange={(e) => setMlManual(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && adicionarAgua()}
-              placeholder={`Digitar ${waterUnit} manualmente...`}
+              placeholder={t("water_manual")}
               className="flex-1 bg-gray-50 dark:bg-[#0f0f0f] border border-gray-200 dark:border-[#2a2a2a] rounded-lg px-3 py-2 text-sm text-gray-700 dark:text-zinc-300 placeholder-gray-300 dark:placeholder-zinc-700 outline-none focus:border-gray-400 dark:focus:border-zinc-600 transition-all"
             />
             <span className="text-xs text-gray-400 dark:text-zinc-600">{waterUnit}</span>
             <button onClick={adicionarAgua} className="bg-blue-600 hover:bg-blue-500 text-white text-xs px-4 py-2 rounded-lg transition-all">
-              Adicionar
+              {t("add")}
             </button>
             {aguaHoje > 0 && (
               <button onClick={() => dispatch({ type: "SET_WATER", amount: 0 })} className="text-gray-300 dark:text-zinc-700 hover:text-rose-400 text-xs px-1 transition-all">
-                Zerar
+                {t("water_reset")}
               </button>
             )}
           </div>
@@ -230,7 +232,7 @@ function Hoje() {
           <div className="relative mb-3">
             <input
               type="text"
-              placeholder="Buscar alimento (ex: frango, arroz, banana)..."
+              placeholder={t("search_placeholder")}
               value={busca}
               onChange={(e) => { setBusca(e.target.value); setAlimentoSelecionado(null) }}
               className="w-full bg-gray-50 dark:bg-[#0f0f0f] border border-gray-200 dark:border-[#2a2a2a] rounded-lg px-3 py-2.5 text-sm text-gray-700 dark:text-zinc-300 placeholder-gray-300 dark:placeholder-zinc-600 outline-none focus:border-gray-400 dark:focus:border-zinc-600 transition-all"
@@ -238,11 +240,9 @@ function Hoje() {
             {carregando && (
               <div className="absolute right-3 top-3 w-4 h-4 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
             )}
-            <AlimentosRapidos
-                refeicaoAtiva={refeicaoAtiva}
-                onAdicionar={() => {}}
-              />
           </div>
+
+          <AlimentosRapidos refeicaoAtiva={refeicaoAtiva} onAdicionar={() => {}} />
 
           {/* Resultados */}
           {resultados.length > 0 && (
@@ -256,12 +256,12 @@ function Hoje() {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm text-gray-800 dark:text-zinc-200 truncate">{f.name}</p>
                     {f.fonte === "local"
-                      ? <span className="text-[10px] text-emerald-600 uppercase tracking-wider">banco local</span>
+                      ? <span className="text-[10px] text-emerald-600 uppercase tracking-wider">{t("local_db")}</span>
                       : f.brand
                         ? <p className="text-xs text-gray-400 dark:text-zinc-600">{f.brand}</p>
                         : <span className="text-[10px] text-blue-500 uppercase tracking-wider">USDA</span>
                     }
-                    <p className="text-xs text-gray-400 dark:text-zinc-600">{f.cal} kcal · {f.p}g P · {f.c}g C · {f.f}g G <span className="text-gray-300 dark:text-zinc-700">(por 100g)</span></p>
+                    <p className="text-xs text-gray-400 dark:text-zinc-600">{f.cal} kcal · {f.p}g P · {f.c}g C · {f.f}g G <span className="text-gray-300 dark:text-zinc-700">({t("per_100g")})</span></p>
                   </div>
                   <span className="text-violet-500 text-lg ml-3">+</span>
                 </div>
@@ -284,7 +284,7 @@ function Hoje() {
                         : "border-gray-200 dark:border-[#2a2a2a] text-gray-400 dark:text-zinc-600"
                     }`}
                   >
-                    Gramas
+                    {t("grams")}
                   </button>
                   <button
                     onClick={() => { setModoUnidade(true); setQuantidade(1) }}
@@ -315,11 +315,10 @@ function Hoje() {
                   onClick={adicionarAlimento}
                   className="bg-violet-600 hover:bg-violet-500 text-white text-sm px-4 py-1.5 rounded-lg transition-all ml-auto"
                 >
-                  Adicionar
+                  {t("add")}
                 </button>
               </div>
 
-              {/* Preview macros */}
               {quantidade > 0 && (
                 <div className="flex gap-4 pt-1">
                   {[
@@ -341,7 +340,7 @@ function Hoje() {
           {/* Itens adicionados */}
           {logHoje[refeicaoAtiva]?.length > 0 && (
             <div>
-              <p className="text-[10px] text-gray-300 dark:text-zinc-600 uppercase tracking-widest mb-2">Adicionado em {refeicaoAtiva}</p>
+              <p className="text-[10px] text-gray-300 dark:text-zinc-600 uppercase tracking-widest mb-2">{t("added_to")} {refeicaoAtiva}</p>
               <div className="space-y-1.5">
                 {logHoje[refeicaoAtiva].map((item) => (
                   <div key={item.id} className="flex items-center justify-between bg-gray-50 dark:bg-[#0f0f0f] border border-gray-100 dark:border-[#2a2a2a] rounded-lg px-3 py-2">
@@ -361,16 +360,16 @@ function Hoje() {
       {/* PAINEL LATERAL */}
       <div className="w-full lg:w-64 lg:flex-shrink-0 space-y-3 lg:sticky lg:top-6">
         <div className="bg-white dark:bg-[#1a1a1a] rounded-xl border border-gray-100 dark:border-[#2a2a2a] p-4">
-          <p className="text-[10px] text-gray-400 dark:text-zinc-600 uppercase tracking-widest mb-4">Resumo do dia</p>
+          <p className="text-[10px] text-gray-400 dark:text-zinc-600 uppercase tracking-widest mb-4">{t("day_summary")}</p>
 
           {!refeicaoTemItens ? (
-            <p className="text-xs text-gray-300 dark:text-zinc-700 text-center py-4">Nenhuma refeição registrada ainda.</p>
+            <p className="text-xs text-gray-300 dark:text-zinc-700 text-center py-4">{t("no_meals")}</p>
           ) : (
             <div className="space-y-4">
               {REFEICOES.map((r) => {
                 const items = logHoje[r] || []
                 if (items.length === 0) return null
-                const t = totaisRefeicao(r)
+                const totRefeicao = totaisRefeicao(r)
                 return (
                   <div key={r}>
                     <p className="text-[10px] text-gray-400 dark:text-zinc-500 uppercase tracking-wider mb-2">{r}</p>
@@ -385,10 +384,10 @@ function Hoje() {
                     <div className="bg-gray-50 dark:bg-[#0f0f0f] rounded-lg p-2 border border-gray-100 dark:border-[#2a2a2a]">
                       <div className="grid grid-cols-2 gap-1">
                         {[
-                          { lbl: "Kcal", val: Math.round(t.cal), cor: "text-violet-500" },
-                          { lbl: "Prot", val: Math.round(t.p) + "g", cor: "text-emerald-500" },
-                          { lbl: "Carbs", val: Math.round(t.c) + "g", cor: "text-amber-500" },
-                          { lbl: "Gord", val: Math.round(t.f) + "g", cor: "text-rose-500" },
+                          { lbl: "Kcal", val: Math.round(totRefeicao.cal), cor: "text-violet-500" },
+                          { lbl: "Prot", val: Math.round(totRefeicao.p) + "g", cor: "text-emerald-500" },
+                          { lbl: "Carbs", val: Math.round(totRefeicao.c) + "g", cor: "text-amber-500" },
+                          { lbl: "Gord", val: Math.round(totRefeicao.f) + "g", cor: "text-rose-500" },
                         ].map((m) => (
                           <div key={m.lbl}>
                             <p className="text-[9px] text-gray-300 dark:text-zinc-700 uppercase">{m.lbl}</p>
@@ -402,16 +401,15 @@ function Hoje() {
                 )
               })}
 
-              {/* Total geral */}
               <div>
-                <p className="text-[10px] text-gray-400 dark:text-zinc-500 uppercase tracking-wider mb-2">Total geral</p>
+                <p className="text-[10px] text-gray-400 dark:text-zinc-500 uppercase tracking-wider mb-2">{t("total")}</p>
                 <div className="bg-violet-50 dark:bg-violet-500/10 border border-violet-100 dark:border-violet-500/20 rounded-lg p-3">
                   <div className="grid grid-cols-2 gap-2">
                     {[
                       { lbl: "Kcal", val: Math.round(totais.cal), cor: "text-violet-500" },
-                      { lbl: "Proteína", val: Math.round(totais.p) + "g", cor: "text-emerald-500" },
-                      { lbl: "Carbos", val: Math.round(totais.c) + "g", cor: "text-amber-500" },
-                      { lbl: "Gordura", val: Math.round(totais.f) + "g", cor: "text-rose-500" },
+                      { lbl: t("protein"), val: Math.round(totais.p) + "g", cor: "text-emerald-500" },
+                      { lbl: t("carbs"), val: Math.round(totais.c) + "g", cor: "text-amber-500" },
+                      { lbl: t("fat"), val: Math.round(totais.f) + "g", cor: "text-rose-500" },
                     ].map((m) => (
                       <div key={m.lbl}>
                         <p className="text-[9px] text-gray-400 dark:text-zinc-600 uppercase">{m.lbl}</p>
