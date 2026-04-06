@@ -1,7 +1,7 @@
 # 🥗 Macro Tracker — Web App
 
-App web completo para acompanhamento de nutrição diária com registro de refeições, controle de macronutrientes, hidratação, histórico por calendário e gráficos de evolução.
-**Versão 1.0 — autenticação real, banco de dados na nuvem via Supabase e suporte a modo escuro/claro.**
+App web completo para acompanhamento de nutrição diária com registro de refeições, controle de macronutrientes, hidratação, histórico por calendário, gráficos de evolução e suporte a múltiplos idiomas.
+**Versão 2.0 — autenticação real, banco de dados na nuvem via Supabase, modo escuro/claro e internacionalização (PT / EN / ES).**
 
 ---
 
@@ -14,6 +14,7 @@ App web completo para acompanhamento de nutrição diária com registro de refei
 | Tailwind CSS | 3 | Estilização com suporte a dark mode |
 | Supabase | — | Banco PostgreSQL + autenticação + RLS |
 | Recharts | — | Gráficos de barras semanais e mensais |
+| i18next | — | Internacionalização (PT / EN / ES) |
 | USDA FoodData Central API | — | Base de dados com 300k+ alimentos |
 | Google Fonts | — | Fonte Bungee no título |
 
@@ -44,7 +45,7 @@ npm run build
 
 ## Variáveis de ambiente
 
-Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
+Crie um arquivo `.env` na raiz do projeto:
 
 ```
 VITE_SUPABASE_URL=https://SEU_PROJETO.supabase.co
@@ -110,19 +111,17 @@ Vá em **Project Settings → API** e copie o **Project URL** e a **anon public 
 
 ### 4. Ativar provedores de login (opcional)
 
-Em **Authentication → Providers**, ative Google e/ou GitHub seguindo as instruções do Supabase para obter as credenciais OAuth de cada plataforma.
+Em **Authentication → Providers**, ative Google e/ou GitHub seguindo as instruções do Supabase.
 
 ---
 
 ## Configurar a API de Alimentos (USDA)
 
-O app busca alimentos na base do USDA FoodData Central — gratuita e com mais de 300 mil itens.
-
 1. Acesse **https://fdc.nal.usda.gov/api-key-signup.html**
 2. Preencha o formulário
 3. Aguarde o e-mail com sua chave e cole no `.env`
 
-> A busca prioriza o banco local em português. A API USDA é usada como complemento quando nenhum resultado local é encontrado.
+> A busca prioriza o banco local no idioma selecionado. A API USDA é usada como complemento quando nenhum resultado local é encontrado.
 
 ---
 
@@ -135,23 +134,28 @@ macro-tracker/
 ├── index.html
 └── src/
     ├── components/
-    │   └── AlimentosRapidos.jsx      ← Acesso rápido a recentes/favoritos/top
+    │   └── AlimentosRapidos.jsx      ← Acesso rápido a alimentos favoritos
     ├── context/
     │   ├── TrackerContext.jsx        ← Estado global + sync com Supabase
     │   └── ThemeContext.jsx          ← Controle de tema claro/escuro
     ├── data/
-    │   └── foods.js                  ← Banco local com 80+ alimentos em PT-BR
+    │   └── foods.js                  ← Banco local com 148 alimentos em PT, EN e ES
+    ├── i18n/
+    │   ├── index.js                  ← Configuração do i18next
+    │   ├── pt.js                     ← Traduções em português
+    │   ├── en.js                     ← Traduções em inglês
+    │   └── es.js                     ← Traduções em espanhol
     ├── pages/
     │   ├── Hoje.jsx                  ← Registro de refeições e hidratação
     │   ├── Calendario.jsx            ← Histórico por calendário
     │   ├── Metas.jsx                 ← Configuração de metas diárias
     │   ├── Graficos.jsx              ← Gráficos semanais e mensais
-    │   ├── Favoritos.jsx             ← Alimentos favoritos, recentes e mais usados
+    │   ├── Favoritos.jsx             ← Alimentos favoritos
     │   └── Login.jsx                 ← Autenticação
     ├── services/
     │   ├── supabase.js               ← Cliente Supabase
     │   ├── db.js                     ← Funções de leitura/escrita no banco
-    │   └── usda.js                   ← Integração com API USDA
+    │   └── usda.js                   ← Integração com API USDA + banco local
     ├── App.jsx                       ← Shell com sidebar + roteamento
     ├── main.jsx                      ← Entry point
     └── index.css                     ← Tailwind base + dark mode
@@ -169,42 +173,60 @@ macro-tracker/
 | **Calendário** | Visualiza o histórico com indicadores coloridos por dia |
 | **Metas** | Define objetivos diários de calorias, proteína, carbs, gordura e água |
 | **Gráficos** | Barras semanais e mensais com linha de meta para cada macro |
-| **Favoritos** | Acesso rápido a alimentos marcados com ♥, recentes e mais usados |
+| **Favoritos** | Acesso rápido a alimentos marcados com ♥ |
 
 ### Registro de refeições
 
-| Refeição | Período |
-|---|---|
-| Café da manhã | Manhã |
-| Almoço | Meio-dia |
-| Lanche da tarde | Tarde |
-| Jantar | Noite |
+| Refeição | Idioma PT | Idioma EN | Idioma ES |
+|---|---|---|---|
+| Café da manhã | Café da manhã | Breakfast | Desayuno |
+| Almoço | Almoço | Lunch | Almuerzo |
+| Lanche da tarde | Lanche da tarde | Afternoon snack | Merienda |
+| Jantar | Jantar | Dinner | Cena |
 
-- Busca em banco local (PT-BR) com fallback automático para API USDA
+- Busca em banco local (idioma selecionado) com fallback automático para API USDA
 - Entrada por **gramas** ou **unidade** (ovos, fatias, frutas, etc.)
 - Preview de macros em tempo real antes de adicionar
 - Painel lateral com resumo por refeição e total do dia
 
 ### Controle de hidratação
 
-- Copos clicáveis baseados na meta e no tamanho do copo configurado
+- Copos clicáveis baseados na meta e tamanho do copo configurado
 - Input manual em **ml** ou **L**
 - Barra de progresso e indicador de quanto falta para a meta
 - Botão para zerar o registro do dia
 
-### Banco local de alimentos (PT-BR)
+### Banco local de alimentos
 
-80+ alimentos organizados por categoria, com dados por 100g:
+**148 alimentos** organizados por categoria, com nomes traduzidos em PT, EN e ES:
 
 | Categoria | Exemplos |
 |---|---|
-| Carnes e proteínas | Peito de frango, atum, salmão, ovo, whey |
-| Carboidratos e grãos | Arroz branco/integral, feijão, aveia, batata-doce, tapioca |
-| Frutas | Banana, maçã, mamão, manga, morango, abacate |
-| Laticínios | Iogurte grego, queijo cottage, leite integral, requeijão |
-| Vegetais | Brócolis, espinafre, cenoura, couve, beterraba |
-| Gorduras | Azeite, pasta de amendoim, amêndoas, castanha-do-pará |
-| Bebidas | Suco de laranja, leite de aveia, café, chá verde |
+| Carnes e aves | Peito de frango, bife de alcatra, picanha, bacon, presunto |
+| Peixes e frutos do mar | Salmão, atum, tilápia, camarão, bacalhau |
+| Ovos e proteínas | Ovo inteiro, clara, whey protein, tofu, tempeh |
+| Laticínios | Iogurte grego, cottage, mussarela, cheddar, parmesão |
+| Cereais e grãos | Arroz branco/integral, aveia, quinoa, granola, tapioca |
+| Pães e massas | Pão francês, pão integral, pita, macarrão, macarrão integral |
+| Leguminosas | Feijão carioca/preto/branco, lentilha, grão-de-bico, ervilha |
+| Tubérculos | Batata-doce, batata inglesa, mandioca, inhame |
+| Frutas | Banana, maçã, mamão, manga, abacate, morango, kiwi, mirtilo |
+| Vegetais | Brócolis, espinafre, cenoura, beterraba, couve-flor, aspargo |
+| Oleaginosas e gorduras | Azeite, amendoim, amêndoas, castanha, chia, linhaça |
+| Bebidas | Suco de laranja, leite de aveia, leite de amêndoas, café, chá |
+| Outros | Mel, açúcar, chocolate amargo, maionese, molho de soja |
+
+---
+
+## Idiomas suportados
+
+| Idioma | Código | Detecção automática |
+|---|---|---|
+| Português (BR) | PT | Sim |
+| English | EN | Sim |
+| Español | ES | Sim |
+
+O idioma é detectado automaticamente pelo navegador no primeiro acesso. O usuário pode trocar manualmente pelos botões **PT / EN / ES** na sidebar. A preferência é salva no `localStorage`. Os nomes dos alimentos no banco local também mudam conforme o idioma selecionado.
 
 ---
 
@@ -220,7 +242,7 @@ macro-tracker/
 
 ### Segurança (RLS)
 
-Todas as tabelas têm **Row Level Security** ativado — cada usuário acessa somente seus próprios dados. A `anon key` do Supabase é segura para uso no frontend.
+Todas as tabelas têm **Row Level Security** ativado — cada usuário acessa somente seus próprios dados.
 
 ---
 
@@ -235,7 +257,7 @@ Todas as tabelas têm **Row Level Security** ativado — cada usuário acessa so
 
 ## Tema claro / escuro
 
-O tema segue automaticamente o sistema operacional do dispositivo no primeiro acesso. O usuário pode alternar manualmente pelo botão na sidebar (desktop) ou na topbar (mobile). A preferência é salva no `localStorage`.
+O tema segue automaticamente o sistema operacional no primeiro acesso. O usuário pode alternar manualmente pelo botão na sidebar. A preferência é salva no `localStorage`.
 
 ---
 
@@ -244,7 +266,7 @@ O tema segue automaticamente o sistema operacional do dispositivo no primeiro ac
 ```bash
 # 1. Subir o código para o GitHub
 git add .
-git commit -m "feat: macro tracker"
+git commit -m "feat: macro tracker v2"
 git push origin main
 
 # 2. Acessar vercel.com e importar o repositório
@@ -265,36 +287,33 @@ A cada `git push`, o Vercel refaz o deploy automaticamente.
 
 ### Adicionar alimentos ao banco local
 
-Em `src/data/foods.js`, adicione um novo objeto ao array:
+Em `src/data/foods.js`, adicione o alimento nas três línguas com o mesmo `id`:
 
 ```js
-{ id: 81, name: "Nome do alimento", cal: 000, p: 00, c: 00, f: 00 }
-```
+// Em foodsData.pt
+{ id: 149, name: "Creme de avelã", cal: 539, p: 6, c: 58, f: 31 },
 
-Para alimentos com unidade (ovo, fatia, fruta):
+// Em foodsData.en
+{ id: 149, name: "Hazelnut spread", cal: 539, p: 6, c: 58, f: 31 },
 
-```js
-{ id: 82, name: "Ovo de codorna", cal: 158, p: 13, c: 0.4, f: 11, unit: "unidade", gramsPerUnit: 10 }
+// Em foodsData.es
+{ id: 149, name: "Crema de avellanas", cal: 539, p: 6, c: 58, f: 31 },
 ```
 
 ### Alterar metas padrão
 
-Em `src/context/TrackerContext.jsx`, edite o objeto `initialState.goals`:
+Em `src/context/TrackerContext.jsx`, edite `initialState.goals`:
 
 ```js
 goals: { cal: 2500, p: 180, c: 250, f: 70, water: 3000, cupMl: 300, waterUnit: "ml" }
 ```
 
-### Alterar cores do tema
+### Adicionar um novo idioma
 
-Em `tailwind.config.js`, edite as cores em `theme.extend.colors`:
-
-```js
-colors: {
-  accent: "#8b5cf6",   // violeta principal
-  surface: "#1a1a1a",  // fundo dos cards (dark)
-}
-```
+1. Cria `src/i18n/fr.js` com todas as chaves traduzidas
+2. Importa e registra em `src/i18n/index.js`
+3. Adiciona o botão `FR` na sidebar do `App.jsx`
+4. Adiciona o array de nomes em `foodsData.fr` no `foods.js`
 
 ---
 
@@ -303,7 +322,7 @@ colors: {
 - Nunca commite o arquivo `.env` no git
 - A `anon key` do Supabase é segura para uso no frontend (RLS protege os dados)
 - A chave da API USDA é gratuita com limite de 1.000 requisições/hora
-- Login com Google e GitHub usa OAuth via Supabase — nenhuma senha é armazenada localmente
+- Login com Google e GitHub usa OAuth via Supabase
 
 ---
 

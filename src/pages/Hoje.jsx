@@ -244,28 +244,49 @@ function Hoje() {
 
           <AlimentosRapidos refeicaoAtiva={refeicaoAtiva} onAdicionar={() => {}} />
 
-          {/* Resultados */}
+          {/* Resultados com botão ♥ */}
           {resultados.length > 0 && (
             <div className="max-h-52 overflow-y-auto rounded-lg border border-gray-100 dark:border-[#2a2a2a] mb-3">
-              {resultados.map((f) => (
-                <div
-                  key={f.id}
-                  onClick={() => selecionarAlimento(f)}
-                  className="flex items-center justify-between px-3 py-2.5 border-b border-gray-50 dark:border-[#2a2a2a] last:border-0 hover:bg-gray-50 dark:hover:bg-[#242424] cursor-pointer transition-all"
-                >
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm text-gray-800 dark:text-zinc-200 truncate">{f.name}</p>
-                    {f.fonte === "local"
-                      ? <span className="text-[10px] text-emerald-600 uppercase tracking-wider">{t("local_db")}</span>
-                      : f.brand
-                        ? <p className="text-xs text-gray-400 dark:text-zinc-600">{f.brand}</p>
-                        : <span className="text-[10px] text-blue-500 uppercase tracking-wider">USDA</span>
-                    }
-                    <p className="text-xs text-gray-400 dark:text-zinc-600">{f.cal} kcal · {f.p}g P · {f.c}g C · {f.f}g G <span className="text-gray-300 dark:text-zinc-700">({t("per_100g")})</span></p>
+              {resultados.map((f) => {
+                const fav = state.favoritos.some((fv) => fv.name === f.name)
+                return (
+                  <div
+                    key={f.id}
+                    className="flex items-center justify-between px-3 py-2.5 border-b border-gray-50 dark:border-[#2a2a2a] last:border-0 hover:bg-gray-50 dark:hover:bg-[#242424] cursor-pointer transition-all"
+                    onClick={() => selecionarAlimento(f)}
+                  >
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-gray-800 dark:text-zinc-200 truncate">{f.name}</p>
+                      {f.fonte === "local"
+                        ? <span className="text-[10px] text-emerald-600 uppercase tracking-wider">{t("local_db")}</span>
+                        : f.brand
+                          ? <p className="text-xs text-gray-400 dark:text-zinc-600">{f.brand}</p>
+                          : <span className="text-[10px] text-blue-500 uppercase tracking-wider">USDA</span>
+                      }
+                      <p className="text-xs text-gray-400 dark:text-zinc-600">
+                        {f.cal} kcal · {f.p}g P · {f.c}g C · {f.f}g G
+                        <span className="text-gray-300 dark:text-zinc-700"> ({t("per_100g")})</span>
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 ml-3 flex-shrink-0">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          dispatch({ type: "TOGGLE_FAVORITO", item: f })
+                        }}
+                        className={`text-base transition-all ${
+                          fav
+                            ? "text-rose-500"
+                            : "text-gray-300 dark:text-zinc-700 hover:text-rose-400"
+                        }`}
+                      >
+                        ♥
+                      </button>
+                      <span className="text-violet-500 text-lg">+</span>
+                    </div>
                   </div>
-                  <span className="text-violet-500 text-lg ml-3">+</span>
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
 

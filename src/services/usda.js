@@ -1,9 +1,6 @@
 import foodsData from "../data/foods"
 import i18n from "../i18n"
 
-const API_KEY = import.meta.env.VITE_USDA_API_KEY
-const BASE_URL = "https://api.nal.usda.gov/fdc/v1"
-
 function getLang() {
   const lang = i18n.language || "pt"
   if (lang.startsWith("en")) return "en"
