@@ -4,6 +4,7 @@ import { TrackerProvider } from "./context/TrackerContext"
 import { useTema } from "./context/ThemeContext"
 import { useTranslation } from "react-i18next"
 import Login from "./pages/Login"
+import Landing from "./pages/Landing"
 import Hoje from "./pages/Hoje"
 import Calendario from "./pages/Calendario"
 import Metas from "./pages/Metas"
@@ -15,6 +16,7 @@ function AppInner() {
   const [usuario, setUsuario] = useState(null)
   const [carregando, setCarregando] = useState(true)
   const [sidebarAberta, setSidebarAberta] = useState(false)
+  const [mostrarLogin, setMostrarLogin] = useState(null)
   const { tema, alternarTema } = useTema()
   const { t, i18n } = useTranslation()
 
@@ -39,15 +41,20 @@ function AppInner() {
 
   async function sair() {
     await supabase.auth.signOut()
+    setMostrarLogin(null)
   }
 
   if (carregando) return (
-    <div className="min-h-screen bg-white dark:bg-[#0f0f0f] flex items-center justify-center">
+    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
       <div className="w-5 h-5 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
     </div>
   )
 
-  if (!usuario) return <Login />
+  if (!usuario) {
+    return mostrarLogin
+      ? <Login modo={mostrarLogin} onVoltar={() => setMostrarLogin(null)} />
+      : <Landing onLogin={(modo) => setMostrarLogin(modo)} />
+  }
 
   return (
     <TrackerProvider userId={usuario.id}>
@@ -59,15 +66,21 @@ function AppInner() {
 
         {/* SIDEBAR */}
         <aside className={`
-          fixed top-0 left-0 z-30 flex flex-col w-56 h-screen
+          fixed top-0 left-0 z-30 flex flex-col w-64 h-screen overflow-y-auto
           bg-white dark:bg-[#111111] border-r border-gray-100 dark:border-[#2a2a2a]
           transition-transform duration-300 flex-shrink-0
           ${sidebarAberta ? "translate-x-0" : "-translate-x-full"}
-          lg:translate-x-0 lg:relative lg:z-auto
+          lg:translate-x-0 lg:relative lg:z-auto lg:w-56
         `}>
 
           {/* Logo */}
-          <div className="px-5 pt-7 pb-6 border-b border-gray-100 dark:border-[#2a2a2a] flex-shrink-0">
+          <div className="px-5 pt-7 pb-6 border-b border-gray-100 dark:border-[#2a2a2a] flex-shrink-0 relative">
+            <button
+              onClick={() => setSidebarAberta(false)}
+              className="lg:hidden absolute top-4 right-4 w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 dark:border-[#2a2a2a] text-gray-400 dark:text-zinc-500 text-lg"
+            >
+              ×
+            </button>
             <div className="flex gap-1 mb-2">
               <div className="w-1.5 h-1.5 rounded-full bg-violet-500" />
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
@@ -104,7 +117,6 @@ function AppInner() {
           <div className="px-3 pb-5 space-y-1 border-t border-gray-100 dark:border-[#2a2a2a] pt-3 flex-shrink-0">
             <p className="text-[10px] text-gray-300 dark:text-zinc-700 px-3 truncate mb-2">{usuario.email}</p>
 
-            {/* Seletor de idioma */}
             <div className="flex gap-1 px-1 mb-1">
               {[{ code: "pt", label: "PT" }, { code: "en", label: "EN" }, { code: "es", label: "ES" }].map((lang) => (
                 <button
@@ -121,7 +133,6 @@ function AppInner() {
               ))}
             </div>
 
-            {/* Toggle tema */}
             <button
               onClick={alternarTema}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 dark:text-zinc-500 hover:bg-gray-50 dark:hover:bg-[#1a1a1a] hover:text-gray-700 dark:hover:text-zinc-300 transition-all"
@@ -134,7 +145,6 @@ function AppInner() {
               {t(tema === "dark" ? "light_mode" : "dark_mode")}
             </button>
 
-            {/* Sair */}
             <button
               onClick={sair}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-gray-400 dark:text-zinc-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 hover:text-rose-500 transition-all"
@@ -148,7 +158,6 @@ function AppInner() {
         {/* CONTEÚDO PRINCIPAL */}
         <div className="flex-1 min-w-0 flex flex-col h-screen overflow-hidden">
 
-          {/* Topbar mobile */}
           <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-white dark:bg-[#111111] border-b border-gray-100 dark:border-[#2a2a2a] flex-shrink-0">
             <button onClick={() => setSidebarAberta(true)} className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 dark:border-[#2a2a2a] text-gray-500 dark:text-zinc-400">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
