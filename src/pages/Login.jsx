@@ -48,8 +48,8 @@ function Login({ onVoltar, modo }) {
       {onVoltar && (
         <button
           onClick={onVoltar}
-          className="flex items-center gap-2 text-xs text-zinc-500 hover:text-zinc-300 transition-all mb-6 self-start max-w-sm w-full"
-        >
+          className="flex items-center gap-2 text-xs text-zinc-500 hover:text-zinc-300 transition-all mb-6 mt-4 self-start max-w-sm w-full"
+          >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
             <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
           </svg>
