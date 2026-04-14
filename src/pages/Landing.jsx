@@ -1,303 +1,252 @@
 import { useTranslation } from "react-i18next"
+import { useEffect, useRef } from "react"
+import "../styles/landing.css"
 
 export default function Landing({ onLogin }) {
-  const { t, i18n } = useTranslation()
-
-  const features = [
-    {
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
-        </svg>
-      ),
-      title: { pt: "Registro diário", en: "Daily logging", es: "Registro diario" },
-      desc: { pt: "Registre café da manhã, almoço, lanche e jantar com facilidade.", en: "Log breakfast, lunch, snack and dinner with ease.", es: "Registra desayuno, almuerzo, merienda y cena fácilmente." },
-    },
-    {
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-        </svg>
-      ),
-      title: { pt: "Base de 300k+ alimentos", en: "300k+ food database", es: "Base de 300k+ alimentos" },
-      desc: { pt: "Banco local em português + API USDA com centenas de milhares de itens.", en: "Local database + USDA API with hundreds of thousands of items.", es: "Base local + API USDA con cientos de miles de alimentos." },
-    },
-    {
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-          <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/>
-        </svg>
-      ),
-      title: { pt: "Gráficos semanais", en: "Weekly charts", es: "Gráficos semanales" },
-      desc: { pt: "Visualize sua evolução de macros e hidratação por semana e mês.", en: "Track your macro and hydration progress by week and month.", es: "Visualiza tu evolución de macros e hidratación por semana y mes." },
-    },
-    {
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-          <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-        </svg>
-      ),
-      title: { pt: "Calendário de histórico", en: "History calendar", es: "Calendario de historial" },
-      desc: { pt: "Veja seus dias com indicadores visuais de cumprimento de metas.", en: "See your days with visual goal completion indicators.", es: "Ve tus días con indicadores visuales de cumplimiento de metas." },
-    },
-    {
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-        </svg>
-      ),
-      title: { pt: "Alimentos favoritos", en: "Favorite foods", es: "Alimentos favoritos" },
-      desc: { pt: "Salve seus alimentos preferidos para adicionar com um clique.", en: "Save your favorite foods to add with one click.", es: "Guarda tus alimentos favoritos para añadir con un clic." },
-    },
-    {
-      icon: (
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-        </svg>
-      ),
-      title: { pt: "Dados na nuvem", en: "Cloud sync", es: "Datos en la nube" },
-      desc: { pt: "Seus dados sincronizados com segurança. Acesse de qualquer dispositivo.", en: "Your data securely synced. Access from any device.", es: "Tus datos sincronizados de forma segura. Accede desde cualquier dispositivo." },
-    },
-  ]
-
+  const { i18n } = useTranslation()
+  const canvasRef = useRef(null)
   const lang = i18n.language.startsWith("en") ? "en" : i18n.language.startsWith("es") ? "es" : "pt"
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+    const ctx = canvas.getContext("2d")
+    let animId
+    let W = (canvas.width = window.innerWidth)
+    let H = (canvas.height = window.innerHeight)
+    const resize = () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight }
+    window.addEventListener("resize", resize)
+    const particles = Array.from({ length: 80 }, () => ({
+      x: Math.random() * W, y: Math.random() * H,
+      r: Math.random() * 1.2 + 0.2,
+      dx: (Math.random() - 0.5) * 0.25, dy: (Math.random() - 0.5) * 0.25,
+      o: Math.random() * 0.35 + 0.05,
+      hue: Math.random() > 0.6 ? 260 : Math.random() > 0.5 ? 200 : 160,
+    }))
+    function draw() {
+      ctx.clearRect(0, 0, W, H)
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i]
+        p.x += p.dx; p.y += p.dy
+        if (p.x < 0) p.x = W; if (p.x > W) p.x = 0
+        if (p.y < 0) p.y = H; if (p.y > H) p.y = 0
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
+        ctx.fillStyle = `hsla(${p.hue},70%,65%,${p.o})`; ctx.fill()
+        for (let j = i + 1; j < particles.length; j++) {
+          const q = particles[j]
+          const dx = p.x - q.x, dy = p.y - q.y
+          const d = Math.sqrt(dx * dx + dy * dy)
+          if (d < 130) {
+            ctx.beginPath()
+            ctx.strokeStyle = `hsla(${p.hue},60%,60%,${0.06 * (1 - d / 130)})`
+            ctx.lineWidth = 0.4
+            ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke()
+          }
+        }
+      }
+      animId = requestAnimationFrame(draw)
+    }
+    draw()
+    return () => { cancelAnimationFrame(animId); window.removeEventListener("resize", resize) }
+  }, [])
 
   const texts = {
     pt: {
-      hero: "Controle sua nutrição com precisão",
-      heroSub: "Registre refeições, acompanhe macros, beba mais água e evolua todos os dias.",
-      cta: "Começar agora",
-      login: "Entrar",
-      featuresTitle: "Tudo que você precisa",
-      featuresSubtitle: "Uma plataforma completa para acompanhar sua alimentação e atingir seus objetivos.",
-      howTitle: "Como funciona",
-      steps: [
-        { n: "01", t: "Crie sua conta", d: "Cadastro rápido com email ou Google em segundos." },
-        { n: "02", t: "Defina suas metas", d: "Configure calorias, proteínas, carboidratos, gordura e água." },
-        { n: "03", t: "Registre suas refeições", d: "Busque alimentos e adicione às suas refeições do dia." },
-        { n: "04", t: "Acompanhe sua evolução", d: "Veja gráficos e calendário de histórico para manter o foco." },
-      ],
+      badge: "Plataforma de nutrição",
+      hero1: "Transforme sua", hero2: "alimentação", hero3: "com dados reais",
+      sub: "Registre refeições, acompanhe macros, hidratação e evolua com inteligência — tudo em uma plataforma limpa e rápida.",
+      cta: "Começar gratuitamente", login: "Entrar na conta",
+      f_title: "Funcionalidades", f_sub: "Tudo que você precisa para uma nutrição precisa.",
+      how_title: "Como funciona", how_sub: "Simples, rápido e eficiente.",
+      cta2: "Pronto para começar?", cta2_sub: "Crie sua conta em segundos. Sem cartão de crédito.",
       footer: "Feito para quem leva saúde a sério.",
+      steps: [
+        { n: "01", t: "Crie sua conta", d: "Cadastro rápido com email, Google ou GitHub." },
+        { n: "02", t: "Configure suas metas", d: "Defina calorias, proteínas, carboidratos, gordura e água." },
+        { n: "03", t: "Registre suas refeições", d: "Busque em 300k+ alimentos e adicione ao seu dia." },
+        { n: "04", t: "Acompanhe a evolução", d: "Gráficos semanais e calendário visual de histórico." },
+      ],
     },
     en: {
-      hero: "Track your nutrition with precision",
-      heroSub: "Log meals, track macros, drink more water and improve every day.",
-      cta: "Get started",
-      login: "Sign in",
-      featuresTitle: "Everything you need",
-      featuresSubtitle: "A complete platform to track your diet and reach your goals.",
-      howTitle: "How it works",
-      steps: [
-        { n: "01", t: "Create your account", d: "Quick signup with email or Google in seconds." },
-        { n: "02", t: "Set your goals", d: "Configure calories, protein, carbs, fat and water targets." },
-        { n: "03", t: "Log your meals", d: "Search foods and add them to your daily meals." },
-        { n: "04", t: "Track your progress", d: "View charts and history calendar to stay on track." },
-      ],
+      badge: "Nutrition platform",
+      hero1: "Transform your", hero2: "eating habits", hero3: "with real data",
+      sub: "Log meals, track macros, hydration and evolve with intelligence — all in a clean and fast platform.",
+      cta: "Start for free", login: "Sign in",
+      f_title: "Features", f_sub: "Everything you need for precise nutrition.",
+      how_title: "How it works", how_sub: "Simple, fast and efficient.",
+      cta2: "Ready to start?", cta2_sub: "Create your account in seconds. No credit card required.",
       footer: "Built for people who take health seriously.",
+      steps: [
+        { n: "01", t: "Create your account", d: "Quick signup with email, Google or GitHub." },
+        { n: "02", t: "Set your goals", d: "Define calories, protein, carbs, fat and water." },
+        { n: "03", t: "Log your meals", d: "Search 300k+ foods and add them to your day." },
+        { n: "04", t: "Track your progress", d: "Weekly charts and visual history calendar." },
+      ],
     },
     es: {
-      hero: "Controla tu nutrición con precisión",
-      heroSub: "Registra comidas, sigue tus macros, bebe más agua y mejora cada día.",
-      cta: "Empezar ahora",
-      login: "Iniciar sesión",
-      featuresTitle: "Todo lo que necesitas",
-      featuresSubtitle: "Una plataforma completa para seguir tu alimentación y alcanzar tus objetivos.",
-      howTitle: "Cómo funciona",
-      steps: [
-        { n: "01", t: "Crea tu cuenta", d: "Registro rápido con email o Google en segundos." },
-        { n: "02", t: "Define tus metas", d: "Configura calorías, proteínas, carbos, grasa y agua." },
-        { n: "03", t: "Registra tus comidas", d: "Busca alimentos y agrégalos a tus comidas del día." },
-        { n: "04", t: "Sigue tu evolución", d: "Ve gráficos y calendario de historial para mantener el foco." },
-      ],
+      badge: "Plataforma de nutrición",
+      hero1: "Transforma tu", hero2: "alimentación", hero3: "con datos reales",
+      sub: "Registra comidas, sigue macros, hidratación y evoluciona con inteligencia — todo en una plataforma limpia y rápida.",
+      cta: "Empezar gratis", login: "Iniciar sesión",
+      f_title: "Funcionalidades", f_sub: "Todo lo que necesitas para una nutrición precisa.",
+      how_title: "Cómo funciona", how_sub: "Simple, rápido y eficiente.",
+      cta2: "¿Listo para empezar?", cta2_sub: "Crea tu cuenta en segundos. Sin tarjeta de crédito.",
       footer: "Hecho para quienes se toman la salud en serio.",
+      steps: [
+        { n: "01", t: "Crea tu cuenta", d: "Registro rápido con email, Google o GitHub." },
+        { n: "02", t: "Configura tus metas", d: "Define calorías, proteínas, carbos, grasa y agua." },
+        { n: "03", t: "Registra tus comidas", d: "Busca en 300k+ alimentos y agrégalos a tu día." },
+        { n: "04", t: "Sigue tu evolución", d: "Gráficos semanales y calendario visual de historial." },
+      ],
     },
   }
+
+  const features = [
+    { emoji: "🍽️", color: "#8b5cf6", rgb: "139,92,246", title: { pt: "Registro de refeições", en: "Meal logging", es: "Registro de comidas" }, desc: { pt: "Café da manhã, almoço, lanche e jantar.", en: "Breakfast, lunch, snack and dinner.", es: "Desayuno, almuerzo, merienda y cena." } },
+    { emoji: "⚡", color: "#10b981", rgb: "16,185,129", title: { pt: "Macros em tempo real", en: "Real-time macros", es: "Macros en tiempo real" }, desc: { pt: "Calorias, proteína, carbs e gordura ao vivo.", en: "Calories, protein, carbs and fat live.", es: "Calorías, proteína, carbos y grasa en vivo." } },
+    { emoji: "💧", color: "#3b82f6", rgb: "59,130,246", title: { pt: "Controle de hidratação", en: "Hydration tracking", es: "Control de hidratación" }, desc: { pt: "Copos visuais com metas personalizadas.", en: "Visual cups with custom goals.", es: "Vasos visuales con metas personalizadas." } },
+    { emoji: "📈", color: "#f59e0b", rgb: "245,158,11", title: { pt: "Gráficos de evolução", en: "Progress charts", es: "Gráficos de evolución" }, desc: { pt: "Barras semanais e mensais com metas.", en: "Weekly and monthly bars with goals.", es: "Barras semanales y mensuales con metas." } },
+    { emoji: "📅", color: "#ef4444", rgb: "239,68,68", title: { pt: "Calendário de histórico", en: "History calendar", es: "Calendario de historial" }, desc: { pt: "Indicadores visuais de cumprimento diário.", en: "Visual daily goal completion indicators.", es: "Indicadores visuales de cumplimiento diario." } },
+    { emoji: "☁️", color: "#06b6d4", rgb: "6,182,212", title: { pt: "Nuvem e multi-idiomas", en: "Cloud & multi-language", es: "Nube y multi-idioma" }, desc: { pt: "Dados seguros em PT, EN e ES.", en: "Secure data in PT, EN and ES.", es: "Datos seguros en PT, EN y ES." } },
+  ]
 
   const tx = texts[lang]
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
+    <div className="landing-root">
+      <canvas ref={canvasRef} style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }} />
+      <div className="grid-bg" />
+      <div className="orb orb-1" /><div className="orb orb-2" /><div className="orb orb-3" />
 
-      {/* NAVBAR */}
-      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-[#0a0a0a]/80 backdrop-blur-md">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="flex gap-1">
-              <div className="w-2 h-2 rounded-full bg-violet-500" />
-              <div className="w-2 h-2 rounded-full bg-emerald-500" />
-              <div className="w-2 h-2 rounded-full bg-rose-500" />
+      <nav className="nav-wrap">
+        <div className="nav-inner">
+          <div className="nav-logo">
+            <div className="nav-dots">
+              <div className="nav-dot" style={{ background: "#8b5cf6" }} />
+              <div className="nav-dot" style={{ background: "#10b981" }} />
+              <div className="nav-dot" style={{ background: "#f43f5e" }} />
             </div>
-            <span style={{ fontFamily: "'Bungee', cursive" }} className="text-sm tracking-widest uppercase text-white">
-              Macro Tracker
-            </span>
+            <span className="nav-title">Macro Tracker</span>
           </div>
-
-          <div className="flex items-center gap-3">
-            {/* Seletor de idioma */}
-            <div className="hidden sm:flex gap-1">
+          <div className="nav-right">
+            <div style={{ display: "flex", gap: "2px" }}>
               {[{ code: "pt", label: "PT" }, { code: "en", label: "EN" }, { code: "es", label: "ES" }].map((l) => (
-                <button
-                  key={l.code}
-                  onClick={() => i18n.changeLanguage(l.code)}
-                  className={`px-2.5 py-1 rounded-lg text-[10px] font-medium uppercase tracking-wider border transition-all ${
-                    lang === l.code
-                      ? "bg-violet-500/20 text-violet-400 border-violet-500/30"
-                      : "text-zinc-500 border-transparent hover:text-zinc-300"
-                  }`}
-                >
-                  {l.label}
-                </button>
+                <button key={l.code} className={`lang-btn ${lang === l.code ? "active" : ""}`} onClick={() => i18n.changeLanguage(l.code)}>{l.label}</button>
               ))}
             </div>
-
-            <button
-              onClick={() => onLogin("login")}
-              className="text-sm text-zinc-400 hover:text-white transition-all px-4 py-2 rounded-lg border border-white/10 hover:border-white/20"
-            >
-              {tx.login}
-            </button>
-            <button
-              onClick={() => onLogin("cadastro")}
-              className="text-sm bg-violet-600 hover:bg-violet-500 text-white px-4 py-2 rounded-lg transition-all font-medium"
-            >
-              {tx.cta}
-            </button>
+            <button className="btn-login" onClick={() => onLogin("login")}>{tx.login}</button>
+            <button className="btn-cta" onClick={() => onLogin("cadastro")}>{tx.cta}</button>
           </div>
         </div>
       </nav>
 
-      {/* HERO */}
-      <section className="pt-40 pb-28 px-6 text-center max-w-4xl mx-auto">
-        <div className="inline-flex items-center gap-2 bg-violet-500/10 border border-violet-500/20 rounded-full px-4 py-1.5 mb-8">
-          <div className="w-1.5 h-1.5 rounded-full bg-violet-400" />
-          <span className="text-xs text-violet-400 tracking-wider uppercase">Macro Tracker</span>
+      <section className="hero">
+        <div className="hero-badge">
+          <div className="hero-badge-dot" />
+          <span className="hero-badge-text">{tx.badge}</span>
         </div>
-
-        <h1 className="text-4xl sm:text-6xl font-semibold text-white leading-tight tracking-tight mb-6">
-          {tx.hero.split(" ").map((word, i, arr) =>
-            i === arr.length - 1
-              ? <span key={i} className="text-violet-400"> {word}</span>
-              : <span key={i}> {word}</span>
-          )}
+        <h1 className="hero-title">
+          <span className="hero-title-line1">{tx.hero1}</span>
+          <span className="hero-title-line2">{tx.hero2}</span>
+          <span className="hero-title-line3">{tx.hero3}</span>
         </h1>
-
-        <p className="text-lg text-zinc-400 max-w-xl mx-auto mb-10 leading-relaxed">
-          {tx.heroSub}
-        </p>
-
-        <div className="flex items-center justify-center gap-4 flex-wrap">
-          <button
-            onClick={() => onLogin("cadastro")}
-            className="bg-violet-600 hover:bg-violet-500 text-white px-8 py-3.5 rounded-xl text-sm font-medium transition-all"
-          >
-            {tx.cta} →
-          </button>
-          <button
-            onClick={() => onLogin("login")}
-            className="text-zinc-400 hover:text-white px-8 py-3.5 rounded-xl text-sm border border-white/10 hover:border-white/20 transition-all"
-          >
-            {tx.login}
-          </button>
+        <p className="hero-sub">{tx.sub}</p>
+        <div className="hero-buttons">
+          <button className="hero-btn-primary" onClick={() => onLogin("cadastro")}><span>{tx.cta} →</span></button>
+          <button className="hero-btn-secondary" onClick={() => onLogin("login")}>{tx.login}</button>
         </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-6 mt-20 pt-10 border-t border-white/5">
+        <div className="stats">
           {[
-            { val: "148+", label: { pt: "alimentos locais", en: "local foods", es: "alimentos locales" } },
-            { val: "300k+", label: { pt: "via API USDA", en: "via USDA API", es: "via API USDA" } },
-            { val: "3", label: { pt: "idiomas suportados", en: "supported languages", es: "idiomas soportados" } },
+            { val: "148+", label: { pt: "Alimentos locais", en: "Local foods", es: "Alimentos locales" }, color: "#a78bfa" },
+            { val: "300k+", label: { pt: "Base USDA", en: "USDA database", es: "Base USDA" }, color: "#34d399" },
+            { val: "3", label: { pt: "Idiomas", en: "Languages", es: "Idiomas" }, color: "#60a5fa" },
           ].map((s, i) => (
-            <div key={i}>
-              <p className="text-3xl font-semibold text-white">{s.val}</p>
-              <p className="text-xs text-zinc-500 mt-1">{s.label[lang]}</p>
+            <div className="stat-card" key={i}>
+              <div className="stat-val" style={{ color: s.color }}>{s.val}</div>
+              <div className="stat-label">{s.label[lang]}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* FEATURES */}
-      <section className="py-24 px-6 border-t border-white/5">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-semibold text-white mb-4">{tx.featuresTitle}</h2>
-            <p className="text-zinc-500 max-w-lg mx-auto">{tx.featuresSubtitle}</p>
-          </div>
+      <hr className="landing-divider" />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <section className="section">
+        <div className="section-inner">
+          <div className="section-header">
+            <span className="section-tag" style={{ color: "#a78bfa" }}>Features</span>
+            <h2 className="section-title">{tx.f_title}</h2>
+            <p className="section-sub">{tx.f_sub}</p>
+          </div>
+          <div className="feature-grid">
             {features.map((f, i) => (
               <div
-                key={i}
-                className="bg-white/3 border border-white/6 rounded-2xl p-6 hover:border-violet-500/20 hover:bg-violet-500/5 transition-all group"
+                className="feature-card" key={i}
+                onMouseEnter={e => e.currentTarget.style.background = `rgba(${f.rgb},0.05)`}
+                onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.02)"}
               >
-                <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400 mb-4 group-hover:bg-violet-500/20 transition-all">
-                  {f.icon}
-                </div>
-                <h3 className="text-sm font-medium text-white mb-2">{f.title[lang]}</h3>
-                <p className="text-xs text-zinc-500 leading-relaxed">{f.desc[lang]}</p>
+                <div className="feature-icon-wrap" style={{ background: `${f.color}18`, border: `1px solid ${f.color}30` }}>{f.emoji}</div>
+                <div className="feature-title">{f.title[lang]}</div>
+                <div className="feature-desc">{f.desc[lang]}</div>
+                <div className="feature-line" style={{ background: `linear-gradient(90deg, ${f.color}60, transparent)` }} />
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* COMO FUNCIONA */}
-      <section className="py-24 px-6 border-t border-white/5">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-semibold text-white mb-4">{tx.howTitle}</h2>
-          </div>
+      <hr className="landing-divider" />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {tx.steps.map((step, i) => (
-              <div key={i} className="bg-white/3 border border-white/6 rounded-2xl p-6 flex gap-4">
-                <span className="text-3xl font-semibold text-white/10 flex-shrink-0">{step.n}</span>
-                <div>
-                  <h3 className="text-sm font-medium text-white mb-1">{step.t}</h3>
-                  <p className="text-xs text-zinc-500 leading-relaxed">{step.d}</p>
+      <section className="section">
+        <div className="section-inner">
+          <div className="section-header">
+            <span className="section-tag" style={{ color: "#34d399" }}>Process</span>
+            <h2 className="section-title">{tx.how_title}</h2>
+            <p className="section-sub">{tx.how_sub}</p>
+          </div>
+          <div style={{ border: "1px solid rgba(255,255,255,0.06)", borderRadius: "20px", overflow: "hidden" }}>
+            <div className="steps-wrap">
+              {tx.steps.map((step, i) => (
+                <div className="step" key={i}>
+                  <div className="step-indicator" />
+                  <div className="step-num">{step.n}</div>
+                  <div className="step-title">{step.t}</div>
+                  <div className="step-desc">{step.d}</div>
                 </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA FINAL */}
-      <section className="py-24 px-6 border-t border-white/5">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-3xl font-semibold text-white mb-4">{tx.hero}</h2>
-          <p className="text-zinc-500 mb-8">{tx.heroSub}</p>
-          <div className="flex items-center justify-center gap-4 flex-wrap">
-            <button
-              onClick={() => onLogin("cadastro")}
-              className="bg-violet-600 hover:bg-violet-500 text-white px-10 py-4 rounded-xl text-sm font-medium transition-all"
-            >
-              {tx.cta} →
-            </button>
-            <button
-              onClick={() => onLogin("login")}
-              className="text-zinc-400 hover:text-white px-10 py-4 rounded-xl text-sm border border-white/10 hover:border-white/20 transition-all"
-            >
-              {tx.login}
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="border-t border-white/5 py-8 px-6">
-        <div className="max-w-6xl mx-auto flex items-center justify-between flex-wrap gap-4">
-          <div className="flex items-center gap-2">
-            <div className="flex gap-1">
-              <div className="w-1.5 h-1.5 rounded-full bg-violet-500" />
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              <div className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+              ))}
             </div>
-            <span style={{ fontFamily: "'Bungee', cursive" }} className="text-xs tracking-widest uppercase text-zinc-500">
-              Macro Tracker
-            </span>
           </div>
-          <p className="text-xs text-zinc-600">{tx.footer}</p>
-          <p className="text-xs text-zinc-700">© {new Date().getFullYear()}</p>
+        </div>
+      </section>
+
+      <div className="cta-section">
+        <div className="cta-card">
+          <div className="cta-card-bg" />
+          <div className="cta-card-content">
+            <span className="section-tag" style={{ color: "#a78bfa", display: "block", marginBottom: "16px" }}>Get started</span>
+            <h2 className="cta-title">{tx.cta2}</h2>
+            <p className="cta-sub">{tx.cta2_sub}</p>
+            <div className="cta-buttons">
+              <button className="hero-btn-primary" onClick={() => onLogin("cadastro")}><span>{tx.cta} →</span></button>
+              <button className="hero-btn-secondary" onClick={() => onLogin("login")}>{tx.login}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr className="landing-divider" />
+      <footer className="footer">
+        <div className="footer-inner">
+          <div className="footer-logo">
+            <div className="nav-dots">
+              <div className="nav-dot" style={{ background: "#8b5cf6", width: "5px", height: "5px" }} />
+              <div className="nav-dot" style={{ background: "#10b981", width: "5px", height: "5px" }} />
+              <div className="nav-dot" style={{ background: "#f43f5e", width: "5px", height: "5px" }} />
+            </div>
+            Macro Tracker
+          </div>
+          <span className="footer-text">{tx.footer}</span>
+          <span className="footer-text">© {new Date().getFullYear()}</span>
         </div>
       </footer>
     </div>
