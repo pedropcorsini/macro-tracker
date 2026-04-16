@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useTracker } from "../context/TrackerContext"
 import { useTranslation } from "react-i18next"
+import "../styles/app.css"
 
 export default function Favoritos() {
   const { state, dispatch } = useTracker()
@@ -9,10 +10,10 @@ export default function Favoritos() {
   const [refeicaoAtiva, setRefeicaoAtiva] = useState("")
   const [adicionado, setAdicionado] = useState(null)
 
-  const REFEICOES = [
-    t("meal_breakfast"), t("meal_lunch"), t("meal_snack"), t("meal_dinner")
-  ]
+  const isDark = document.documentElement.classList.contains("dark")
+  const d = isDark
 
+  const REFEICOES = [t("meal_breakfast"), t("meal_lunch"), t("meal_snack"), t("meal_dinner")]
   const refeicaoSelecionada = refeicaoAtiva || REFEICOES[0]
 
   function toggleFavorito(item) {
@@ -26,9 +27,7 @@ export default function Favoritos() {
       type: "ADD_FOOD",
       meal: refeicaoSelecionada,
       item: {
-        id: Date.now(),
-        name: item.name,
-        qty: `${qty}g`,
+        id: Date.now(), name: item.name, qty: `${qty}g`,
         cal: Math.round(item.cal * ratio),
         p: Math.round(item.p * ratio * 10) / 10,
         c: Math.round(item.c * ratio * 10) / 10,
@@ -40,74 +39,69 @@ export default function Favoritos() {
   }
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h2 className="text-sm font-medium text-gray-800 dark:text-zinc-200">{t("favorites_title")}</h2>
-        <p className="text-xs text-gray-400 dark:text-zinc-600 mt-0.5">{t("favorites_subtitle")}</p>
+    <div style={{ maxWidth: "680px" }}>
+      <div className="page-header">
+        <div className="page-tag">Saved</div>
+        <h1 className={d?"page-title":"page-title light"}>{t("favorites_title")}</h1>
+        <p className="page-sub">{t("favorites_subtitle")}</p>
       </div>
 
       {/* Seletor de refeição */}
-      <div className="bg-white dark:bg-[#1a1a1a] rounded-xl border border-gray-100 dark:border-[#2a2a2a] p-4">
-        <p className="text-[10px] text-gray-400 dark:text-zinc-600 uppercase tracking-widest mb-3">{t("add_to")}</p>
-        <div className="flex gap-2 flex-wrap">
+      <div className={d?"app-card":"app-card light"} style={{ marginBottom:"12px" }}>
+        <div className="app-card-label">{t("add_to")}</div>
+        <div className="pill-tabs" style={{ marginBottom: 0 }}>
           {REFEICOES.map((r) => (
-            <button
-              key={r}
-              onClick={() => setRefeicaoAtiva(r)}
-              className={`px-3 py-1.5 rounded-full text-xs border transition-all ${
-                refeicaoSelecionada === r
-                  ? "bg-violet-500/20 border-violet-500/40 text-violet-500"
-                  : "border-gray-200 dark:border-[#2a2a2a] text-gray-400 dark:text-zinc-600 hover:border-gray-400"
-              }`}
-            >
-              {r}
-            </button>
+            <button key={r}
+              className={`pill-tab${!d?" light":""}${refeicaoSelecionada===r?" active":""}`}
+              onClick={() => setRefeicaoAtiva(r)}>{r}</button>
           ))}
         </div>
       </div>
 
       {/* Lista de favoritos */}
-      <div className="bg-white dark:bg-[#1a1a1a] rounded-xl border border-gray-100 dark:border-[#2a2a2a] p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-rose-500 text-sm">♥</span>
-          <p className="text-sm font-medium text-gray-700 dark:text-zinc-300">{t("favorites")}</p>
-          <span className="text-[10px] text-gray-300 dark:text-zinc-700 ml-auto">{state.favoritos.length} {t("items")}</span>
+      <div className={d?"app-card":"app-card light"}>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"16px" }}>
+          <div className="app-card-label" style={{ margin:0, display:"flex", alignItems:"center", gap:"6px" }}>
+            <span style={{ color:"#ef4444" }}>♥</span> {t("favorites")}
+          </div>
+          <span style={{ fontSize:"11px", color:"#52525b" }}>
+            {state.favoritos.length} {t("items")}
+          </span>
         </div>
 
         {state.favoritos.length === 0 ? (
-          <p className="text-xs text-gray-300 dark:text-zinc-700 py-6 text-center">{t("no_favorites")}</p>
+          <div style={{ textAlign:"center", padding:"48px 0" }}>
+            <div style={{ fontSize:"40px", marginBottom:"12px", opacity:0.3 }}>♥</div>
+            <p style={{ fontSize:"14px", color:"#52525b", marginBottom:"4px" }}>{t("no_favorites")}</p>
+            <p style={{ fontSize:"12px", color:"#3f3f46" }}>
+              {t("no_favorites")}
+            </p>
+          </div>
         ) : (
-          <div className="space-y-2">
+          <div>
             {state.favoritos.map((item) => {
               const qty = quantidades[item.name] || 100
               const ratio = qty / 100
               const foiAdicionado = adicionado === item.name
               return (
-                <div key={item.name} className="flex items-center gap-3 bg-gray-50 dark:bg-[#0f0f0f] border border-gray-100 dark:border-[#2a2a2a] rounded-xl px-3 py-2.5">
-                  <button
-                    onClick={() => toggleFavorito(item)}
-                    className="flex-shrink-0 transition-all text-base text-rose-500 hover:text-rose-400"
-                  >
-                    ♥
-                  </button>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-medium text-gray-700 dark:text-zinc-300 truncate">{item.name}</p>
-                    <p className="text-[10px] text-gray-400 dark:text-zinc-600">
-                      {Math.round(item.cal * ratio)} kcal · {Math.round(item.p * ratio * 10) / 10}g P · {Math.round(item.c * ratio * 10) / 10}g C · {Math.round(item.f * ratio * 10) / 10}g G
-                    </p>
+                <div key={item.name} className={d?"fav-item":"fav-item light"}>
+                  <button className="fav-heart" onClick={() => toggleFavorito(item)}>♥</button>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <div className={d?"fav-name":"fav-name light"}>{item.name}</div>
+                    <div className="fav-meta">
+                      {Math.round(item.cal*ratio)} kcal · {Math.round(item.p*ratio*10)/10}g P · {Math.round(item.c*ratio*10)/10}g C · {Math.round(item.f*ratio*10)/10}g G
+                    </div>
                   </div>
                   <input
                     type="number"
                     value={qty}
                     onChange={(e) => setQuantidades((prev) => ({ ...prev, [item.name]: Number(e.target.value) }))}
-                    className="w-16 bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-lg px-2 py-1 text-xs text-gray-700 dark:text-zinc-200 outline-none text-center"
+                    className={d?"fav-qty-input":"fav-qty-input light"}
                   />
-                  <span className="text-[10px] text-gray-300 dark:text-zinc-700">g</span>
+                  <span style={{ fontSize:"11px", color:"#52525b" }}>g</span>
                   <button
+                    className={`fav-add-btn${foiAdicionado?" done":""}`}
                     onClick={() => adicionarRapido(item)}
-                    className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                      foiAdicionado ? "bg-emerald-500 text-white" : "bg-violet-600 hover:bg-violet-500 text-white"
-                    }`}
                   >
                     {foiAdicionado ? "✓" : "+"}
                   </button>

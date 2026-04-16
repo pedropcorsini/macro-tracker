@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useTracker } from "../context/TrackerContext"
 import { useTranslation } from "react-i18next"
+import "../styles/app.css"
 
 const MESES = {
   pt: ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"],
@@ -21,26 +22,29 @@ function Calendario() {
   const [mes, setMes] = useState(hoje.getMonth())
   const [diaSelecionado, setDiaSelecionado] = useState(null)
 
+  const isDark = document.documentElement.classList.contains("dark")
+  const d = isDark
+
   const lang = i18n.language.startsWith("en") ? "en" : i18n.language.startsWith("es") ? "es" : "pt"
   const meses = MESES[lang]
   const diasSemana = DIAS_SEMANA[lang]
 
-  function mudarMes(d) {
-    if (d === 1 && mes === 11) { setMes(0); setAno(ano + 1) }
-    else if (d === -1 && mes === 0) { setMes(11); setAno(ano - 1) }
-    else setMes(mes + d)
+  function mudarMes(dir) {
+    if (dir === 1 && mes === 11) { setMes(0); setAno(ano + 1) }
+    else if (dir === -1 && mes === 0) { setMes(11); setAno(ano - 1) }
+    else setMes(mes + dir)
     setDiaSelecionado(null)
   }
 
-  function getChave(d) {
-    return `${ano}-${String(mes + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`
+  function getChave(dd) {
+    return `${ano}-${String(mes+1).padStart(2,"0")}-${String(dd).padStart(2,"0")}`
   }
 
   function getTotais(chave) {
     const log = state.logs[chave] || {}
     return Object.values(log).flat().reduce(
-      (a, i) => ({ cal: a.cal + i.cal, p: a.p + i.p, c: a.c + i.c, f: a.f + i.f }),
-      { cal: 0, p: 0, c: 0, f: 0 }
+      (a, i) => ({ cal: a.cal+i.cal, p: a.p+i.p, c: a.c+i.c, f: a.f+i.f }),
+      { cal:0, p:0, c:0, f:0 }
     )
   }
 
@@ -48,58 +52,67 @@ function Calendario() {
     const tt = getTotais(chave)
     if (tt.cal === 0) return null
     const pct = state.goals.cal > 0 ? tt.cal / state.goals.cal : 0
-    if (pct >= 0.9 && pct <= 1.1) return "bg-emerald-500"
-    if (pct >= 0.7) return "bg-amber-500"
-    return "bg-rose-500"
+    if (pct >= 0.9 && pct <= 1.1) return "#34d399"
+    if (pct >= 0.7) return "#fbbf24"
+    return "#f87171"
+  }
+
+  function pctBadgeClass(val, meta) {
+    const pct = meta > 0 ? Math.round(val / meta * 100) : 0
+    if (pct >= 90 && pct <= 110) return "ok"
+    if (pct >= 75) return "warn"
+    return "bad"
   }
 
   const primeiroDia = new Date(ano, mes, 1).getDay()
-  const totalDias = new Date(ano, mes + 1, 0).getDate()
-  const chaveSelecionada = diaSelecionado ? getChave(diaSelecionado) : null
-  const totaisDia = chaveSelecionada ? getTotais(chaveSelecionada) : null
-  const aguaDia = chaveSelecionada ? (state.waterLog[chaveSelecionada] || 0) : 0
+  const totalDias = new Date(ano, mes+1, 0).getDate()
+  const chaveSel = diaSelecionado ? getChave(diaSelecionado) : null
+  const totaisDia = chaveSel ? getTotais(chaveSel) : null
+  const aguaDia = chaveSel ? (state.waterLog[chaveSel] || 0) : 0
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="bg-white dark:bg-[#1a1a1a] rounded-xl border border-gray-100 dark:border-[#2a2a2a] p-4">
+    <div style={{ maxWidth: "680px" }}>
+      <div className="page-header">
+        <div className="page-tag">Histórico</div>
+        <h1 className={d?"page-title":"page-title light"}>{t("nav_calendar")}</h1>
+        <p className="page-sub">{meses[mes]} {ano}</p>
+      </div>
 
+      <div className={d?"app-card":"app-card light"}>
         {/* Navegação */}
-        <div className="flex items-center justify-between mb-5">
-          <button onClick={() => mudarMes(-1)} className="w-8 h-8 flex items-center justify-center border border-gray-200 dark:border-[#2a2a2a] rounded-lg text-gray-400 hover:border-gray-400 hover:text-gray-600 dark:hover:border-zinc-600 dark:hover:text-zinc-200 transition-all">‹</button>
-          <span className="text-sm font-medium text-gray-800 dark:text-zinc-200">{meses[mes]} {ano}</span>
-          <button onClick={() => mudarMes(1)} className="w-8 h-8 flex items-center justify-center border border-gray-200 dark:border-[#2a2a2a] rounded-lg text-gray-400 hover:border-gray-400 hover:text-gray-600 dark:hover:border-zinc-600 dark:hover:text-zinc-200 transition-all">›</button>
+        <div className="cal-nav">
+          <button className={d?"cal-nav-btn":"cal-nav-btn light"} onClick={() => mudarMes(-1)}>‹</button>
+          <span className={d?"cal-nav-title":"cal-nav-title light"}>{meses[mes]} {ano}</span>
+          <button className={d?"cal-nav-btn":"cal-nav-btn light"} onClick={() => mudarMes(1)}>›</button>
         </div>
 
         {/* Dias da semana */}
-        <div className="grid grid-cols-7 gap-1 mb-1">
-          {diasSemana.map((d) => (
-            <div key={d} className="text-center text-[10px] text-gray-300 dark:text-zinc-600 uppercase tracking-wider py-1">{d}</div>
+        <div className="cal-grid" style={{ marginBottom: "8px" }}>
+          {diasSemana.map((dd) => (
+            <div key={dd} className="cal-dow">{dd}</div>
           ))}
         </div>
 
         {/* Grade */}
-        <div className="grid grid-cols-7 gap-1">
+        <div className="cal-grid">
           {Array.from({ length: primeiroDia }).map((_, i) => <div key={`v-${i}`} />)}
           {Array.from({ length: totalDias }).map((_, i) => {
             const dia = i + 1
             const chave = getChave(dia)
-            const isHoje = dia === hoje.getDate() && mes === hoje.getMonth() && ano === hoje.getFullYear()
+            const isHoje = dia===hoje.getDate() && mes===hoje.getMonth() && ano===hoje.getFullYear()
             const isSel = diaSelecionado === dia
             const ponto = corPonto(chave)
             const temAgua = (state.waterLog[chave] || 0) > 0
             return (
               <div
                 key={dia}
+                className={`cal-day${!d?" light":""}${isHoje?" today":""}${isSel?" selected":""}`}
                 onClick={() => setDiaSelecionado(isSel ? null : dia)}
-                className={`rounded-lg p-1 sm:p-1.5 min-h-10 sm:min-h-12 text-center cursor-pointer border transition-all
-                  ${isHoje ? "border-violet-400 dark:border-violet-500/50" : "border-transparent"}
-                  ${isSel ? "bg-violet-50 dark:bg-violet-500/10 border-violet-300 dark:border-violet-500/30" : "hover:bg-gray-50 dark:hover:bg-[#242424]"}
-                `}
               >
-                <p className={`text-xs sm:text-sm font-medium ${isHoje ? "text-violet-500" : "text-gray-600 dark:text-zinc-400"}`}>{dia}</p>
-                <div className="flex gap-0.5 justify-center mt-1">
-                  {ponto && <div className={`w-1.5 h-1.5 rounded-full ${ponto}`} />}
-                  {temAgua && <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />}
+                <div className="cal-day-num">{dia}</div>
+                <div className="cal-dots">
+                  {ponto && <div className="cal-dot" style={{ background: ponto }} />}
+                  {temAgua && <div className="cal-dot" style={{ background: "#60a5fa" }} />}
                 </div>
               </div>
             )
@@ -107,50 +120,48 @@ function Calendario() {
         </div>
 
         {/* Legenda */}
-        <div className="flex gap-3 sm:gap-4 mt-4 pt-3 border-t border-gray-100 dark:border-[#2a2a2a] flex-wrap">
+        <div className={d?"cal-legend":"cal-legend light"}>
           {[
-            { cor: "bg-emerald-500", texto: t("goal_reached_label") },
-            { cor: "bg-amber-500",   texto: t("near_goal") },
-            { cor: "bg-rose-500",    texto: t("below_goal") },
-            { cor: "bg-blue-500",    texto: t("water_logged") },
+            { cor: "#34d399", texto: t("goal_reached_label") },
+            { cor: "#fbbf24", texto: t("near_goal") },
+            { cor: "#f87171", texto: t("below_goal") },
+            { cor: "#60a5fa", texto: t("water_logged") },
           ].map((l) => (
-            <div key={l.texto} className="flex items-center gap-1.5">
-              <div className={`w-1.5 h-1.5 rounded-full ${l.cor}`} />
-              <span className="text-[10px] text-gray-400 dark:text-zinc-600">{l.texto}</span>
+            <div key={l.texto} className="cal-legend-item">
+              <div className="cal-dot" style={{ background: l.cor, width: "7px", height: "7px" }} />
+              {l.texto}
             </div>
           ))}
         </div>
 
         {/* Detalhe do dia */}
         {diaSelecionado && totaisDia && (
-          <div className="mt-4 bg-gray-50 dark:bg-[#0f0f0f] rounded-lg border border-gray-100 dark:border-[#2a2a2a] p-4">
-            <p className="text-xs text-gray-400 dark:text-zinc-500 uppercase tracking-wider mb-3">
+          <div className={d?"cal-detail":"cal-detail light"}>
+            <div className="cal-detail-title">
               {String(diaSelecionado).padStart(2,"0")}/{String(mes+1).padStart(2,"0")}/{ano}
-            </p>
+            </div>
             {totaisDia.cal === 0 && aguaDia === 0 ? (
-              <p className="text-sm text-gray-300 dark:text-zinc-600">{t("no_data")}</p>
+              <p style={{ fontSize:"13px", color:"#52525b" }}>{t("no_data")}</p>
             ) : (
-              <div className="space-y-2.5">
+              <>
                 {[
-                  { label: t("calories"), val: Math.round(totaisDia.cal), meta: state.goals.cal, unit: "kcal" },
-                  { label: t("protein"),  val: Math.round(totaisDia.p),   meta: state.goals.p,   unit: "g" },
-                  { label: t("carbs"),    val: Math.round(totaisDia.c),   meta: state.goals.c,   unit: "g" },
-                  { label: t("fat"),      val: Math.round(totaisDia.f),   meta: state.goals.f,   unit: "g" },
-                  { label: t("water"),    val: aguaDia,                   meta: state.goals.water, unit: "ml" },
-                ].map((item) => {
-                  const pct = item.meta > 0 ? Math.round(item.val / item.meta * 100) : 0
-                  const cor = pct >= 90 && pct <= 110 ? "text-emerald-500 bg-emerald-50 dark:bg-emerald-500/10" : pct >= 75 ? "text-amber-500 bg-amber-50 dark:bg-amber-500/10" : "text-rose-500 bg-rose-50 dark:bg-rose-500/10"
-                  return (
-                    <div key={item.label} className="flex items-center justify-between">
-                      <span className="text-xs text-gray-400 dark:text-zinc-500">{item.label}</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-gray-700 dark:text-zinc-300">{item.val} {item.unit}</span>
-                        <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${cor}`}>{pct}%</span>
-                      </div>
+                  { label: t("calories"),     val: Math.round(totaisDia.cal), meta: state.goals.cal,   unit: "kcal" },
+                  { label: t("protein"),      val: Math.round(totaisDia.p),   meta: state.goals.p,     unit: "g" },
+                  { label: t("carbs"),        val: Math.round(totaisDia.c),   meta: state.goals.c,     unit: "g" },
+                  { label: t("fat"),          val: Math.round(totaisDia.f),   meta: state.goals.f,     unit: "g" },
+                  { label: t("water"),        val: aguaDia,                   meta: state.goals.water, unit: "ml" },
+                ].map((item) => (
+                  <div key={item.label} className={d?"cal-detail-row":"cal-detail-row light"}>
+                    <span className="cal-detail-label">{item.label}</span>
+                    <div style={{ display:"flex", alignItems:"center" }}>
+                      <span className={d?"cal-detail-val":"cal-detail-val light"}>{item.val} {item.unit}</span>
+                      <span className={`cal-pct-badge ${pctBadgeClass(item.val, item.meta)}`}>
+                        {item.meta > 0 ? Math.round(item.val/item.meta*100) : 0}%
+                      </span>
                     </div>
-                  )
-                })}
-              </div>
+                  </div>
+                ))}
+              </>
             )}
           </div>
         )}
