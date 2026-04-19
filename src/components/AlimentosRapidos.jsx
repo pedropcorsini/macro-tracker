@@ -8,6 +8,8 @@ export default function AlimentosRapidos({ refeicaoAtiva, onAdicionar }) {
   const [quantidades, setQuantidades] = useState({})
 
   const favoritos = state.favoritos
+  const isDark = document.documentElement.classList.contains("dark")
+  const d = isDark
 
   function toggleFavorito(item) {
     dispatch({ type: "TOGGLE_FAVORITO", item })
@@ -39,49 +41,43 @@ export default function AlimentosRapidos({ refeicaoAtiva, onAdicionar }) {
   if (favoritos.length === 0) return null
 
   return (
-    <div className="bg-white dark:bg-[#1a1a1a] rounded-xl border border-gray-100 dark:border-[#2a2a2a] p-4 mb-3">
-      <div className="flex items-center gap-2 mb-3">
-        <span className="text-rose-500 text-sm">♥</span>
-        <p className="text-[10px] text-gray-400 dark:text-zinc-600 uppercase tracking-widest">{t("favorites")}</p>
-        <span className="text-[10px] text-gray-300 dark:text-zinc-700 ml-auto">({favoritos.length})</span>
+    <div className={d ? "quick-access" : "quick-access light"}>
+      <div className="quick-access-header">
+        <div className="quick-access-label" style={{ marginBottom: 0 }}>
+          <span style={{ color: "#ef4444" }}>♥</span>
+          {t("favorites")}
+        </div>
+        <span className="quick-access-count">({favoritos.length})</span>
       </div>
 
-      <div className="space-y-1.5 max-h-64 overflow-y-auto">
+      <div className="quick-access-list">
         {favoritos.map((item) => {
           const qty = quantidades[item.name] || 100
           const ratio = qty / 100
           const fav = isFavorito(item.name)
+
           return (
-            <div
-              key={item.name}
-              className="flex items-center gap-2 bg-gray-50 dark:bg-[#0f0f0f] border border-gray-100 dark:border-[#2a2a2a] rounded-lg px-3 py-2"
-            >
-              <button
-                onClick={() => toggleFavorito(item)}
-                className={`flex-shrink-0 text-sm transition-all ${fav ? "text-rose-500" : "text-gray-200 dark:text-zinc-700 hover:text-rose-400"}`}
-              >
-                ♥
+            <div key={item.name} className={d ? "fav-item" : "fav-item light"}>
+              <button className="fav-heart" onClick={() => toggleFavorito(item)}>
+                {fav ? "♥" : "♡"}
               </button>
 
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-gray-700 dark:text-zinc-300 truncate">{item.name}</p>
-                <p className="text-[10px] text-gray-400 dark:text-zinc-600">
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div className={d ? "fav-name" : "fav-name light"}>{item.name}</div>
+                <div className="fav-meta">
                   {Math.round(item.cal * ratio)} kcal · {Math.round(item.p * ratio * 10) / 10}g P
-                </p>
+                </div>
               </div>
 
               <input
                 type="number"
                 value={qty}
                 onChange={(e) => setQuantidades((prev) => ({ ...prev, [item.name]: Number(e.target.value) }))}
-                className="w-14 bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#2a2a2a] rounded-lg px-1.5 py-1 text-xs text-gray-700 dark:text-zinc-200 outline-none text-center"
+                className={d ? "fav-qty-input" : "fav-qty-input light"}
               />
-              <span className="text-[10px] text-gray-300 dark:text-zinc-700">g</span>
+              <span className="quick-access-unit">g</span>
 
-              <button
-                onClick={() => adicionarRapido(item)}
-                className="flex-shrink-0 w-7 h-7 bg-violet-600 hover:bg-violet-500 text-white rounded-lg flex items-center justify-center text-sm font-medium transition-all"
-              >
+              <button className="fav-add-btn" onClick={() => adicionarRapido(item)}>
                 +
               </button>
             </div>

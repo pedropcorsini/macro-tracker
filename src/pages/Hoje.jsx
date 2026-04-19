@@ -107,10 +107,10 @@ function Hoje() {
   const gramas = alimentoSelecionado ? (modoUnidade ? quantidade * (alimentoSelecionado.gramsPerUnit || 100) : quantidade) : 0
 
   return (
-    <div style={{ display: "flex", gap: "20px", alignItems: "flex-start" }}>
+    <div className="page-shell dashboard-page">
 
       {/* COLUNA PRINCIPAL */}
-      <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column", gap: "12px" }}>
+      <div className="dashboard-main">
 
         {/* Macros */}
         <div className="macro-grid">
@@ -286,7 +286,7 @@ function Hoje() {
       </div>
 
       {/* PAINEL LATERAL */}
-      <div style={{ width:"260px", flexShrink:0, position:"sticky", top:"24px" }}>
+      <div className="dashboard-sidebar">
         <div className={d?"summary-panel":"summary-panel light"}>
           <div className="app-card-label">{t("day_summary")}</div>
           {!refeicaoTemItens ? (

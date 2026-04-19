@@ -106,7 +106,7 @@ function Graficos() {
   }
 
   return (
-    <div>
+    <div className="page-shell">
       <div className="page-header">
         <div className="page-tag">Analytics</div>
         <h1 className={d?"page-title":"page-title light"}>{t("charts_title")}</h1>

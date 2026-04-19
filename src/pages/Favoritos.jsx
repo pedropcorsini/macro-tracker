@@ -39,7 +39,7 @@ export default function Favoritos() {
   }
 
   return (
-    <div style={{ maxWidth: "680px" }}>
+    <div className="page-shell" style={{ maxWidth: "680px" }}>
       <div className="page-header">
         <div className="page-tag">Saved</div>
         <h1 className={d?"page-title":"page-title light"}>{t("favorites_title")}</h1>

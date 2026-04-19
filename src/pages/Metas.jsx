@@ -28,7 +28,7 @@ function Metas() {
   ]
 
   return (
-    <div style={{ maxWidth: "720px" }}>
+    <div className="page-shell" style={{ maxWidth: "720px" }}>
       <div className="page-header">
         <div className="page-tag">Config</div>
         <h1 className={d ? "page-title" : "page-title light"}>{t("daily_goals")}</h1>

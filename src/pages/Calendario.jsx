@@ -71,7 +71,7 @@ function Calendario() {
   const aguaDia = chaveSel ? (state.waterLog[chaveSel] || 0) : 0
 
   return (
-    <div style={{ maxWidth: "680px" }}>
+    <div className="page-shell" style={{ maxWidth: "680px" }}>
       <div className="page-header">
         <div className="page-tag">Histórico</div>
         <h1 className={d?"page-title":"page-title light"}>{t("nav_calendar")}</h1>

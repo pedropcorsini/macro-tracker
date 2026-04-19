@@ -3,6 +3,7 @@ import { supabase } from "./services/supabase"
 import { TrackerProvider } from "./context/TrackerContext"
 import { useTema } from "./context/ThemeContext"
 import { useTranslation } from "react-i18next"
+import "./styles/app.css"
 import Login from "./pages/Login"
 import Landing from "./pages/Landing"
 import Hoje from "./pages/Hoje"
@@ -45,8 +46,8 @@ function AppInner() {
   }
 
   if (carregando) return (
-    <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
-      <div className="w-5 h-5 border-2 border-violet-500 border-t-transparent rounded-full animate-spin" />
+    <div className="app-shell app-shell-loading min-h-screen flex items-center justify-center">
+      <div className="w-5 h-5 border-2 border-violet-500 border-t-transparent rounded-full animate-spin relative z-10" />
     </div>
   )
 
@@ -58,16 +59,16 @@ function AppInner() {
 
   return (
     <TrackerProvider userId={usuario.id}>
-      <div className="h-screen bg-gray-50 dark:bg-[#0f0f0f] flex overflow-hidden transition-colors">
+      <div className="app-shell h-screen flex overflow-hidden transition-colors">
 
         {sidebarAberta && (
-          <div className="fixed inset-0 bg-black/50 z-20 lg:hidden" onClick={() => setSidebarAberta(false)} />
+          <div className="app-mobile-overlay fixed inset-0 z-20 lg:hidden" onClick={() => setSidebarAberta(false)} />
         )}
 
         {/* SIDEBAR */}
         <aside className={`
-          fixed top-0 left-0 z-30 flex flex-col w-64 h-screen overflow-y-auto
-          bg-white dark:bg-[#111111] border-r border-gray-100 dark:border-[#2a2a2a]
+          app-sidebar fixed top-0 left-0 z-30 flex flex-col w-64 h-screen overflow-y-auto
+          border-r border-gray-100 dark:border-[#2a2a2a]
           transition-transform duration-300 flex-shrink-0
           ${sidebarAberta ? "translate-x-0" : "-translate-x-full"}
           lg:translate-x-0 lg:relative lg:z-auto lg:w-56
@@ -156,9 +157,9 @@ function AppInner() {
         </aside>
 
         {/* CONTEÚDO PRINCIPAL */}
-        <div className="flex-1 min-w-0 flex flex-col h-screen overflow-hidden">
+        <div className="app-main flex-1 min-w-0 flex flex-col h-screen overflow-hidden">
 
-          <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-white dark:bg-[#111111] border-b border-gray-100 dark:border-[#2a2a2a] flex-shrink-0">
+          <div className="app-mobile-header lg:hidden flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-[#2a2a2a] flex-shrink-0">
             <button onClick={() => setSidebarAberta(true)} className="w-8 h-8 flex items-center justify-center rounded-lg border border-gray-200 dark:border-[#2a2a2a] text-gray-500 dark:text-zinc-400">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
             </button>
@@ -174,8 +175,8 @@ function AppInner() {
             </button>
           </div>
 
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6">
-            <div className="max-w-4xl mx-auto">
+          <main className="app-main-content flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
+            <div className="app-main-inner max-w-5xl mx-auto">
               {abaAtiva === "hoje" && <Hoje />}
               {abaAtiva === "calendario" && <Calendario />}
               {abaAtiva === "metas" && <Metas />}
