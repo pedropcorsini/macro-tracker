@@ -1,7 +1,7 @@
 # 🥗 Macro Tracker — Web App
 
 App web completo para acompanhamento de nutrição diária com registro de refeições, controle de macronutrientes, hidratação, histórico por calendário, gráficos de evolução e suporte a múltiplos idiomas.
-**Versão 2.0 — autenticação real, banco de dados na nuvem via Supabase, modo escuro/claro e internacionalização (PT / EN / ES).**
+**Versão atual — landing page institucional, autenticação via Supabase, modo claro/escuro, internacionalização (PT / EN / ES) e interface visual clean com seletor customizado de idioma.**
 
 ---
 
@@ -9,14 +9,15 @@ App web completo para acompanhamento de nutrição diária com registro de refei
 
 | Tecnologia | Versão | Uso |
 |---|---|---|
-| React | 18 | UI e gerenciamento de estado |
-| Vite | 5 | Bundler e dev server |
-| Tailwind CSS | 3 | Estilização com suporte a dark mode |
-| Supabase | — | Banco PostgreSQL + autenticação + RLS |
-| Recharts | — | Gráficos de barras semanais e mensais |
-| i18next | — | Internacionalização (PT / EN / ES) |
-| USDA FoodData Central API | — | Base de dados com 300k+ alimentos |
-| Google Fonts | — | Fonte Bungee no título |
+| React | 19 | UI e gerenciamento de estado |
+| Vite | 8 | Bundler e dev server |
+| Tailwind CSS | 3 | Base de estilos e utilitários |
+| CSS customizado | — | Layout, landing page, superfícies e componentes visuais |
+| Supabase JS | 2 | Banco PostgreSQL + autenticação + RLS |
+| Recharts | 3 | Gráficos semanais e mensais |
+| i18next + react-i18next | 26 / 17 | Internacionalização (PT / EN / ES) |
+| Language Detector | 8 | Persistência do idioma salvo no `localStorage` |
+| USDA FoodData Central API | — | Base complementar com 300k+ alimentos |
 
 ---
 
@@ -47,7 +48,7 @@ npm run build
 
 Crie um arquivo `.env` na raiz do projeto:
 
-```
+```env
 VITE_SUPABASE_URL=https://SEU_PROJETO.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGc...SUA_CHAVE_AQUI
 VITE_USDA_API_KEY=SUA_CHAVE_USDA_AQUI
@@ -61,7 +62,7 @@ VITE_USDA_API_KEY=SUA_CHAVE_USDA_AQUI
 
 ### 1. Criar uma conta gratuita
 
-Acesse **https://supabase.com** e crie um projeto (gratuito).
+Acesse **https://supabase.com** e crie um projeto.
 
 ### 2. Executar o schema SQL
 
@@ -127,38 +128,44 @@ Em **Authentication → Providers**, ative Google e/ou GitHub seguindo as instru
 
 ## Estrutura de pastas
 
-```
+```text
 macro-tracker/
 ├── public/
-├── .env                              ← Suas credenciais (NÃO commitar!)
+├── .env                              ← Suas credenciais (não commitar)
 ├── index.html
 └── src/
+    ├── assets/
     ├── components/
-    │   └── AlimentosRapidos.jsx      ← Acesso rápido a alimentos favoritos
+    │   ├── AlimentosRapidos.jsx      ← Acesso rápido a favoritos na tela Hoje
+    │   └── LanguageSelect.jsx        ← Dropdown customizado de idiomas
     ├── context/
-    │   ├── TrackerContext.jsx        ← Estado global + sync com Supabase
-    │   └── ThemeContext.jsx          ← Controle de tema claro/escuro
+    │   ├── ThemeContext.jsx          ← Controle de tema claro/escuro
+    │   └── TrackerContext.jsx        ← Estado global + sync com Supabase
     ├── data/
     │   └── foods.js                  ← Banco local com 148 alimentos em PT, EN e ES
     ├── i18n/
-    │   ├── index.js                  ← Configuração do i18next
+    │   ├── index.js                  ← Configuração do i18next (PT padrão)
     │   ├── pt.js                     ← Traduções em português
     │   ├── en.js                     ← Traduções em inglês
     │   └── es.js                     ← Traduções em espanhol
     ├── pages/
+    │   ├── Landing.jsx               ← Landing page institucional
+    │   ├── Login.jsx                 ← Autenticação com email/senha e OAuth
     │   ├── Hoje.jsx                  ← Registro de refeições e hidratação
     │   ├── Calendario.jsx            ← Histórico por calendário
     │   ├── Metas.jsx                 ← Configuração de metas diárias
     │   ├── Graficos.jsx              ← Gráficos semanais e mensais
-    │   ├── Favoritos.jsx             ← Alimentos favoritos
-    │   └── Login.jsx                 ← Autenticação
+    │   └── Favoritos.jsx             ← Gestão e adição rápida de favoritos
     ├── services/
+    │   ├── db.js                     ← Leitura e escrita no Supabase
     │   ├── supabase.js               ← Cliente Supabase
-    │   ├── db.js                     ← Funções de leitura/escrita no banco
-    │   └── usda.js                   ← Integração com API USDA + banco local
-    ├── App.jsx                       ← Shell com sidebar + roteamento
-    ├── main.jsx                      ← Entry point
-    └── index.css                     ← Tailwind base + dark mode
+    │   └── usda.js                   ← Busca local + fallback para USDA
+    ├── styles/
+    │   ├── app.css                   ← Estilos da área autenticada e login
+    │   └── landing.css               ← Estilos da landing page
+    ├── App.jsx                       ← Shell principal, landing, auth e dashboard
+    ├── index.css                     ← Base Tailwind + tema global
+    └── main.jsx                      ← Entry point
 ```
 
 ---
@@ -169,11 +176,21 @@ macro-tracker/
 
 | Página | Descrição |
 |---|---|
+| **Landing** | Apresentação do produto com seções institucionais, CTA e seletor de idioma |
+| **Login** | Login e cadastro com email/senha, Google, GitHub, alternância de tema e idioma |
 | **Hoje** | Registra refeições por período do dia, controla hidratação e exibe macros em tempo real |
 | **Calendário** | Visualiza o histórico com indicadores coloridos por dia |
-| **Metas** | Define objetivos diários de calorias, proteína, carbs, gordura e água |
+| **Metas** | Define objetivos diários de calorias, proteína, carboidratos, gordura e água |
 | **Gráficos** | Barras semanais e mensais com linha de meta para cada macro |
-| **Favoritos** | Acesso rápido a alimentos marcados com ♥ |
+| **Favoritos** | Lista alimentos salvos e permite adição rápida com gramagem personalizada |
+
+### Experiência e interface
+
+- Landing page com visual clean, navegação fixa e seções de apresentação do app
+- Tela de autenticação com layout próprio, suporte a Google e GitHub e controle de tema
+- Área logada com sidebar, topbar mobile e conteúdo principal com scroll independente
+- Seletor customizado de idioma com a mesma estética do restante da interface
+- Primeiro acesso em **português** por padrão; preferência de idioma e tema é salva no `localStorage`
 
 ### Registro de refeições
 
@@ -184,10 +201,18 @@ macro-tracker/
 | Lanche da tarde | Lanche da tarde | Afternoon snack | Merienda |
 | Jantar | Jantar | Dinner | Cena |
 
-- Busca em banco local (idioma selecionado) com fallback automático para API USDA
+- Busca em banco local no idioma selecionado com fallback automático para API USDA
 - Entrada por **gramas** ou **unidade** (ovos, fatias, frutas, etc.)
 - Preview de macros em tempo real antes de adicionar
-- Painel lateral com resumo por refeição e total do dia
+- Resumo por refeição e total consolidado do dia
+- Botão de favorito para salvar alimentos usados com frequência
+
+### Favoritos e acesso rápido
+
+- Tela dedicada para gerenciar favoritos
+- Bloco de adição rápida na tela **Hoje**
+- Inclusão instantânea com quantidade em gramas
+- Persistência de favoritos por usuário no Supabase
 
 ### Controle de hidratação
 
@@ -220,13 +245,13 @@ macro-tracker/
 
 ## Idiomas suportados
 
-| Idioma | Código | Detecção automática |
+| Idioma | Código | Comportamento atual |
 |---|---|---|
-| Português (BR) | PT | Sim |
-| English | EN | Sim |
-| Español | ES | Sim |
+| Português (BR) | PT | Padrão inicial do app |
+| English | EN | Seleção manual com persistência |
+| Español | ES | Seleção manual com persistência |
 
-O idioma é detectado automaticamente pelo navegador no primeiro acesso. O usuário pode trocar manualmente pelos botões **PT / EN / ES** na sidebar. A preferência é salva no `localStorage`. Os nomes dos alimentos no banco local também mudam conforme o idioma selecionado.
+O app inicia em **português** quando não existe preferência salva. Depois disso, a escolha do usuário é persistida no `localStorage` e restaurada automaticamente nas próximas visitas. O idioma pode ser alterado pelo seletor presente na **landing page**, na **tela de login** e na **sidebar** da área logada. Os nomes dos alimentos do banco local também mudam conforme o idioma selecionado.
 
 ---
 
@@ -251,13 +276,13 @@ Todas as tabelas têm **Row Level Security** ativado — cada usuário acessa so
 | Dispositivo | Layout |
 |---|---|
 | Desktop (≥ 1024px) | Sidebar fixa 224px + conteúdo principal com scroll independente |
-| Tablet / Mobile (< 1024px) | Topbar com botão hamburger ☰ que abre sidebar deslizante + overlay escuro |
+| Tablet / Mobile (< 1024px) | Topbar com botão hamburger que abre sidebar deslizante + overlay escuro |
 
 ---
 
 ## Tema claro / escuro
 
-O tema segue automaticamente o sistema operacional no primeiro acesso. O usuário pode alternar manualmente pelo botão na sidebar. A preferência é salva no `localStorage`.
+O tema segue o sistema operacional no primeiro acesso. O usuário pode alternar manualmente pelo botão da interface, e a preferência é salva no `localStorage`.
 
 ---
 
@@ -266,7 +291,7 @@ O tema segue automaticamente o sistema operacional no primeiro acesso. O usuári
 ```bash
 # 1. Subir o código para o GitHub
 git add .
-git commit -m "feat: macro tracker v2"
+git commit -m "feat: macro tracker"
 git push origin main
 
 # 2. Acessar vercel.com e importar o repositório
@@ -305,23 +330,27 @@ Em `src/data/foods.js`, adicione o alimento nas três línguas com o mesmo `id`:
 Em `src/context/TrackerContext.jsx`, edite `initialState.goals`:
 
 ```js
-goals: { cal: 2500, p: 180, c: 250, f: 70, water: 3000, cupMl: 300, waterUnit: "ml" }
+goals: { cal: 2000, p: 150, c: 200, f: 65, water: 2500, cupMl: 250, waterUnit: "ml" }
 ```
+
+### Alterar idioma padrão
+
+Em `src/i18n/index.js`, ajuste a inicialização de `lng` e `fallbackLng` se quiser trocar o padrão atual de `pt`.
 
 ### Adicionar um novo idioma
 
-1. Cria `src/i18n/fr.js` com todas as chaves traduzidas
-2. Importa e registra em `src/i18n/index.js`
-3. Adiciona o botão `FR` na sidebar do `App.jsx`
-4. Adiciona o array de nomes em `foodsData.fr` no `foods.js`
+1. Crie `src/i18n/fr.js` com todas as chaves traduzidas
+2. Importe e registre o idioma em `src/i18n/index.js`
+3. Adicione o idioma ao array `LANGUAGES` em `src/components/LanguageSelect.jsx`
+4. Adicione `foodsData.fr` em `src/data/foods.js`
 
 ---
 
 ## Segurança
 
-- Nunca commite o arquivo `.env` no git
-- A `anon key` do Supabase é segura para uso no frontend (RLS protege os dados)
-- A chave da API USDA é gratuita com limite de 1.000 requisições/hora
+- Nunca commite o arquivo `.env` no Git
+- A `anon key` do Supabase é segura para uso no frontend quando usada com RLS
+- A chave da API USDA é gratuita e usada apenas como complemento da base local
 - Login com Google e GitHub usa OAuth via Supabase
 
 ---
