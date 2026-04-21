@@ -1,7 +1,7 @@
 # 🥗 Macro Tracker — Web App
 
 App web completo para acompanhamento de nutrição diária com registro de refeições, controle de macronutrientes, hidratação, histórico por calendário, gráficos de evolução e suporte a múltiplos idiomas.
-**Versão atual — landing page institucional, autenticação via Supabase, modo claro/escuro, internacionalização (PT / EN / ES) e interface visual clean com seletor customizado de idioma.**
+**Versão atual - landing page institucional, autenticação via Supabase, modo claro/escuro, internacionalização (PT / EN / ES) e interface visual clean com seletor customizado de idioma.**
 
 ---
 
