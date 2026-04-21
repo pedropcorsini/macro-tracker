@@ -2,12 +2,13 @@ import { useState } from "react"
 import { supabase } from "../services/supabase"
 import { useTema } from "../context/ThemeContext"
 import { useTranslation } from "react-i18next"
+import LanguageSelect from "../components/LanguageSelect"
 import "../styles/app.css"
 
 const MODO = { LOGIN: "login", CADASTRO: "cadastro" }
 
 function Login({ onVoltar, modo }) {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const { tema, alternarTema } = useTema()
   const [modoAtivo, setModoAtivo] = useState(modo === "cadastro" ? MODO.CADASTRO : MODO.LOGIN)
   const [email, setEmail] = useState("")
@@ -138,15 +139,7 @@ function Login({ onVoltar, modo }) {
               </button>
 
               <div className="auth-language-group">
-                {[{ code: "pt", label: "PT" }, { code: "en", label: "EN" }, { code: "es", label: "ES" }].map((lang) => (
-                  <button
-                    key={lang.code}
-                    onClick={() => i18n.changeLanguage(lang.code)}
-                    className={`pill-tab${!d ? " light" : ""}${i18n.language.startsWith(lang.code) ? " active" : ""}`}
-                  >
-                    {lang.label}
-                  </button>
-                ))}
+                <LanguageSelect variant={d ? "dark" : "light"} />
               </div>
             </div>
           </div>

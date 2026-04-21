@@ -5,6 +5,16 @@ import pt from "./pt"
 import en from "./en"
 import es from "./es"
 
+function normalizeLanguage(language = "") {
+  if (language.startsWith("en")) return "en"
+  if (language.startsWith("es")) return "es"
+  return "pt"
+}
+
+const savedLanguage = typeof window !== "undefined"
+  ? normalizeLanguage(window.localStorage.getItem("i18nextLng") || "")
+  : "pt"
+
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
@@ -14,9 +24,12 @@ i18n
       en: { translation: en },
       es: { translation: es },
     },
+    lng: savedLanguage,
+    supportedLngs: ["pt", "en", "es"],
+    load: "languageOnly",
     fallbackLng: "pt",
     detection: {
-      order: ["localStorage", "navigator"],
+      order: ["localStorage"],
       caches: ["localStorage"],
     },
     interpolation: {

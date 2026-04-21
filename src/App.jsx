@@ -11,6 +11,7 @@ import Calendario from "./pages/Calendario"
 import Metas from "./pages/Metas"
 import Graficos from "./pages/Graficos"
 import Favoritos from "./pages/Favoritos"
+import LanguageSelect from "./components/LanguageSelect"
 
 function AppInner() {
   const [abaAtiva, setAbaAtiva] = useState("hoje")
@@ -19,7 +20,7 @@ function AppInner() {
   const [sidebarAberta, setSidebarAberta] = useState(false)
   const [mostrarLogin, setMostrarLogin] = useState(null)
   const { tema, alternarTema } = useTema()
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
 
   const ABAS = [
     { id: "hoje", labelKey: "nav_today", icon: (<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>) },
@@ -118,21 +119,7 @@ function AppInner() {
           <div className="px-3 pb-5 space-y-1 border-t border-gray-100 dark:border-[#2a2a2a] pt-3 flex-shrink-0">
             <p className="text-[10px] text-gray-300 dark:text-zinc-700 px-3 truncate mb-2">{usuario.email}</p>
 
-            <div className="flex gap-1 px-1 mb-1">
-              {[{ code: "pt", label: "PT" }, { code: "en", label: "EN" }, { code: "es", label: "ES" }].map((lang) => (
-                <button
-                  key={lang.code}
-                  onClick={() => i18n.changeLanguage(lang.code)}
-                  className={`flex-1 py-1.5 rounded-lg text-[10px] font-medium uppercase tracking-wider transition-all border ${
-                    i18n.language.startsWith(lang.code)
-                      ? "bg-violet-500/20 text-violet-500 border-violet-500/30"
-                      : "text-gray-400 dark:text-zinc-600 hover:text-gray-600 dark:hover:text-zinc-400 border-transparent"
-                  }`}
-                >
-                  {lang.label}
-                </button>
-              ))}
-            </div>
+            <LanguageSelect variant={tema === "dark" ? "dark" : "light"} fullWidth />
 
             <button
               onClick={alternarTema}

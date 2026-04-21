@@ -1,53 +1,52 @@
 import { useTranslation } from "react-i18next"
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
+import LanguageSelect from "../components/LanguageSelect"
 import "../styles/landing.css"
 
 export default function Landing({ onLogin }) {
   const { i18n } = useTranslation()
-  const canvasRef = useRef(null)
+  const rootRef = useRef(null)
+  const [isScrolled, setIsScrolled] = useState(false)
   const lang = i18n.language.startsWith("en") ? "en" : i18n.language.startsWith("es") ? "es" : "pt"
+  const revealStyle = (delay = 0) => ({ "--reveal-delay": `${delay}ms` })
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-    const ctx = canvas.getContext("2d")
-    let animId
-    let W = (canvas.width = window.innerWidth)
-    let H = (canvas.height = window.innerHeight)
-    const resize = () => { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight }
-    window.addEventListener("resize", resize)
-    const particles = Array.from({ length: 80 }, () => ({
-      x: Math.random() * W, y: Math.random() * H,
-      r: Math.random() * 1.2 + 0.2,
-      dx: (Math.random() - 0.5) * 0.25, dy: (Math.random() - 0.5) * 0.25,
-      o: Math.random() * 0.35 + 0.05,
-      hue: Math.random() > 0.6 ? 260 : Math.random() > 0.5 ? 200 : 160,
-    }))
-    function draw() {
-      ctx.clearRect(0, 0, W, H)
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i]
-        p.x += p.dx; p.y += p.dy
-        if (p.x < 0) p.x = W; if (p.x > W) p.x = 0
-        if (p.y < 0) p.y = H; if (p.y > H) p.y = 0
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2)
-        ctx.fillStyle = `hsla(${p.hue},70%,65%,${p.o})`; ctx.fill()
-        for (let j = i + 1; j < particles.length; j++) {
-          const q = particles[j]
-          const dx = p.x - q.x, dy = p.y - q.y
-          const d = Math.sqrt(dx * dx + dy * dy)
-          if (d < 130) {
-            ctx.beginPath()
-            ctx.strokeStyle = `hsla(${p.hue},60%,60%,${0.06 * (1 - d / 130)})`
-            ctx.lineWidth = 0.4
-            ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y); ctx.stroke()
-          }
-        }
-      }
-      animId = requestAnimationFrame(draw)
+    const onScroll = () => setIsScrolled(window.scrollY > 18)
+
+    onScroll()
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
+  }, [])
+
+  useEffect(() => {
+    const root = rootRef.current
+    if (!root) return
+
+    const elements = Array.from(root.querySelectorAll("[data-reveal]"))
+    if (!elements.length) return
+
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)")
+    if (reduceMotion.matches) {
+      elements.forEach((element) => element.classList.add("is-visible"))
+      return
     }
-    draw()
-    return () => { cancelAnimationFrame(animId); window.removeEventListener("resize", resize) }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+          entry.target.classList.add("is-visible")
+          observer.unobserve(entry.target)
+        })
+      },
+      {
+        threshold: 0.18,
+        rootMargin: "0px 0px -12% 0px",
+      }
+    )
+
+    elements.forEach((element) => observer.observe(element))
+    return () => observer.disconnect()
   }, [])
 
   const texts = {
@@ -113,12 +112,11 @@ export default function Landing({ onLogin }) {
   const tx = texts[lang]
 
   return (
-    <div className="landing-root">
-      <canvas ref={canvasRef} style={{ position: "fixed", inset: 0, zIndex: 0, pointerEvents: "none" }} />
+    <div ref={rootRef} className="landing-root">
       <div className="grid-bg" />
       <div className="orb orb-1" /><div className="orb orb-2" /><div className="orb orb-3" />
 
-      <nav className="nav-wrap">
+      <nav className={`nav-wrap ${isScrolled ? "is-scrolled" : ""}`}>
         <div className="nav-inner">
           <div className="nav-logo">
             <div className="nav-dots">
@@ -129,11 +127,7 @@ export default function Landing({ onLogin }) {
             <span className="nav-title">Macro Tracker</span>
           </div>
           <div className="nav-right">
-            <div style={{ display: "flex", gap: "2px" }}>
-              {[{ code: "pt", label: "PT" }, { code: "en", label: "EN" }, { code: "es", label: "ES" }].map((l) => (
-                <button key={l.code} className={`lang-btn ${lang === l.code ? "active" : ""}`} onClick={() => i18n.changeLanguage(l.code)}>{l.label}</button>
-              ))}
-            </div>
+            <LanguageSelect variant="landing" />
             <button className="btn-login" onClick={() => onLogin("login")}>{tx.login}</button>
             <button className="btn-cta" onClick={() => onLogin("cadastro")}>{tx.cta}</button>
           </div>
@@ -141,17 +135,17 @@ export default function Landing({ onLogin }) {
       </nav>
 
       <section className="hero">
-        <div className="hero-badge">
+        <div className="hero-badge" data-reveal="up" style={revealStyle(40)}>
           <div className="hero-badge-dot" />
           <span className="hero-badge-text">{tx.badge}</span>
         </div>
-        <h1 className="hero-title">
+        <h1 className="hero-title" data-reveal="up" style={revealStyle(120)}>
           <span className="hero-title-line1">{tx.hero1}</span>
           <span className="hero-title-line2">{tx.hero2}</span>
           <span className="hero-title-line3">{tx.hero3}</span>
         </h1>
-        <p className="hero-sub">{tx.sub}</p>
-        <div className="hero-buttons">
+        <p className="hero-sub" data-reveal="up" style={revealStyle(200)}>{tx.sub}</p>
+        <div className="hero-buttons" data-reveal="up" style={revealStyle(280)}>
           <button className="hero-btn-primary" onClick={() => onLogin("cadastro")}><span>{tx.cta} →</span></button>
           <button className="hero-btn-secondary" onClick={() => onLogin("login")}>{tx.login}</button>
         </div>
@@ -161,7 +155,7 @@ export default function Landing({ onLogin }) {
             { val: "300k+", label: { pt: "Base USDA", en: "USDA database", es: "Base USDA" }, color: "#34d399" },
             { val: "3", label: { pt: "Idiomas", en: "Languages", es: "Idiomas" }, color: "#60a5fa" },
           ].map((s, i) => (
-            <div className="stat-card" key={i}>
+            <div className="stat-card" data-reveal="scale" style={revealStyle(360 + i * 80)} key={i}>
               <div className="stat-val" style={{ color: s.color }}>{s.val}</div>
               <div className="stat-label">{s.label[lang]}</div>
             </div>
@@ -169,11 +163,11 @@ export default function Landing({ onLogin }) {
         </div>
       </section>
 
-      <hr className="landing-divider" />
+      <hr className="landing-divider" data-reveal="line" style={revealStyle(40)} />
 
       <section className="section">
         <div className="section-inner">
-          <div className="section-header">
+          <div className="section-header" data-reveal="up" style={revealStyle(60)}>
             <span className="section-tag" style={{ color: "#a78bfa" }}>Features</span>
             <h2 className="section-title">{tx.f_title}</h2>
             <p className="section-sub">{tx.f_sub}</p>
@@ -181,9 +175,7 @@ export default function Landing({ onLogin }) {
           <div className="feature-grid">
             {features.map((f, i) => (
               <div
-                className="feature-card" key={i}
-                onMouseEnter={e => e.currentTarget.style.background = `rgba(${f.rgb},0.05)`}
-                onMouseLeave={e => e.currentTarget.style.background = "rgba(255,255,255,0.02)"}
+                className="feature-card" data-reveal="scale" style={revealStyle(120 + i * 70)} key={i}
               >
                 <div className="feature-icon-wrap" style={{ background: `${f.color}18`, border: `1px solid ${f.color}30` }}>{f.emoji}</div>
                 <div className="feature-title">{f.title[lang]}</div>
@@ -195,19 +187,19 @@ export default function Landing({ onLogin }) {
         </div>
       </section>
 
-      <hr className="landing-divider" />
+      <hr className="landing-divider" data-reveal="line" style={revealStyle(40)} />
 
       <section className="section">
         <div className="section-inner">
-          <div className="section-header">
+          <div className="section-header" data-reveal="up" style={revealStyle(60)}>
             <span className="section-tag" style={{ color: "#34d399" }}>Process</span>
             <h2 className="section-title">{tx.how_title}</h2>
             <p className="section-sub">{tx.how_sub}</p>
           </div>
-          <div style={{ border: "1px solid rgba(255,255,255,0.06)", borderRadius: "20px", overflow: "hidden" }}>
+          <div data-reveal="up" style={{ ...revealStyle(120), border: "1px solid rgba(255,255,255,0.06)", borderRadius: "20px", overflow: "hidden" }}>
             <div className="steps-wrap">
               {tx.steps.map((step, i) => (
-                <div className="step" key={i}>
+                <div className="step" data-reveal="up" style={revealStyle(180 + i * 80)} key={i}>
                   <div className="step-indicator" />
                   <div className="step-num">{step.n}</div>
                   <div className="step-title">{step.t}</div>
@@ -220,7 +212,7 @@ export default function Landing({ onLogin }) {
       </section>
 
       <div className="cta-section">
-        <div className="cta-card">
+        <div className="cta-card" data-reveal="scale" style={revealStyle(80)}>
           <div className="cta-card-bg" />
           <div className="cta-card-content">
             <span className="section-tag" style={{ color: "#a78bfa", display: "block", marginBottom: "16px" }}>Get started</span>
@@ -234,9 +226,9 @@ export default function Landing({ onLogin }) {
         </div>
       </div>
 
-      <hr className="landing-divider" />
+      <hr className="landing-divider" data-reveal="line" style={revealStyle(40)} />
       <footer className="footer">
-        <div className="footer-inner">
+        <div className="footer-inner" data-reveal="up" style={revealStyle(60)}>
           <div className="footer-logo">
             <div className="nav-dots">
               <div className="nav-dot" style={{ background: "#8b5cf6", width: "5px", height: "5px" }} />
