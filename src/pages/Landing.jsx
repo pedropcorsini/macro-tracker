@@ -53,7 +53,7 @@ export default function Landing({ onLogin }) {
     pt: {
       badge: "Plataforma de nutrição",
       hero1: "Transforme sua", hero2: "alimentação", hero3: "com dados reais",
-      sub: "Registre refeições, acompanhe macros, hidratação e evolua com inteligência — tudo em uma plataforma limpa e rápida.",
+      sub: "Registre refeições, acompanhe macros, hidratação e evolua com inteligência, tudo em uma plataforma limpa e rápida.",
       cta: "Começar gratuitamente", login: "Entrar na conta",
       f_title: "Funcionalidades", f_sub: "Tudo que você precisa para uma nutrição precisa.",
       how_title: "Como funciona", how_sub: "Simples, rápido e eficiente.",
@@ -69,7 +69,7 @@ export default function Landing({ onLogin }) {
     en: {
       badge: "Nutrition platform",
       hero1: "Transform your", hero2: "eating habits", hero3: "with real data",
-      sub: "Log meals, track macros, hydration and evolve with intelligence — all in a clean and fast platform.",
+      sub: "Log meals, track macros, hydration and evolve with intelligence, all in a clean and fast platform.",
       cta: "Start for free", login: "Sign in",
       f_title: "Features", f_sub: "Everything you need for precise nutrition.",
       how_title: "How it works", how_sub: "Simple, fast and efficient.",
@@ -85,7 +85,7 @@ export default function Landing({ onLogin }) {
     es: {
       badge: "Plataforma de nutrición",
       hero1: "Transforma tu", hero2: "alimentación", hero3: "con datos reales",
-      sub: "Registra comidas, sigue macros, hidratación y evoluciona con inteligencia — todo en una plataforma limpia y rápida.",
+      sub: "Registra comidas, sigue macros, hidratación y evoluciona con inteligencia, todo en una plataforma limpia y rápida.",
       cta: "Empezar gratis", login: "Iniciar sesión",
       f_title: "Funcionalidades", f_sub: "Todo lo que necesitas para una nutrición precisa.",
       how_title: "Cómo funciona", how_sub: "Simple, rápido y eficiente.",
@@ -118,16 +118,18 @@ export default function Landing({ onLogin }) {
 
       <nav className={`nav-wrap ${isScrolled ? "is-scrolled" : ""}`}>
         <div className="nav-inner">
-          <div className="nav-logo">
-            <div className="nav-dots">
-              <div className="nav-dot" style={{ background: "#8b5cf6" }} />
-              <div className="nav-dot" style={{ background: "#10b981" }} />
-              <div className="nav-dot" style={{ background: "#f43f5e" }} />
+          <div className="nav-brand">
+            <div className="nav-logo">
+              <div className="nav-dots">
+                <div className="nav-dot" style={{ background: "#8b5cf6" }} />
+                <div className="nav-dot" style={{ background: "#10b981" }} />
+                <div className="nav-dot" style={{ background: "#f43f5e" }} />
+              </div>
+              <span className="nav-title">Macro Tracker</span>
             </div>
-            <span className="nav-title">Macro Tracker</span>
-          </div>
-          <div className="nav-right">
             <LanguageSelect variant="landing" />
+          </div>
+          <div className="nav-actions">
             <button className="btn-login" onClick={() => onLogin("login")}>{tx.login}</button>
             <button className="btn-cta" onClick={() => onLogin("cadastro")}>{tx.cta}</button>
           </div>
