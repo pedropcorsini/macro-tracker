@@ -688,6 +688,15 @@ body { min-height: 100vh; background: #f8fafc; }
   box-shadow: 0 8px 24px rgba(15,23,42,0.06);
 }
 
+.app-sidebar {
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.app-sidebar-nav {
+  min-height: 0;
+}
+
 .dark .app-sidebar,
 .dark .app-mobile-header {
   background: rgba(7,12,24,0.94);
@@ -1277,6 +1286,26 @@ body { min-height: 100vh; background: #f8fafc; }
 }
 
 @media (max-width: 1024px) {
+  .app-sidebar {
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow-y: auto;
+    touch-action: pan-y;
+  }
+
+  .app-sidebar-brand {
+    padding-top: calc(28px + env(safe-area-inset-top, 0px));
+  }
+
+  .app-sidebar-nav {
+    flex: 1 1 auto;
+    overflow: visible;
+  }
+
+  .app-sidebar-footer {
+    padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  }
+
   .auth-layout {
     grid-template-columns: 1fr;
     max-width: 620px;

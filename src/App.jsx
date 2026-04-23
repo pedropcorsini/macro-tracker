@@ -76,7 +76,7 @@ function AppInner() {
         `}>
 
           {/* Logo */}
-          <div className="px-5 pt-7 pb-6 border-b border-gray-100 dark:border-[#2a2a2a] flex-shrink-0 relative">
+          <div className="app-sidebar-brand px-5 pt-7 pb-6 border-b border-gray-100 dark:border-[#2a2a2a] flex-shrink-0 relative">
             <button
               onClick={() => setSidebarAberta(false)}
               className="lg:hidden absolute top-4 right-4 w-7 h-7 flex items-center justify-center rounded-lg border border-gray-200 dark:border-[#2a2a2a] text-gray-400 dark:text-zinc-500 text-lg"
@@ -97,7 +97,7 @@ function AppInner() {
           </div>
 
           {/* Navegação */}
-          <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+          <nav className="app-sidebar-nav flex-1 min-h-0 px-3 py-4 space-y-1">
             {ABAS.map((aba) => (
               <button
                 key={aba.id}
@@ -116,7 +116,7 @@ function AppInner() {
           </nav>
 
           {/* Rodapé */}
-          <div className="px-3 pb-5 space-y-1 border-t border-gray-100 dark:border-[#2a2a2a] pt-3 flex-shrink-0">
+          <div className="app-sidebar-footer px-3 pb-5 space-y-1 border-t border-gray-100 dark:border-[#2a2a2a] pt-3 flex-shrink-0">
             <p className="text-[10px] text-gray-300 dark:text-zinc-700 px-3 truncate mb-2">{usuario.email}</p>
 
             <LanguageSelect variant={tema === "dark" ? "dark" : "light"} fullWidth />
