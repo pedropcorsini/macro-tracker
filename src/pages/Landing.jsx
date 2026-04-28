@@ -56,7 +56,7 @@ export default function Landing({ onLogin }) {
       sub: "Registre refeições, acompanhe macros, hidratação e evolua com inteligência, tudo em uma plataforma limpa e rápida.",
       cta: "Começar gratuitamente", login: "Entrar na conta",
       f_title: "Funcionalidades", f_sub: "Tudo que você precisa para uma nutrição precisa.",
-      how_title: "Como funciona", how_sub: "Simples, rápido e eficiente.",
+      how_title: "Como funciona?", how_sub: "Simples, rápido e eficiente.",
       cta2: "Pronto para começar?", cta2_sub: "Crie sua conta em segundos. Sem cartão de crédito.",
       footer: "Feito para quem leva saúde a sério.",
       steps: [
@@ -72,7 +72,7 @@ export default function Landing({ onLogin }) {
       sub: "Log meals, track macros, hydration and evolve with intelligence, all in a clean and fast platform.",
       cta: "Start for free", login: "Sign in",
       f_title: "Features", f_sub: "Everything you need for precise nutrition.",
-      how_title: "How it works", how_sub: "Simple, fast and efficient.",
+      how_title: "How it works?", how_sub: "Simple, fast and efficient.",
       cta2: "Ready to start?", cta2_sub: "Create your account in seconds. No credit card required.",
       footer: "Built for people who take health seriously.",
       steps: [
@@ -88,7 +88,7 @@ export default function Landing({ onLogin }) {
       sub: "Registra comidas, sigue macros, hidratación y evoluciona con inteligencia, todo en una plataforma limpia y rápida.",
       cta: "Empezar gratis", login: "Iniciar sesión",
       f_title: "Funcionalidades", f_sub: "Todo lo que necesitas para una nutrición precisa.",
-      how_title: "Cómo funciona", how_sub: "Simple, rápido y eficiente.",
+      how_title: "¿Cómo funciona?", how_sub: "Simple, rápido y eficiente.",
       cta2: "¿Listo para empezar?", cta2_sub: "Crea tu cuenta en segundos. Sin tarjeta de crédito.",
       footer: "Hecho para quienes se toman la salud en serio.",
       steps: [

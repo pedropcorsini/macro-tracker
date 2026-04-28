@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useTracker } from "../context/TrackerContext"
+import { useTema } from "../context/ThemeContext"
 import { useTranslation } from "react-i18next"
 import "../styles/app.css"
 
@@ -16,13 +17,13 @@ const DIAS_SEMANA = {
 
 function Calendario() {
   const { state } = useTracker()
+  const { isDark } = useTema()
   const { t, i18n } = useTranslation()
   const hoje = new Date()
   const [ano, setAno] = useState(hoje.getFullYear())
   const [mes, setMes] = useState(hoje.getMonth())
   const [diaSelecionado, setDiaSelecionado] = useState(null)
 
-  const isDark = document.documentElement.classList.contains("dark")
   const d = isDark
 
   const lang = i18n.language.startsWith("en") ? "en" : i18n.language.startsWith("es") ? "es" : "pt"

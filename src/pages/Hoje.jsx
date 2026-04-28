@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react"
 import { useTracker } from "../context/TrackerContext"
+import { useTema } from "../context/ThemeContext"
 import { buscarAlimentos } from "../services/usda"
 import AlimentosRapidos from "../components/AlimentosRapidos"
 import { useTranslation } from "react-i18next"
@@ -7,6 +8,7 @@ import "../styles/app.css"
 
 function Hoje() {
   const { state, dispatch } = useTracker()
+  const { isDark } = useTema()
   const { t } = useTranslation()
 
   const REFEICOES = [t("meal_breakfast"), t("meal_lunch"), t("meal_snack"), t("meal_dinner")]
@@ -47,7 +49,6 @@ function Hoje() {
   const waterDisplay = waterUnit === "L" ? (aguaHoje / 1000).toFixed(1) + "L" : aguaHoje + "ml"
   const waterMetaDisplay = waterUnit === "L" ? (goals.water / 1000).toFixed(1) + "L" : goals.water + "ml"
 
-  const isDark = document.documentElement.classList.contains("dark")
   const d = isDark
 
   useEffect(() => {

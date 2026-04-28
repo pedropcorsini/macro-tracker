@@ -1,14 +1,15 @@
 import { useState } from "react"
 import { useTracker } from "../context/TrackerContext"
+import { useTema } from "../context/ThemeContext"
 import { useTranslation } from "react-i18next"
 
 export default function AlimentosRapidos({ refeicaoAtiva, onAdicionar }) {
   const { state, dispatch } = useTracker()
+  const { isDark } = useTema()
   const { t } = useTranslation()
   const [quantidades, setQuantidades] = useState({})
 
   const favoritos = state.favoritos
-  const isDark = document.documentElement.classList.contains("dark")
   const d = isDark
 
   function toggleFavorito(item) {

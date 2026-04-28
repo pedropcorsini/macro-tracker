@@ -1,15 +1,16 @@
 import { useState } from "react"
 import { useTracker } from "../context/TrackerContext"
+import { useTema } from "../context/ThemeContext"
 import { useTranslation } from "react-i18next"
 import "../styles/app.css"
 
 function Metas() {
   const { state, dispatch } = useTracker()
+  const { isDark } = useTema()
   const { t } = useTranslation()
   const [form, setForm] = useState({ ...state.goals })
   const [salvo, setSalvo] = useState(false)
 
-  const isDark = document.documentElement.classList.contains("dark")
   const d = isDark
 
   function salvar() {

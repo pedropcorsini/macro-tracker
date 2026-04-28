@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useTracker } from "../context/TrackerContext"
+import { useTema } from "../context/ThemeContext"
 import { useTranslation } from "react-i18next"
 import "../styles/app.css"
 import {
@@ -24,11 +25,11 @@ function getChave(date) {
 
 function Graficos() {
   const { state } = useTracker()
+  const { isDark } = useTema()
   const { t, i18n } = useTranslation()
   const [periodo, setPeriodo] = useState("semana")
   const hoje = new Date()
 
-  const isDark = document.documentElement.classList.contains("dark")
   const d = isDark
 
   const lang = i18n.language.startsWith("en") ? "en" : i18n.language.startsWith("es") ? "es" : "pt"

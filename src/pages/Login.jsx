@@ -9,7 +9,7 @@ const MODO = { LOGIN: "login", CADASTRO: "cadastro" }
 
 function Login({ onVoltar, modo }) {
   const { t } = useTranslation()
-  const { tema, alternarTema } = useTema()
+  const { tema, isDark, alternandoTema, alternarTema } = useTema()
   const [modoAtivo, setModoAtivo] = useState(modo === "cadastro" ? MODO.CADASTRO : MODO.LOGIN)
   const [email, setEmail] = useState("")
   const [senha, setSenha] = useState("")
@@ -17,7 +17,7 @@ function Login({ onVoltar, modo }) {
   const [erro, setErro] = useState("")
   const [sucesso, setSucesso] = useState("")
 
-  const d = tema === "dark"
+  const d = isDark
 
   async function handleEmailSenha() {
     setErro("")
@@ -117,9 +117,12 @@ function Login({ onVoltar, modo }) {
             <div className="auth-toolbar-actions">
               <button
                 onClick={alternarTema}
+                disabled={alternandoTema}
+                aria-label={t(tema === "dark" ? "light_mode" : "dark_mode")}
+                aria-pressed={isDark}
                 className={d ? "app-btn-secondary auth-theme-btn" : "app-btn-secondary light auth-theme-btn"}
               >
-                {tema === "dark" ? (
+                {isDark ? (
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <circle cx="12" cy="12" r="5" />
                     <line x1="12" y1="1" x2="12" y2="3" />

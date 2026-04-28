@@ -1,16 +1,17 @@
 import { useState } from "react"
 import { useTracker } from "../context/TrackerContext"
+import { useTema } from "../context/ThemeContext"
 import { useTranslation } from "react-i18next"
 import "../styles/app.css"
 
 export default function Favoritos() {
   const { state, dispatch } = useTracker()
+  const { isDark } = useTema()
   const { t } = useTranslation()
   const [quantidades, setQuantidades] = useState({})
   const [refeicaoAtiva, setRefeicaoAtiva] = useState("")
   const [adicionado, setAdicionado] = useState(null)
 
-  const isDark = document.documentElement.classList.contains("dark")
   const d = isDark
 
   const REFEICOES = [t("meal_breakfast"), t("meal_lunch"), t("meal_snack"), t("meal_dinner")]
