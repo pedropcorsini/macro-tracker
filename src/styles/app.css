@@ -1501,11 +1501,14 @@ button {
   mask-image: radial-gradient(ellipse 80% 64% at 58% 0%, #000 42%, transparent 100%);
 }
 
-.app-sidebar,
 .app-main,
 .app-mobile-header {
   position: relative;
   z-index: 1;
+}
+
+.app-sidebar {
+  z-index: 30;
 }
 
 .app-sidebar {
