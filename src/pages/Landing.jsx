@@ -51,62 +51,83 @@ export default function Landing({ onLogin }) {
 
   const texts = {
     pt: {
-      badge: "Plataforma de nutrição",
-      hero1: "Transforme sua", hero2: "alimentação", hero3: "com dados reais",
-      sub: "Registre refeições, acompanhe macros, hidratação e evolua com inteligência, tudo em uma plataforma limpa e rápida.",
+      badge: "Precision Nutrition Infrastructure",
+      hero1: "Orquestre sua", hero2: "nutrição diária", hero3: "com precisão visual",
+      sub: "Um ambiente moderno para registrar refeições, controlar hidratação, acompanhar macros e transformar consistência em clareza operacional.",
       cta: "Começar gratuitamente", login: "Entrar na conta",
-      f_title: "Funcionalidades", f_sub: "Tudo que você precisa para uma nutrição precisa.",
-      how_title: "Como funciona?", how_sub: "Simples, rápido e eficiente.",
-      cta2: "Pronto para começar?", cta2_sub: "Crie sua conta em segundos. Sem cartão de crédito.",
+      nav_features: "Ecossistema", nav_process: "Fluxo", nav_start: "Acesso",
+      feature_tag: "Nutrition OS",
+      process_tag: "Operating Flow",
+      start_tag: "Get started",
+      f_title: "Um ecossistema completo para decisões melhores.",
+      f_sub: "Registro, metas, favoritos, calendário e gráficos trabalhando como uma camada única de inteligência nutricional.",
+      how_title: "Do registro ao insight, sem atrito.",
+      how_sub: "A navegação foi pensada para reduzir esforço e manter o foco no próximo passo.",
+      cta2: "Pronto para operar sua rotina com mais clareza?",
+      cta2_sub: "Crie sua conta em segundos e entre em um painel limpo, rápido e preparado para uso diário.",
       footer: "Feito para quem leva saúde a sério.",
       steps: [
-        { n: "01", t: "Crie sua conta", d: "Cadastro rápido com email, Google ou GitHub." },
-        { n: "02", t: "Configure suas metas", d: "Defina calorias, proteínas, carboidratos, gordura e água." },
-        { n: "03", t: "Registre suas refeições", d: "Busque em 300k+ alimentos e adicione ao seu dia." },
-        { n: "04", t: "Acompanhe a evolução", d: "Gráficos semanais e calendário visual de histórico." },
+        { n: "01", t: "Configure a base", d: "Defina metas de calorias, macros, água e tamanho do copo." },
+        { n: "02", t: "Registre com fluidez", d: "Busque alimentos, use favoritos e registre cada refeição sem sair do fluxo." },
+        { n: "03", t: "Monitore sinais", d: "Veja progresso diário, hidratação e aderência com leitura rápida." },
+        { n: "04", t: "Aja com contexto", d: "Use gráficos e calendário para entender padrões semanais e mensais." },
       ],
     },
     en: {
-      badge: "Nutrition platform",
-      hero1: "Transform your", hero2: "eating habits", hero3: "with real data",
-      sub: "Log meals, track macros, hydration and evolve with intelligence, all in a clean and fast platform.",
+      badge: "Precision Nutrition Infrastructure",
+      hero1: "Orchestrate your", hero2: "daily nutrition", hero3: "with visual precision",
+      sub: "A modern workspace to log meals, manage hydration, track macros and turn consistency into operational clarity.",
       cta: "Start for free", login: "Sign in",
-      f_title: "Features", f_sub: "Everything you need for precise nutrition.",
-      how_title: "How it works?", how_sub: "Simple, fast and efficient.",
-      cta2: "Ready to start?", cta2_sub: "Create your account in seconds. No credit card required.",
+      nav_features: "Ecosystem", nav_process: "Flow", nav_start: "Access",
+      feature_tag: "Nutrition OS",
+      process_tag: "Operating Flow",
+      start_tag: "Get started",
+      f_title: "A complete ecosystem for better decisions.",
+      f_sub: "Logging, goals, favorites, calendar and charts working as one nutrition intelligence layer.",
+      how_title: "From log to insight, without friction.",
+      how_sub: "Navigation is designed to reduce effort and keep the next step obvious.",
+      cta2: "Ready to operate your routine with more clarity?",
+      cta2_sub: "Create your account in seconds and enter a clean, fast panel built for daily use.",
       footer: "Built for people who take health seriously.",
       steps: [
-        { n: "01", t: "Create your account", d: "Quick signup with email, Google or GitHub." },
-        { n: "02", t: "Set your goals", d: "Define calories, protein, carbs, fat and water." },
-        { n: "03", t: "Log your meals", d: "Search 300k+ foods and add them to your day." },
-        { n: "04", t: "Track your progress", d: "Weekly charts and visual history calendar." },
+        { n: "01", t: "Set the baseline", d: "Define calories, macros, water and cup size goals." },
+        { n: "02", t: "Log with flow", d: "Search foods, use favorites and record each meal without breaking context." },
+        { n: "03", t: "Monitor signals", d: "Read daily progress, hydration and adherence at a glance." },
+        { n: "04", t: "Act with context", d: "Use charts and calendar views to understand weekly and monthly patterns." },
       ],
     },
     es: {
-      badge: "Plataforma de nutrición",
-      hero1: "Transforma tu", hero2: "alimentación", hero3: "con datos reales",
-      sub: "Registra comidas, sigue macros, hidratación y evoluciona con inteligencia, todo en una plataforma limpia y rápida.",
+      badge: "Precision Nutrition Infrastructure",
+      hero1: "Orquesta tu", hero2: "nutrición diaria", hero3: "con precisión visual",
+      sub: "Un entorno moderno para registrar comidas, controlar hidratación, seguir macros y convertir consistencia en claridad operacional.",
       cta: "Empezar gratis", login: "Iniciar sesión",
-      f_title: "Funcionalidades", f_sub: "Todo lo que necesitas para una nutrición precisa.",
-      how_title: "¿Cómo funciona?", how_sub: "Simple, rápido y eficiente.",
-      cta2: "¿Listo para empezar?", cta2_sub: "Crea tu cuenta en segundos. Sin tarjeta de crédito.",
+      nav_features: "Ecosistema", nav_process: "Flujo", nav_start: "Acceso",
+      feature_tag: "Nutrition OS",
+      process_tag: "Operating Flow",
+      start_tag: "Get started",
+      f_title: "Un ecosistema completo para mejores decisiones.",
+      f_sub: "Registro, metas, favoritos, calendario y gráficos trabajando como una capa única de inteligencia nutricional.",
+      how_title: "Del registro al insight, sin fricción.",
+      how_sub: "La navegación fue pensada para reducir esfuerzo y mantener claro el próximo paso.",
+      cta2: "¿Listo para operar tu rutina con más claridad?",
+      cta2_sub: "Crea tu cuenta en segundos y entra en un panel limpio, rápido y preparado para uso diario.",
       footer: "Hecho para quienes se toman la salud en serio.",
       steps: [
-        { n: "01", t: "Crea tu cuenta", d: "Registro rápido con email, Google o GitHub." },
-        { n: "02", t: "Configura tus metas", d: "Define calorías, proteínas, carbos, grasa y agua." },
-        { n: "03", t: "Registra tus comidas", d: "Busca en 300k+ alimentos y agrégalos a tu día." },
-        { n: "04", t: "Sigue tu evolución", d: "Gráficos semanales y calendario visual de historial." },
+        { n: "01", t: "Configura la base", d: "Define calorías, macros, agua y tamaño del vaso." },
+        { n: "02", t: "Registra con fluidez", d: "Busca alimentos, usa favoritos y registra cada comida sin salir del flujo." },
+        { n: "03", t: "Monitorea señales", d: "Lee progreso diario, hidratación y adherencia de un vistazo." },
+        { n: "04", t: "Actúa con contexto", d: "Usa gráficos y calendario para entender patrones semanales y mensuales." },
       ],
     },
   }
 
   const features = [
-    { emoji: "🍽️", color: "#8b5cf6", rgb: "139,92,246", title: { pt: "Registro de refeições", en: "Meal logging", es: "Registro de comidas" }, desc: { pt: "Café da manhã, almoço, lanche e jantar.", en: "Breakfast, lunch, snack and dinner.", es: "Desayuno, almuerzo, merienda y cena." } },
-    { emoji: "⚡", color: "#10b981", rgb: "16,185,129", title: { pt: "Macros em tempo real", en: "Real-time macros", es: "Macros en tiempo real" }, desc: { pt: "Calorias, proteína, carbs e gordura ao vivo.", en: "Calories, protein, carbs and fat live.", es: "Calorías, proteína, carbos y grasa en vivo." } },
-    { emoji: "💧", color: "#3b82f6", rgb: "59,130,246", title: { pt: "Controle de hidratação", en: "Hydration tracking", es: "Control de hidratación" }, desc: { pt: "Copos visuais com metas personalizadas.", en: "Visual cups with custom goals.", es: "Vasos visuales con metas personalizadas." } },
-    { emoji: "📈", color: "#f59e0b", rgb: "245,158,11", title: { pt: "Gráficos de evolução", en: "Progress charts", es: "Gráficos de evolución" }, desc: { pt: "Barras semanais e mensais com metas.", en: "Weekly and monthly bars with goals.", es: "Barras semanales y mensuales con metas." } },
-    { emoji: "📅", color: "#ef4444", rgb: "239,68,68", title: { pt: "Calendário de histórico", en: "History calendar", es: "Calendario de historial" }, desc: { pt: "Indicadores visuais de cumprimento diário.", en: "Visual daily goal completion indicators.", es: "Indicadores visuales de cumplimiento diario." } },
-    { emoji: "☁️", color: "#06b6d4", rgb: "6,182,212", title: { pt: "Nuvem e multi-idiomas", en: "Cloud & multi-language", es: "Nube y multi-idioma" }, desc: { pt: "Dados seguros em PT, EN e ES.", en: "Secure data in PT, EN and ES.", es: "Datos seguros en PT, EN y ES." } },
+    { emoji: "LOG", color: "#8b5cf6", rgb: "139,92,246", title: { pt: "Registro de refeições", en: "Meal logging", es: "Registro de comidas" }, desc: { pt: "Café da manhã, almoço, lanche e jantar em um fluxo único.", en: "Breakfast, lunch, snack and dinner in one flow.", es: "Desayuno, almuerzo, merienda y cena en un solo flujo." } },
+    { emoji: "LIVE", color: "#10b981", rgb: "16,185,129", title: { pt: "Macros em tempo real", en: "Real-time macros", es: "Macros en tiempo real" }, desc: { pt: "Calorias, proteína, carbs e gordura atualizados a cada registro.", en: "Calories, protein, carbs and fat updated with each log.", es: "Calorías, proteína, carbos y grasa actualizados en cada registro." } },
+    { emoji: "H2O", color: "#3b82f6", rgb: "59,130,246", title: { pt: "Controle de hidratação", en: "Hydration tracking", es: "Control de hidratación" }, desc: { pt: "Copos visuais, entrada manual e metas personalizadas.", en: "Visual cups, manual input and custom goals.", es: "Vasos visuales, entrada manual y metas personalizadas." } },
+    { emoji: "KPI", color: "#f59e0b", rgb: "245,158,11", title: { pt: "Gráficos de evolução", en: "Progress charts", es: "Gráficos de evolución" }, desc: { pt: "Barras semanais e mensais com linhas de referência.", en: "Weekly and monthly bars with reference lines.", es: "Barras semanales y mensuales con líneas de referencia." } },
+    { emoji: "CAL", color: "#ef4444", rgb: "239,68,68", title: { pt: "Calendário de histórico", en: "History calendar", es: "Calendario de historial" }, desc: { pt: "Indicadores visuais de aderência diária e hidratação.", en: "Visual indicators for daily adherence and hydration.", es: "Indicadores visuales de adherencia diaria e hidratación." } },
+    { emoji: "SYNC", color: "#06b6d4", rgb: "6,182,212", title: { pt: "Nuvem e multi-idiomas", en: "Cloud & multi-language", es: "Nube y multi-idioma" }, desc: { pt: "Dados seguros com suporte em PT, EN e ES.", en: "Secure data with PT, EN and ES support.", es: "Datos seguros con soporte en PT, EN y ES." } },
   ]
 
   const tx = texts[lang]
@@ -129,6 +150,13 @@ export default function Landing({ onLogin }) {
             </div>
             <LanguageSelect variant="landing" />
           </div>
+          <div className="nav-menu" aria-label="Navegação da página">
+            <a href="#features">{tx.nav_features}</a>
+            <span>/</span>
+            <a href="#process">{tx.nav_process}</a>
+            <span>/</span>
+            <a href="#start">{tx.nav_start}</a>
+          </div>
           <div className="nav-actions">
             <button className="btn-login" onClick={() => onLogin("login")}>{tx.login}</button>
             <button className="btn-cta" onClick={() => onLogin("cadastro")}>{tx.cta}</button>
@@ -136,7 +164,7 @@ export default function Landing({ onLogin }) {
         </div>
       </nav>
 
-      <section className="hero">
+      <section className="hero" id="top">
         <div className="hero-badge" data-reveal="up" style={revealStyle(40)}>
           <div className="hero-badge-dot" />
           <span className="hero-badge-text">{tx.badge}</span>
@@ -167,10 +195,10 @@ export default function Landing({ onLogin }) {
 
       <hr className="landing-divider" data-reveal="line" style={revealStyle(40)} />
 
-      <section className="section">
+      <section className="section" id="features">
         <div className="section-inner">
           <div className="section-header" data-reveal="up" style={revealStyle(60)}>
-            <span className="section-tag" style={{ color: "#a78bfa" }}>Features</span>
+            <span className="section-tag" style={{ color: "#a78bfa" }}>{tx.feature_tag}</span>
             <h2 className="section-title">{tx.f_title}</h2>
             <p className="section-sub">{tx.f_sub}</p>
           </div>
@@ -191,10 +219,10 @@ export default function Landing({ onLogin }) {
 
       <hr className="landing-divider" data-reveal="line" style={revealStyle(40)} />
 
-      <section className="section">
+      <section className="section" id="process">
         <div className="section-inner">
           <div className="section-header" data-reveal="up" style={revealStyle(60)}>
-            <span className="section-tag" style={{ color: "#34d399" }}>Process</span>
+            <span className="section-tag" style={{ color: "#34d399" }}>{tx.process_tag}</span>
             <h2 className="section-title">{tx.how_title}</h2>
             <p className="section-sub">{tx.how_sub}</p>
           </div>
@@ -213,11 +241,11 @@ export default function Landing({ onLogin }) {
         </div>
       </section>
 
-      <div className="cta-section">
+      <div className="cta-section" id="start">
         <div className="cta-card" data-reveal="scale" style={revealStyle(80)}>
           <div className="cta-card-bg" />
           <div className="cta-card-content">
-            <span className="section-tag" style={{ color: "#a78bfa", display: "block", marginBottom: "16px" }}>Get started</span>
+            <span className="section-tag" style={{ color: "#a78bfa", display: "block", marginBottom: "16px" }}>{tx.start_tag}</span>
             <h2 className="cta-title">{tx.cta2}</h2>
             <p className="cta-sub">{tx.cta2_sub}</p>
             <div className="cta-buttons">
