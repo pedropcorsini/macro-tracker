@@ -53,19 +53,19 @@ export default {
   water_intake: "Water intake",
   water_manual: "Enter manually...",
   water_reset: "Reset",
-  cups: "cups",
+  cups: "bottles",
 
   day_summary: "Day summary",
   no_meals: "No meals logged yet.",
   total: "Total",
 
   daily_goals: "Daily goals",
-  cup_size: "Cup size",
-  per_cup: "ml per cup",
+  cup_size: "Bottle size",
+  per_cup: "ml per bottle",
   save_goals: "Save goals",
   saved: "Saved successfully!",
   preview_goals: "Preview",
-  cups_per_day: "cups/day",
+  cups_per_day: "bottles/day",
 
   goal_reached_label: "Goal reached",
   near_goal: "Near goal",

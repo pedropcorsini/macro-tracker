@@ -59,7 +59,7 @@ export default {
   water_intake: "Consumo de água",
   water_manual: "Digitar manualmente...",
   water_reset: "Zerar",
-  cups: "copos",
+  cups: "garrafas",
 
   // Resumo
   day_summary: "Resumo do dia",
@@ -68,12 +68,12 @@ export default {
 
   // Metas
   daily_goals: "Metas diárias",
-  cup_size: "Tamanho do copo",
-  per_cup: "ml por copo",
+  cup_size: "Tamanho da garrafa",
+  per_cup: "ml por garrafa",
   save_goals: "Salvar metas",
   saved: "Salvo com sucesso!",
   preview_goals: "Preview",
-  cups_per_day: "copos/dia",
+  cups_per_day: "garrafas/dia",
 
   // Calendário
   goal_reached_label: "Meta atingida",

@@ -2,7 +2,7 @@ import { createContext, useContext, useReducer, useEffect, useCallback } from "r
 import { carregarPerfil, salvarGoals, salvarLog, carregarTodosLogs, salvarFavoritos, carregarFavoritos } from "../services/db"
 
 const initialState = {
-  goals: { cal: 2000, p: 150, c: 200, f: 65, water: 2500, cupMl: 250, waterUnit: "ml" },
+  goals: { cal: 2000, p: 150, c: 200, f: 65, water: 2500, cupMl: 500, waterUnit: "ml" },
   logs: {},
   waterLog: {},
   favoritos: [],

@@ -53,19 +53,19 @@ export default {
   water_intake: "Consumo de agua",
   water_manual: "Ingresar manualmente...",
   water_reset: "Reiniciar",
-  cups: "vasos",
+  cups: "botellas",
 
   day_summary: "Resumen del día",
   no_meals: "Ninguna comida registrada aún.",
   total: "Total general",
 
   daily_goals: "Metas diarias",
-  cup_size: "Tamaño del vaso",
-  per_cup: "ml por vaso",
+  cup_size: "Tamaño de la botella",
+  per_cup: "ml por botella",
   save_goals: "Guardar metas",
   saved: "¡Guardado con éxito!",
   preview_goals: "Vista previa",
-  cups_per_day: "vasos/día",
+  cups_per_day: "botellas/día",
 
   goal_reached_label: "Meta alcanzada",
   near_goal: "Cerca de la meta",
