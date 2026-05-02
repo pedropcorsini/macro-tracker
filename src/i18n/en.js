@@ -43,6 +43,8 @@ export default {
   meal_dinner: "Dinner",
   added_to: "Added to",
   search_placeholder: "Search food (e.g. chicken, rice, banana)...",
+  search: "Search",
+  search_foods: "Search foods",
   no_results: "No food found",
   per_100g: "per 100g",
   local_db: "local db",

@@ -48,6 +48,8 @@ export default {
   meal_dinner: "Jantar",
   added_to: "Adicionado em",
   search_placeholder: "Buscar alimento (ex: frango, arroz, banana)...",
+  search: "Pesquisar",
+  search_foods: "Pesquisar alimentos",
   no_results: "Nenhum alimento encontrado",
   per_100g: "por 100g",
   local_db: "banco local",

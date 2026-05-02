@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { useTracker } from "../context/TrackerContext"
 import { useTema } from "../context/ThemeContext"
+import { buscarAlimentos } from "../services/usda"
 import { useTranslation } from "react-i18next"
 import "../styles/app.css"
 
@@ -11,6 +12,10 @@ export default function Favoritos() {
   const [quantidades, setQuantidades] = useState({})
   const [refeicaoAtiva, setRefeicaoAtiva] = useState("")
   const [adicionado, setAdicionado] = useState(null)
+  const [busca, setBusca] = useState("")
+  const [resultadosBusca, setResultadosBusca] = useState([])
+  const [buscando, setBuscando] = useState(false)
+  const [buscaExecutada, setBuscaExecutada] = useState(false)
 
   const d = isDark
 
@@ -19,6 +24,31 @@ export default function Favoritos() {
 
   function toggleFavorito(item) {
     dispatch({ type: "TOGGLE_FAVORITO", item })
+  }
+
+  async function pesquisarAlimentos() {
+    const termo = busca.trim()
+    setBuscaExecutada(true)
+
+    if (termo.length < 2) {
+      setResultadosBusca([])
+      return
+    }
+
+    setBuscando(true)
+    try {
+      const dados = await buscarAlimentos(termo)
+      setResultadosBusca(dados)
+    } catch {
+      setResultadosBusca([])
+    } finally {
+      setBuscando(false)
+    }
+  }
+
+  function salvarFavorito(item) {
+    const jaSalvo = state.favoritos.some((fav) => fav.name === item.name)
+    if (!jaSalvo) dispatch({ type: "TOGGLE_FAVORITO", item })
   }
 
   function adicionarRapido(item) {
@@ -47,7 +77,61 @@ export default function Favoritos() {
         <p className="page-sub">{t("favorites_subtitle")}</p>
       </div>
 
-      {/* Seletor de refeição */}
+      {/* Pesquisa de alimentos */}
+      <div className={d?"app-card":"app-card light"} style={{ marginBottom:"12px" }}>
+        <div className="app-card-label">{t("search_foods")}</div>
+        <div className="fav-search-row">
+          <input
+            type="text"
+            value={busca}
+            onChange={(e) => {
+              setBusca(e.target.value)
+              setBuscaExecutada(false)
+            }}
+            onKeyDown={(e) => e.key === "Enter" && pesquisarAlimentos()}
+            placeholder={t("search_placeholder")}
+            className={d?"app-input":"app-input light"}
+          />
+          <button className="app-btn-primary fav-search-btn" onClick={pesquisarAlimentos} disabled={buscando}>
+            {buscando ? t("login_loading") : t("search")}
+          </button>
+        </div>
+
+        {resultadosBusca.length > 0 && (
+          <div className={d?"food-list-wrap fav-search-results":"food-list-wrap light fav-search-results"}>
+            {resultadosBusca.map((item) => {
+              const jaSalvo = state.favoritos.some((fav) => fav.name === item.name)
+
+              return (
+                <div key={item.id} className={d?"food-item":"food-item light"}>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <div className={d?"food-item-name":"food-item-name light"}>{item.name}</div>
+                    <div style={{ display:"flex", alignItems:"center", gap:"6px", marginTop:"3px", flexWrap:"wrap" }}>
+                      {item.fonte === "local"
+                        ? <span className="food-item-badge local">{t("local_db")}</span>
+                        : item.brand ? <span className="food-item-meta">{item.brand}</span>
+                        : <span className="food-item-badge usda">USDA</span>}
+                      <span className="food-item-meta">{item.cal} kcal · {item.p}g P · {item.c}g C · {item.f}g G</span>
+                    </div>
+                  </div>
+                  <button
+                    className={`fav-add-btn${jaSalvo ? " done" : ""}`}
+                    onClick={() => salvarFavorito(item)}
+                    disabled={jaSalvo}
+                  >
+                    {jaSalvo ? "✓" : "+"}
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+        )}
+
+        {buscaExecutada && !buscando && resultadosBusca.length === 0 && (
+          <p className="fav-search-empty">{t("no_results")}</p>
+        )}
+      </div>
+
       <div className={d?"app-card":"app-card light"} style={{ marginBottom:"12px" }}>
         <div className="app-card-label">{t("add_to")}</div>
         <div className="pill-tabs" style={{ marginBottom: 0 }}>

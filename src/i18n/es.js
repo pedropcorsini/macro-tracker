@@ -43,6 +43,8 @@ export default {
   meal_dinner: "Cena",
   added_to: "Agregado a",
   search_placeholder: "Buscar alimento (ej: pollo, arroz, banana)...",
+  search: "Buscar",
+  search_foods: "Buscar alimentos",
   no_results: "Ningún alimento encontrado",
   per_100g: "por 100g",
   local_db: "base local",

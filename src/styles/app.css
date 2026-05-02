@@ -647,6 +647,25 @@
 .fav-item.light { background: #fafafa; border-color: #f0f0f0; }
 .fav-item:hover { border-color: rgba(255,255,255,0.1); }
 .fav-item.light:hover { border-color: #e4e4e7; }
+.fav-search-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.fav-search-row .app-input {
+  flex: 1;
+}
+.fav-search-btn {
+  min-height: 44px;
+}
+.fav-search-results {
+  margin-top: 12px;
+}
+.fav-search-empty {
+  margin: 12px 0 0;
+  color: #52525b;
+  font-size: 13px;
+}
 .fav-heart {
   background: none; border: none; font-size: 16px;
   cursor: pointer; color: #ef4444; transition: transform 0.15s; flex-shrink: 0; padding: 0;
@@ -669,6 +688,11 @@
 }
 .fav-add-btn:hover { background: linear-gradient(135deg,#8b5cf6,#4f46e5); transform: translateY(-1px); }
 .fav-add-btn.done { background: linear-gradient(135deg,#059669,#047857); }
+.fav-add-btn:disabled {
+  cursor: default;
+  opacity: 0.85;
+  transform: none;
+}
 
 /* ---------- SPINNER ---------- */
 @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
@@ -1982,7 +2006,8 @@ button {
 
   .water-header,
   .water-input-row,
-  .chart-card-header {
+  .chart-card-header,
+  .fav-search-row {
     align-items: stretch;
     flex-direction: column;
   }
