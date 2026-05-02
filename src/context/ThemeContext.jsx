@@ -2,23 +2,20 @@ import { createContext, useContext, useEffect, useLayoutEffect, useRef, useState
 
 const ThemeContext = createContext(null)
 const TEMA_STORAGE_KEY = "tema"
-
-function getSystemTheme() {
-  if (typeof window === "undefined") return "light"
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
-}
+const TEMA_MANUAL_STORAGE_KEY = "tema_manual"
 
 function getInitialTheme() {
-  if (typeof window === "undefined") return "light"
+  if (typeof window === "undefined") return "dark"
 
   try {
+    const temaManual = window.localStorage.getItem(TEMA_MANUAL_STORAGE_KEY) === "true"
     const temaSalvo = window.localStorage.getItem(TEMA_STORAGE_KEY)
-    if (temaSalvo === "dark" || temaSalvo === "light") return temaSalvo
+    if (temaManual && (temaSalvo === "dark" || temaSalvo === "light")) return temaSalvo
   } catch {
-    // Ignore storage access errors and fall back to the system theme.
+    // Ignore storage access errors and fall back to the default theme.
   }
 
-  return getSystemTheme()
+  return "dark"
 }
 
 export function ThemeProvider({ children }) {
@@ -44,6 +41,11 @@ export function ThemeProvider({ children }) {
     if (bloqueioToggleRef.current) return
 
     setAlternandoTema(true)
+    try {
+      window.localStorage.setItem(TEMA_MANUAL_STORAGE_KEY, "true")
+    } catch {
+      // Ignore storage access errors and keep the selected theme in memory.
+    }
     setTema((t) => (t === "dark" ? "light" : "dark"))
 
     bloqueioToggleRef.current = window.setTimeout(() => {
