@@ -1968,3 +1968,117 @@ button {
     font-size: 30px;
   }
 }
+
+@media (max-width: 760px) {
+  .auth-shell {
+    min-height: 100dvh;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: calc(14px + env(safe-area-inset-top, 0px)) 12px calc(92px + env(safe-area-inset-bottom, 0px));
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .auth-layout {
+    width: 100%;
+    max-width: 480px;
+    gap: 0;
+    margin: 0 auto;
+  }
+
+  .auth-intro-panel {
+    display: none;
+  }
+
+  .auth-form-panel {
+    width: 100%;
+    padding: clamp(18px, 5vw, 24px);
+    border-radius: 24px;
+    gap: 16px;
+  }
+
+  .auth-toolbar {
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .auth-toolbar-actions {
+    width: auto;
+    margin-left: auto;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+  }
+
+  .auth-language-group {
+    flex: 0 0 auto;
+    justify-content: flex-end;
+  }
+
+  .auth-language-group .language-select-wrap {
+    min-width: 84px;
+  }
+
+  .auth-language-group .language-select-menu {
+    right: 0;
+    left: auto;
+  }
+
+  .auth-theme-btn {
+    width: 44px !important;
+    height: 44px;
+    flex: 0 0 44px;
+    padding: 0;
+  }
+
+  .auth-back-btn {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+    z-index: 90;
+    width: auto !important;
+    min-height: 54px;
+    border-radius: 18px !important;
+    background: rgba(255, 255, 255, 0.82) !important;
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.18);
+    backdrop-filter: blur(18px);
+  }
+
+  .dark .auth-back-btn {
+    background: rgba(15, 23, 42, 0.88) !important;
+    box-shadow: 0 18px 44px rgba(2, 6, 23, 0.44);
+  }
+
+  .auth-form-head {
+    margin-top: 0;
+  }
+
+  .auth-form-title {
+    font-size: clamp(26px, 8vw, 32px);
+    line-height: 1.05;
+  }
+
+  .auth-mode-tabs {
+    margin-bottom: 0;
+  }
+
+  .auth-submit-btn {
+    min-height: 50px;
+  }
+}
+
+@media (max-width: 420px) {
+  .auth-shell {
+    padding-inline: 10px;
+  }
+
+  .auth-form-panel {
+    padding: 18px;
+  }
+
+  .auth-back-btn {
+    left: 10px;
+    right: 10px;
+  }
+}

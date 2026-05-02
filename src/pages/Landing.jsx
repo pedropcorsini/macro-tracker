@@ -52,7 +52,7 @@ export default function Landing({ onLogin }) {
   const texts = {
     pt: {
       badge: "Precision Nutrition Infrastructure",
-      hero1: "Orquestre sua", hero2: "nutrição diária", hero3: "com precisão visual",
+      hero1: "Controle sua", hero2: "nutrição diária", hero3: "com precisão visual",
       sub: "Um ambiente moderno para registrar refeições, controlar hidratação, acompanhar macros e transformar consistência em clareza operacional.",
       cta: "Começar gratuitamente", login: "Entrar na conta",
       nav_features: "Ecossistema", nav_process: "Fluxo", nav_start: "Acesso",
@@ -75,7 +75,7 @@ export default function Landing({ onLogin }) {
     },
     en: {
       badge: "Precision Nutrition Infrastructure",
-      hero1: "Orchestrate your", hero2: "daily nutrition", hero3: "with visual precision",
+      hero1: "Control your", hero2: "daily nutrition", hero3: "with visual precision",
       sub: "A modern workspace to log meals, manage hydration, track macros and turn consistency into operational clarity.",
       cta: "Start for free", login: "Sign in",
       nav_features: "Ecosystem", nav_process: "Flow", nav_start: "Access",
@@ -98,7 +98,7 @@ export default function Landing({ onLogin }) {
     },
     es: {
       badge: "Precision Nutrition Infrastructure",
-      hero1: "Orquesta tu", hero2: "nutrición diaria", hero3: "con precisión visual",
+      hero1: "Controla tu", hero2: "nutrición diaria", hero3: "con precisión visual",
       sub: "Un entorno moderno para registrar comidas, controlar hidratación, seguir macros y convertir consistencia en claridad operacional.",
       cta: "Empezar gratis", login: "Iniciar sesión",
       nav_features: "Ecosistema", nav_process: "Flujo", nav_start: "Acceso",
@@ -124,9 +124,9 @@ export default function Landing({ onLogin }) {
   const features = [
     { emoji: "LOG", color: "#8b5cf6", rgb: "139,92,246", title: { pt: "Registro de refeições", en: "Meal logging", es: "Registro de comidas" }, desc: { pt: "Café da manhã, almoço, lanche e jantar em um fluxo único.", en: "Breakfast, lunch, snack and dinner in one flow.", es: "Desayuno, almuerzo, merienda y cena en un solo flujo." } },
     { emoji: "LIVE", color: "#10b981", rgb: "16,185,129", title: { pt: "Macros em tempo real", en: "Real-time macros", es: "Macros en tiempo real" }, desc: { pt: "Calorias, proteína, carbs e gordura atualizados a cada registro.", en: "Calories, protein, carbs and fat updated with each log.", es: "Calorías, proteína, carbos y grasa actualizados en cada registro." } },
-    { emoji: "H2O", color: "#3b82f6", rgb: "59,130,246", title: { pt: "Controle de hidratação", en: "Hydration tracking", es: "Control de hidratación" }, desc: { pt: "Copos visuais, entrada manual e metas personalizadas.", en: "Visual cups, manual input and custom goals.", es: "Vasos visuales, entrada manual y metas personalizadas." } },
-    { emoji: "KPI", color: "#f59e0b", rgb: "245,158,11", title: { pt: "Gráficos de evolução", en: "Progress charts", es: "Gráficos de evolución" }, desc: { pt: "Barras semanais e mensais com linhas de referência.", en: "Weekly and monthly bars with reference lines.", es: "Barras semanales y mensuales con líneas de referencia." } },
-    { emoji: "CAL", color: "#ef4444", rgb: "239,68,68", title: { pt: "Calendário de histórico", en: "History calendar", es: "Calendario de historial" }, desc: { pt: "Indicadores visuais de aderência diária e hidratação.", en: "Visual indicators for daily adherence and hydration.", es: "Indicadores visuales de adherencia diaria e hidratación." } },
+    { emoji: "H₂O", color: "#3b82f6", rgb: "59,130,246", title: { pt: "Controle de hidratação", en: "Hydration tracking", es: "Control de hidratación" }, desc: { pt: "Copos visuais, entrada manual e metas personalizadas.", en: "Visual cups, manual input and custom goals.", es: "Vasos visuales, entrada manual y metas personalizadas." } },
+    { emoji: "EVOLUÇÃO", color: "#f59e0b", rgb: "245,158,11", title: { pt: "Gráficos de evolução", en: "Progress charts", es: "Gráficos de evolución" }, desc: { pt: "Barras semanais e mensais com linhas de referência.", en: "Weekly and monthly bars with reference lines.", es: "Barras semanales y mensuales con líneas de referencia." } },
+    { emoji: "MACROS", color: "#ef4444", rgb: "239,68,68", title: { pt: "Calendário de histórico", en: "History calendar", es: "Calendario de historial" }, desc: { pt: "Indicadores visuais de aderência diária e hidratação.", en: "Visual indicators for daily adherence and hydration.", es: "Indicadores visuales de adherencia diaria e hidratación." } },
     { emoji: "SYNC", color: "#06b6d4", rgb: "6,182,212", title: { pt: "Nuvem e multi-idiomas", en: "Cloud & multi-language", es: "Nube y multi-idioma" }, desc: { pt: "Dados seguros com suporte em PT, EN e ES.", en: "Secure data with PT, EN and ES support.", es: "Datos seguros con soporte en PT, EN y ES." } },
   ]
 
