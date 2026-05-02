@@ -2104,6 +2104,10 @@ button {
   .auth-submit-btn {
     min-height: 50px;
   }
+
+  .auth-social-grid {
+    margin-bottom: calc(78px + env(safe-area-inset-bottom, 0px));
+  }
 }
 
 @media (max-width: 420px) {
