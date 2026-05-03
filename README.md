@@ -1,77 +1,173 @@
-# 🥗 Macro Tracker — Web App
+# Macro Tracker
 
-App web completo para acompanhamento de nutrição diária com registro de refeições, controle de macronutrientes, hidratação, histórico por calendário, gráficos de evolução e suporte a múltiplos idiomas.
-**Versão atual - landing page institucional, autenticação via Supabase, modo claro/escuro, internacionalização (PT / EN / ES) e interface visual clean com seletor customizado de idioma.**
+Aplicação web para acompanhamento nutricional diário, desenvolvida como projeto de portfólio estudantil/profissional. O app reúne autenticação, registro de refeições, metas, hidratação, favoritos, calendário, gráficos e suporte multilíngue em uma interface responsiva.
 
----
+O projeto demonstra construção de uma SPA com React, persistência em nuvem com Supabase, internacionalização, estado global sincronizado, visualização de dados e uma experiência completa de uso.
 
 ## Stack
 
-| Tecnologia | Versão | Uso |
-|---|---|---|
-| React | 19 | UI e gerenciamento de estado |
-| Vite | 8 | Bundler e dev server |
-| Tailwind CSS | 3 | Base de estilos e utilitários |
-| CSS customizado | — | Layout, landing page, superfícies e componentes visuais |
-| Supabase JS | 2 | Banco PostgreSQL + autenticação + RLS |
-| Recharts | 3 | Gráficos semanais e mensais |
-| i18next + react-i18next | 26 / 17 | Internacionalização (PT / EN / ES) |
-| Language Detector | 8 | Persistência do idioma salvo no `localStorage` |
-| USDA FoodData Central API | — | Base complementar com 300k+ alimentos |
+| Tecnologia | Uso |
+|---|---|
+| React 19 | Interface, composição de páginas e estado local |
+| Vite 8 | Ambiente de desenvolvimento e build |
+| Supabase JS 2 | Autenticação, banco PostgreSQL e RLS |
+| Recharts 3 | Gráficos semanais e mensais |
+| i18next + react-i18next | Traduções em PT, EN e ES |
+| i18next-browser-languagedetector | Persistência do idioma no `localStorage` |
+| Tailwind CSS 3 + CSS customizado | Base visual, layout responsivo, landing page e dashboard |
+| USDA FoodData Central API | Fonte complementar para busca de alimentos |
 
----
+## Funcionalidades
 
-## Início rápido
+### Experiência Geral
 
-```bash
-# 1. Clonar o repositório
-git clone https://github.com/pedropcorsini/macro-tracker.git
-cd macro-tracker
+- Landing page institucional com navegação, CTA, animações de entrada e seletor de idioma.
+- Login e cadastro com email/senha via Supabase Auth.
+- OAuth com Google e GitHub.
+- Área autenticada com sidebar no desktop e menu deslizante no mobile.
+- Tema claro/escuro: inicia em modo escuro e salva a preferência em `localStorage`.
+- Interface em português, inglês e espanhol.
 
-# 2. Instalar dependências
-npm install
+### Dashboard
 
-# 3. Criar o arquivo de variáveis de ambiente
-# (veja a seção "Variáveis de ambiente" abaixo)
+| Página | O que faz |
+|---|---|
+| **Hoje** | Registra refeições, calcula macros em tempo real, controla água e mostra resumo do dia |
+| **Calendário** | Exibe histórico mensal com indicadores de meta e hidratação por dia |
+| **Metas** | Configura calorias, proteína, carboidratos, gordura, meta de água e medida do copo |
+| **Gráficos** | Mostra evolução semanal ou mensal de macros e água com linhas de meta |
+| **Favoritos** | Pesquisa alimentos, salva favoritos e adiciona itens rapidamente às refeições |
 
-# 4. Rodar em modo desenvolvimento
-npm run dev
-# → http://localhost:5173
+### Registro de Refeições
 
-# 5. Build de produção
-npm run build
+- Refeições padrão: café da manhã, almoço, lanche da tarde e jantar.
+- Busca de alimentos com prioridade para o banco local no idioma ativo.
+- Fallback para USDA quando não há resultado local.
+- Alimentos podem ser adicionados em gramas ou por unidade quando houver `unit` e `gramsPerUnit`.
+- Preview de calorias, proteína, carboidratos e gordura antes de adicionar.
+- Remoção de itens já registrados.
+- Resumo por refeição e total consolidado do dia.
+
+### Favoritos
+
+- Favoritar alimentos direto da tela **Hoje**.
+- Aba dedicada para buscar alimentos e salvar favoritos.
+- Lista de favoritos persistida por usuário no Supabase.
+- Inclusão rápida em uma refeição selecionada, com gramagem editável.
+- Componente de acesso rápido aos favoritos dentro da tela **Hoje**.
+
+### Hidratação
+
+- Meta diária de água configurável.
+- Medida do copo configurável, com padrão atual de `500ml`.
+- Copos clicáveis para registrar consumo.
+- Entrada manual em `ml` ou `L`.
+- Barra de progresso, indicação do volume restante e botão para zerar o dia.
+
+### Gráficos e Histórico
+
+- Gráficos de calorias, proteína, carboidratos, gordura e água.
+- Alternância entre visão semanal e mensal.
+- Médias por dia e porcentagem em relação à meta.
+- Calendário com cores para aderência à meta de calorias.
+- Indicador separado para dias com água registrada.
+- Detalhe diário com macros, água e porcentagens da meta.
+
+### Internacionalização
+
+- Idiomas suportados: `pt`, `en`, `es`.
+- Português é o fallback padrão.
+- A escolha do idioma é salva no `localStorage`.
+- Textos da interface e nomes do banco local de alimentos acompanham o idioma ativo.
+
+## Dados e Persistência
+
+O estado principal fica em `TrackerContext`, que mantém metas, logs diários, água, favoritos, alimentos recentes e alimentos mais usados. As alterações relevantes são sincronizadas com o Supabase.
+
+| Tabela | Conteúdo |
+|---|---|
+| `profiles` | Metas nutricionais e preferências do usuário |
+| `daily_logs` | Refeições e água registradas por data |
+| `favoritos` | Lista de alimentos favoritos do usuário |
+
+Todas as tabelas usam Row Level Security, garantindo que cada usuário acesse apenas os próprios dados.
+
+## Banco de Alimentos
+
+O projeto inclui uma base local com **148 alimentos** em português, inglês e espanhol. Cada item guarda calorias, proteína, carboidratos e gordura por 100g. Alguns alimentos também têm unidade prática, como fatia, unidade, dente ou porção equivalente, usando `unit` e `gramsPerUnit`.
+
+Categorias contempladas: carnes, peixes, ovos, proteínas, laticínios, cereais, pães, massas, leguminosas, tubérculos, frutas, vegetais, oleaginosas, gorduras, bebidas e itens complementares.
+
+## Estrutura do Projeto
+
+```text
+macro-tracker/
+|-- public/
+|-- src/
+|   |-- assets/              # Imagens e assets estáticos
+|   |-- components/          # Componentes reutilizáveis
+|   |-- context/             # ThemeContext e TrackerContext
+|   |-- data/                # Base local de alimentos
+|   |-- i18n/                # Configuração e traduções PT/EN/ES
+|   |-- pages/               # Landing, Login e páginas do dashboard
+|   |-- services/            # Supabase, persistência e busca de alimentos
+|   |-- styles/              # CSS da landing e da área autenticada
+|   |-- App.jsx              # Controle de auth, landing e shell do dashboard
+|   |-- main.jsx             # Entry point React
+|-- package.json
+|-- vite.config.js
 ```
 
----
+## Como Rodar Localmente
 
-## Variáveis de ambiente
+```bash
+git clone https://github.com/pedropcorsini/macro-tracker.git
+cd macro-tracker
+npm install
+npm run dev
+```
+
+O app fica disponível em:
+
+```text
+http://localhost:5173
+```
+
+## Variáveis de Ambiente
 
 Crie um arquivo `.env` na raiz do projeto:
 
 ```env
 VITE_SUPABASE_URL=https://SEU_PROJETO.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGc...SUA_CHAVE_AQUI
-VITE_USDA_API_KEY=SUA_CHAVE_USDA_AQUI
+VITE_SUPABASE_ANON_KEY=SUA_CHAVE_PUBLICA_ANON
+VITE_USDA_API_KEY=SUA_CHAVE_USDA
 ```
 
-> ⚠️ O arquivo `.env` já está no `.gitignore` — nunca suba suas chaves para o GitHub.
+O `.env` está no `.gitignore` e não deve ser versionado.
 
----
+## Scripts
 
-## Configurar o Supabase
+| Comando | Descrição |
+|---|---|
+| `npm run dev` | Inicia o servidor de desenvolvimento |
+| `npm run build` | Gera o build de produção |
+| `npm run preview` | Pré-visualiza o build localmente |
+| `npm run lint` | Executa o ESLint |
 
-### 1. Criar uma conta gratuita
+## Configuração do Supabase
 
-Acesse **https://supabase.com** e crie um projeto.
+1. Crie um projeto em `https://supabase.com`.
+2. Copie `Project URL` e `anon public key` para o `.env`.
+3. Execute o schema abaixo no SQL Editor.
+4. Ative Google e GitHub em Authentication > Providers se quiser usar OAuth.
 
-### 2. Executar o schema SQL
-
-No painel do Supabase, vá em **SQL Editor → New query**, cole e execute:
+<details>
+<summary>Schema SQL</summary>
 
 ```sql
 create table profiles (
   id uuid references auth.users on delete cascade primary key,
-  goals jsonb default '{"cal":2000,"p":150,"c":200,"f":65,"water":2500,"cupMl":250,"waterUnit":"ml"}'::jsonb,
+  goals jsonb default '{"cal":2000,"p":150,"c":200,"f":65,"water":2500,"cupMl":500,"waterUnit":"ml"}'::jsonb,
   created_at timestamp with time zone default timezone('utc'::text, now())
 );
 
@@ -106,255 +202,50 @@ create policy "Users can manage own favoritos"
   on favoritos for all using (auth.uid() = user_id);
 ```
 
-### 3. Copiar as credenciais
+</details>
 
-Vá em **Project Settings → API** e copie o **Project URL** e a **anon public key**.
+## API USDA
 
-### 4. Ativar provedores de login (opcional)
+A busca de alimentos usa primeiro a base local. Quando não encontra resultados, o serviço tenta consultar a USDA FoodData Central API.
 
-Em **Authentication → Providers**, ative Google e/ou GitHub seguindo as instruções do Supabase.
+Para obter uma chave:
 
----
-
-## Configurar a API de Alimentos (USDA)
-
-1. Acesse **https://fdc.nal.usda.gov/api-key-signup.html**
-2. Preencha o formulário
-3. Aguarde o e-mail com sua chave e cole no `.env`
-
-> A busca prioriza o banco local no idioma selecionado. A API USDA é usada como complemento quando nenhum resultado local é encontrado.
-
----
-
-## Estrutura de pastas
-
-```text
-macro-tracker/
-├── public/
-├── .env                              ← Suas credenciais (não commitar)
-├── index.html
-└── src/
-    ├── assets/
-    ├── components/
-    │   ├── AlimentosRapidos.jsx      ← Acesso rápido a favoritos na tela Hoje
-    │   └── LanguageSelect.jsx        ← Dropdown customizado de idiomas
-    ├── context/
-    │   ├── ThemeContext.jsx          ← Controle de tema claro/escuro
-    │   └── TrackerContext.jsx        ← Estado global + sync com Supabase
-    ├── data/
-    │   └── foods.js                  ← Banco local com 148 alimentos em PT, EN e ES
-    ├── i18n/
-    │   ├── index.js                  ← Configuração do i18next (PT padrão)
-    │   ├── pt.js                     ← Traduções em português
-    │   ├── en.js                     ← Traduções em inglês
-    │   └── es.js                     ← Traduções em espanhol
-    ├── pages/
-    │   ├── Landing.jsx               ← Landing page institucional
-    │   ├── Login.jsx                 ← Autenticação com email/senha e OAuth
-    │   ├── Hoje.jsx                  ← Registro de refeições e hidratação
-    │   ├── Calendario.jsx            ← Histórico por calendário
-    │   ├── Metas.jsx                 ← Configuração de metas diárias
-    │   ├── Graficos.jsx              ← Gráficos semanais e mensais
-    │   └── Favoritos.jsx             ← Gestão e adição rápida de favoritos
-    ├── services/
-    │   ├── db.js                     ← Leitura e escrita no Supabase
-    │   ├── supabase.js               ← Cliente Supabase
-    │   └── usda.js                   ← Busca local + fallback para USDA
-    ├── styles/
-    │   ├── app.css                   ← Estilos da área autenticada e login
-    │   └── landing.css               ← Estilos da landing page
-    ├── App.jsx                       ← Shell principal, landing, auth e dashboard
-    ├── index.css                     ← Base Tailwind + tema global
-    └── main.jsx                      ← Entry point
-```
-
----
-
-## Funcionalidades
-
-### Páginas disponíveis
-
-| Página | Descrição |
-|---|---|
-| **Landing** | Apresentação do produto com seções institucionais, CTA e seletor de idioma |
-| **Login** | Login e cadastro com email/senha, Google, GitHub, alternância de tema e idioma |
-| **Hoje** | Registra refeições por período do dia, controla hidratação e exibe macros em tempo real |
-| **Calendário** | Visualiza o histórico com indicadores coloridos por dia |
-| **Metas** | Define objetivos diários de calorias, proteína, carboidratos, gordura e água |
-| **Gráficos** | Barras semanais e mensais com linha de meta para cada macro |
-| **Favoritos** | Lista alimentos salvos e permite adição rápida com gramagem personalizada |
-
-### Experiência e interface
-
-- Landing page com visual clean, navegação fixa e seções de apresentação do app
-- Tela de autenticação com layout próprio, suporte a Google e GitHub e controle de tema
-- Área logada com sidebar, topbar mobile e conteúdo principal com scroll independente
-- Seletor customizado de idioma com a mesma estética do restante da interface
-- Primeiro acesso em **português** por padrão; preferência de idioma e tema é salva no `localStorage`
-
-### Registro de refeições
-
-| Refeição | Idioma PT | Idioma EN | Idioma ES |
-|---|---|---|---|
-| Café da manhã | Café da manhã | Breakfast | Desayuno |
-| Almoço | Almoço | Lunch | Almuerzo |
-| Lanche da tarde | Lanche da tarde | Afternoon snack | Merienda |
-| Jantar | Jantar | Dinner | Cena |
-
-- Busca em banco local no idioma selecionado com fallback automático para API USDA
-- Entrada por **gramas** ou **unidade** (ovos, fatias, frutas, etc.)
-- Preview de macros em tempo real antes de adicionar
-- Resumo por refeição e total consolidado do dia
-- Botão de favorito para salvar alimentos usados com frequência
-
-### Favoritos e acesso rápido
-
-- Tela dedicada para gerenciar favoritos
-- Bloco de adição rápida na tela **Hoje**
-- Inclusão instantânea com quantidade em gramas
-- Persistência de favoritos por usuário no Supabase
-
-### Controle de hidratação
-
-- Copos clicáveis baseados na meta e tamanho do copo configurado
-- Input manual em **ml** ou **L**
-- Barra de progresso e indicador de quanto falta para a meta
-- Botão para zerar o registro do dia
-
-### Banco local de alimentos
-
-**148 alimentos** organizados por categoria, com nomes traduzidos em PT, EN e ES:
-
-| Categoria | Exemplos |
-|---|---|
-| Carnes e aves | Peito de frango, bife de alcatra, picanha, bacon, presunto |
-| Peixes e frutos do mar | Salmão, atum, tilápia, camarão, bacalhau |
-| Ovos e proteínas | Ovo inteiro, clara, whey protein, tofu, tempeh |
-| Laticínios | Iogurte grego, cottage, mussarela, cheddar, parmesão |
-| Cereais e grãos | Arroz branco/integral, aveia, quinoa, granola, tapioca |
-| Pães e massas | Pão francês, pão integral, pita, macarrão, macarrão integral |
-| Leguminosas | Feijão carioca/preto/branco, lentilha, grão-de-bico, ervilha |
-| Tubérculos | Batata-doce, batata inglesa, mandioca, inhame |
-| Frutas | Banana, maçã, mamão, manga, abacate, morango, kiwi, mirtilo |
-| Vegetais | Brócolis, espinafre, cenoura, beterraba, couve-flor, aspargo |
-| Oleaginosas e gorduras | Azeite, amendoim, amêndoas, castanha, chia, linhaça |
-| Bebidas | Suco de laranja, leite de aveia, leite de amêndoas, café, chá |
-| Outros | Mel, açúcar, chocolate amargo, maionese, molho de soja |
-
----
-
-## Idiomas suportados
-
-| Idioma | Código | Comportamento atual |
-|---|---|---|
-| Português (BR) | PT | Padrão inicial do app |
-| English | EN | Seleção manual com persistência |
-| Español | ES | Seleção manual com persistência |
-
-O app inicia em **português** quando não existe preferência salva. Depois disso, a escolha do usuário é persistida no `localStorage` e restaurada automaticamente nas próximas visitas. O idioma pode ser alterado pelo seletor presente na **landing page**, na **tela de login** e na **sidebar** da área logada. Os nomes dos alimentos do banco local também mudam conforme o idioma selecionado.
-
----
-
-## Banco de dados (Supabase)
-
-### Tabelas
-
-| Tabela | Descrição |
-|---|---|
-| `profiles` | Metas e preferências do usuário |
-| `daily_logs` | Refeições e consumo de água por dia |
-| `favoritos` | Lista de alimentos favoritos por usuário |
-
-### Segurança (RLS)
-
-Todas as tabelas têm **Row Level Security** ativado — cada usuário acessa somente seus próprios dados.
-
----
-
-## Responsividade
-
-| Dispositivo | Layout |
-|---|---|
-| Desktop (≥ 1024px) | Sidebar fixa 224px + conteúdo principal com scroll independente |
-| Tablet / Mobile (< 1024px) | Topbar com botão hamburger que abre sidebar deslizante + overlay escuro |
-
----
-
-## Tema claro / escuro
-
-O tema segue o sistema operacional no primeiro acesso. O usuário pode alternar manualmente pelo botão da interface, e a preferência é salva no `localStorage`.
-
----
-
-## Deploy no Vercel
-
-```bash
-# 1. Subir o código para o GitHub
-git add .
-git commit -m "feat: macro tracker"
-git push origin main
-
-# 2. Acessar vercel.com e importar o repositório
-# → Framework Preset: Vite
-# → Build Command: npm run build
-# → Output Directory: dist
-
-# 3. Em "Environment Variables", adicionar as 3 variáveis do .env
-
-# 4. Clicar em Deploy
-```
-
-A cada `git push`, o Vercel refaz o deploy automaticamente.
-
----
+1. Acesse `https://fdc.nal.usda.gov/api-key-signup.html`.
+2. Solicite a chave gratuita.
+3. Adicione a chave em `VITE_USDA_API_KEY`.
 
 ## Personalização
 
-### Adicionar alimentos ao banco local
+- **Metas padrão:** edite `initialState.goals` em `src/context/TrackerContext.jsx`.
+- **Novos alimentos:** adicione itens em `src/data/foods.js` mantendo o mesmo `id` nas três línguas.
+- **Novo idioma:** crie o arquivo de tradução em `src/i18n`, registre em `src/i18n/index.js`, adicione no `LanguageSelect` e inclua a base em `foodsData`.
+- **Estilos:** ajuste `src/styles/app.css` para a área autenticada e `src/styles/landing.css` para a landing page.
 
-Em `src/data/foods.js`, adicione o alimento nas três línguas com o mesmo `id`:
+## Deploy
 
-```js
-// Em foodsData.pt
-{ id: 149, name: "Creme de avelã", cal: 539, p: 6, c: 58, f: 31 },
+O projeto está preparado para deploy em plataformas como Vercel:
 
-// Em foodsData.en
-{ id: 149, name: "Hazelnut spread", cal: 539, p: 6, c: 58, f: 31 },
-
-// Em foodsData.es
-{ id: 149, name: "Crema de avellanas", cal: 539, p: 6, c: 58, f: 31 },
+```bash
+npm run build
 ```
 
-### Alterar metas padrão
+Configuração recomendada:
 
-Em `src/context/TrackerContext.jsx`, edite `initialState.goals`:
+| Campo | Valor |
+|---|---|
+| Framework Preset | Vite |
+| Build Command | `npm run build` |
+| Output Directory | `dist` |
 
-```js
-goals: { cal: 2000, p: 150, c: 200, f: 65, water: 2500, cupMl: 250, waterUnit: "ml" }
-```
-
-### Alterar idioma padrão
-
-Em `src/i18n/index.js`, ajuste a inicialização de `lng` e `fallbackLng` se quiser trocar o padrão atual de `pt`.
-
-### Adicionar um novo idioma
-
-1. Crie `src/i18n/fr.js` com todas as chaves traduzidas
-2. Importe e registre o idioma em `src/i18n/index.js`
-3. Adicione o idioma ao array `LANGUAGES` em `src/components/LanguageSelect.jsx`
-4. Adicione `foodsData.fr` em `src/data/foods.js`
-
----
+Adicione as variáveis de ambiente do `.env` no painel da plataforma antes de publicar.
 
 ## Segurança
 
-- Nunca commite o arquivo `.env` no Git
-- A `anon key` do Supabase é segura para uso no frontend quando usada com RLS
-- A chave da API USDA é gratuita e usada apenas como complemento da base local
-- Login com Google e GitHub usa OAuth via Supabase
-
----
+- A `anon key` do Supabase pode ser usada no frontend quando as tabelas estão protegidas por RLS.
+- As policies limitam leitura e escrita ao usuário autenticado.
+- O arquivo `.env` não deve ser commitado.
+- OAuth é delegado ao Supabase Auth.
 
 ## Licença
 
-Projeto desenvolvido para fins de portfólio. Todos os direitos reservados.
+Projeto desenvolvido por Pedro Passos Corsinis para fins de estudo e portfólio profissional.
