@@ -248,4 +248,4 @@ Adicione as variáveis de ambiente do `.env` no painel da plataforma antes de pu
 
 ## Licença
 
-Projeto desenvolvido por Pedro Passos Corsinis para fins de estudo e portfólio profissional.
+Projeto desenvolvido por Pedro Passos Corsini para fins de estudo e portfólio profissional.
