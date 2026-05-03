@@ -70,7 +70,7 @@ export default {
 
   // Metas
   daily_goals: "Metas diárias",
-  cup_size: "Tamanho da garrafa",
+  cup_size: "Medida do copo",
   per_cup: "ml por garrafa",
   save_goals: "Salvar metas",
   saved: "Salvo com sucesso!",
