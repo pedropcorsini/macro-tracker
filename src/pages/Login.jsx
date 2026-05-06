@@ -3,6 +3,7 @@ import { supabase } from "../services/supabase"
 import { useTema } from "../context/ThemeContext"
 import { useTranslation } from "react-i18next"
 import LanguageSelect from "../components/LanguageSelect"
+import SiteFooter from "../components/SiteFooter"
 import "../styles/app.css"
 
 const MODO = { LOGIN: "login", CADASTRO: "cadastro" }
@@ -236,6 +237,8 @@ function Login({ onVoltar, modo }) {
           </div>
         </section>
       </div>
+
+      <SiteFooter className="auth-site-footer" />
     </div>
   )
 }

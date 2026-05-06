@@ -12,6 +12,7 @@ import Metas from "./pages/Metas"
 import Graficos from "./pages/Graficos"
 import Favoritos from "./pages/Favoritos"
 import LanguageSelect from "./components/LanguageSelect"
+import SiteFooter from "./components/SiteFooter"
 
 function AppInner() {
   const [abaAtiva, setAbaAtiva] = useState("hoje")
@@ -178,6 +179,7 @@ function AppInner() {
               {abaAtiva === "metas" && <Metas />}
               {abaAtiva === "graficos" && <Graficos />}
               {abaAtiva === "favoritos" && <Favoritos />}
+              <SiteFooter className="app-site-footer" />
             </div>
           </main>
         </div>

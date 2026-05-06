@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next"
 import { useEffect, useRef, useState } from "react"
 import LanguageSelect from "../components/LanguageSelect"
+import SiteFooter from "../components/SiteFooter"
 import "../styles/landing.css"
 
 export default function Landing({ onLogin }) {
@@ -9,6 +10,9 @@ export default function Landing({ onLogin }) {
   const [isScrolled, setIsScrolled] = useState(false)
   const lang = i18n.language.startsWith("en") ? "en" : i18n.language.startsWith("es") ? "es" : "pt"
   const revealStyle = (delay = 0) => ({ "--reveal-delay": `${delay}ms` })
+  const scrollToTop = () => {
+    document.getElementById("top")?.scrollIntoView({ behavior: "smooth", block: "start" })
+  }
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 18)
@@ -58,14 +62,22 @@ export default function Landing({ onLogin }) {
       nav_features: "Ecossistema", nav_process: "Fluxo", nav_start: "Acesso",
       feature_tag: "Nutrition OS",
       process_tag: "Operating Flow",
-      start_tag: "Get started",
       f_title: "Um ecossistema completo para decisões melhores.",
       f_sub: "Registro, metas, favoritos, calendário e gráficos trabalhando como uma camada única de inteligência nutricional.",
       how_title: "Do registro ao insight, sem atrito.",
       how_sub: "A navegação foi pensada para reduzir esforço e manter o foco no próximo passo.",
       cta2: "Pronto para operar sua rotina com mais clareza?",
-      cta2_sub: "Crie sua conta em segundos e entre em um painel limpo, rápido e preparado para uso diário.",
+      cta2_sub: "Comece já a transformar sua rotina.",
+      cta_top_button: "Voltar ao topo",
       footer: "Feito para quem leva saúde a sério.",
+      footer_desc: "Um painel privado para acompanhar alimentação, hidratação, metas e progresso com mais facilidade no dia a dia.",
+      footer_product: "Produto",
+      footer_follow: "Siga-me",
+      footer_top: "Topo",
+      footer_features: "Ecossistema",
+      footer_process: "Fluxo",
+      footer_start: "Começar",
+      footer_disclaimer: "Dados nutricionais são estimativas para acompanhamento pessoal e não substituem orientação profissional.",
       steps: [
         { n: "01", t: "Configure a base", d: "Defina metas de calorias, macros, água e tamanho do copo." },
         { n: "02", t: "Registre com fluidez", d: "Busque alimentos, use favoritos e registre cada refeição sem sair do fluxo." },
@@ -81,14 +93,22 @@ export default function Landing({ onLogin }) {
       nav_features: "Ecosystem", nav_process: "Flow", nav_start: "Access",
       feature_tag: "Nutrition OS",
       process_tag: "Operating Flow",
-      start_tag: "Get started",
       f_title: "A complete ecosystem for better decisions.",
       f_sub: "Logging, goals, favorites, calendar and charts working as one nutrition intelligence layer.",
       how_title: "From log to insight, without friction.",
       how_sub: "Navigation is designed to reduce effort and keep the next step obvious.",
       cta2: "Ready to operate your routine with more clarity?",
-      cta2_sub: "Create your account in seconds and enter a clean, fast panel built for daily use.",
+      cta2_sub: "Start transforming your routine today.",
+      cta_top_button: "Back to top",
       footer: "Built for people who take health seriously.",
+      footer_desc: "A private control panel to more easily track your diet, hydration, goals, and daily progress.",
+      footer_product: "Product",
+      footer_follow: "Follow me",
+      footer_top: "Top",
+      footer_features: "Ecosystem",
+      footer_process: "Flow",
+      footer_start: "Start",
+      footer_disclaimer: "Nutrition data is estimated for personal tracking and does not replace professional guidance.",
       steps: [
         { n: "01", t: "Set the baseline", d: "Define calories, macros, water and cup size goals." },
         { n: "02", t: "Log with flow", d: "Search foods, use favorites and record each meal without breaking context." },
@@ -104,14 +124,22 @@ export default function Landing({ onLogin }) {
       nav_features: "Ecosistema", nav_process: "Flujo", nav_start: "Acceso",
       feature_tag: "Nutrition OS",
       process_tag: "Operating Flow",
-      start_tag: "Get started",
       f_title: "Un ecosistema completo para mejores decisiones.",
       f_sub: "Registro, metas, favoritos, calendario y gráficos trabajando como una capa única de inteligencia nutricional.",
       how_title: "Del registro al insight, sin fricción.",
       how_sub: "La navegación fue pensada para reducir esfuerzo y mantener claro el próximo paso.",
       cta2: "¿Listo para operar tu rutina con más claridad?",
-      cta2_sub: "Crea tu cuenta en segundos y entra en un panel limpio, rápido y preparado para uso diario.",
+      cta2_sub: "Empieza hoy a transformar tu rutina.",
+      cta_top_button: "Volver arriba",
       footer: "Hecho para quienes se toman la salud en serio.",
+      footer_desc: "Un panel de control privado para realizar un seguimiento más sencillo de tu dieta, hidratación, objetivos y progreso a diario.",
+      footer_product: "Producto",
+      footer_follow: "Sígueme",
+      footer_top: "Inicio",
+      footer_features: "Ecosistema",
+      footer_process: "Flujo",
+      footer_start: "Empezar",
+      footer_disclaimer: "Los datos nutricionales son estimaciones para seguimiento personal y no sustituyen orientación profesional.",
       steps: [
         { n: "01", t: "Configura la base", d: "Define calorías, macros, agua y tamaño del vaso." },
         { n: "02", t: "Registra con fluidez", d: "Busca alimentos, usa favoritos y registra cada comida sin salir del flujo." },
@@ -245,32 +273,25 @@ export default function Landing({ onLogin }) {
         <div className="cta-card" data-reveal="scale" style={revealStyle(80)}>
           <div className="cta-card-bg" />
           <div className="cta-card-content">
-            <span className="section-tag" style={{ color: "#a78bfa", display: "block", marginBottom: "16px" }}>{tx.start_tag}</span>
             <h2 className="cta-title">{tx.cta2}</h2>
             <p className="cta-sub">{tx.cta2_sub}</p>
             <div className="cta-buttons">
-              <button className="hero-btn-primary" onClick={() => onLogin("cadastro")}><span>{tx.cta} →</span></button>
-              <button className="hero-btn-secondary" onClick={() => onLogin("login")}>{tx.login}</button>
+              <button type="button" className="hero-btn-primary cta-top-button" onClick={scrollToTop}>
+                <span>{tx.cta_top_button} ↑</span>
+              </button>
             </div>
           </div>
         </div>
       </div>
 
       <hr className="landing-divider" data-reveal="line" style={revealStyle(40)} />
-      <footer className="footer">
-        <div className="footer-inner" data-reveal="up" style={revealStyle(60)}>
-          <div className="footer-logo">
-            <div className="nav-dots">
-              <div className="nav-dot" style={{ background: "#8b5cf6", width: "5px", height: "5px" }} />
-              <div className="nav-dot" style={{ background: "#10b981", width: "5px", height: "5px" }} />
-              <div className="nav-dot" style={{ background: "#f43f5e", width: "5px", height: "5px" }} />
-            </div>
-            Macro Tracker
-          </div>
-          <span className="footer-text">{tx.footer}</span>
-          <span className="footer-text">© {new Date().getFullYear()}</span>
-        </div>
-      </footer>
+      <SiteFooter
+        brandHref="#top"
+        className="site-footer--landing"
+        revealStyle={revealStyle(60)}
+        showProduct
+        showTopLink
+      />
     </div>
   )
 }
