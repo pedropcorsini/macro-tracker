@@ -2,6 +2,8 @@ import foodsData from "../data/foods"
 import i18n from "../i18n"
 
 const BASE_URL = "https://api.nal.usda.gov/fdc/v1"
+const DEV_PROXY_URL = "/api/usda"
+const USDA_URL = import.meta.env.DEV ? DEV_PROXY_URL : BASE_URL
 const API_KEY = import.meta.env.VITE_USDA_API_KEY
 
 function getLang() {
@@ -13,7 +15,8 @@ function getLang() {
 
 export function getFoods() {
   return foodsData[getLang()] || foodsData.pt
-  }
+}
+
 export async function buscarAlimentos(query) {
   if (!query || query.trim().length < 2) return []
 
@@ -23,12 +26,10 @@ export async function buscarAlimentos(query) {
     .filter((f) => f.name.toLowerCase().includes(termo))
     .map((f) => ({ ...f, fonte: "local" }))
 
-  if (!API_KEY) return locais
+  if (!API_KEY && !import.meta.env.DEV) return locais
 
   try {
-    const response = await fetch(
-      `${BASE_URL}/foods/search?query=${encodeURIComponent(query)}&pageSize=20&api_key=${API_KEY}`
-    )
+    const response = await fetch(buildSearchUrl(query))
     if (!response.ok) throw new Error("Erro na API")
     const data = await response.json()
 
@@ -44,7 +45,11 @@ export async function buscarAlimentos(query) {
     }))
 
     return deduplicarAlimentos([...locais, ...usda])
-  } catch {
+  } catch (error) {
+    if (import.meta.env.DEV) {
+      console.warn("Falha ao buscar alimentos na USDA", error)
+    }
+
     return locais
   }
 }
@@ -52,6 +57,19 @@ export async function buscarAlimentos(query) {
 function getNutrient(food, id) {
   const nutrient = food.foodNutrients?.find((n) => n.nutrientId === id)
   return Math.round((nutrient?.value || 0) * 10) / 10
+}
+
+function buildSearchUrl(query) {
+  const params = new URLSearchParams({
+    query,
+    pageSize: "20",
+  })
+
+  if (!import.meta.env.DEV && API_KEY) {
+    params.set("api_key", API_KEY)
+  }
+
+  return `${USDA_URL}/foods/search?${params.toString()}`
 }
 
 function deduplicarAlimentos(foods) {
