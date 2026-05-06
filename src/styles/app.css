@@ -2216,18 +2216,6 @@ button {
   padding: 0;
 }
 
-.auth-shell {
-  flex-direction: column;
-  gap: 22px;
-  overflow-x: hidden;
-  overflow-y: auto;
-}
-
-.auth-site-footer {
-  width: min(100%, 1080px);
-  padding: 0;
-}
-
 .site-footer-inner {
   max-width: 1180px;
   margin: 0 auto;
@@ -2253,18 +2241,7 @@ button {
   box-shadow: var(--surface-shadow);
 }
 
-.auth-site-footer .site-footer-inner {
-  max-width: none;
-  border-radius: 22px;
-  border-color: var(--surface-border);
-  background:
-    linear-gradient(180deg, var(--surface-shell), rgba(255, 255, 255, 0.50)),
-    radial-gradient(circle at top left, rgba(167, 139, 250, 0.08), transparent 30%);
-  box-shadow: var(--surface-shadow);
-}
-
-.dark .app-site-footer .site-footer-inner,
-.dark .auth-site-footer .site-footer-inner {
+.dark .app-site-footer .site-footer-inner {
   border-color: rgba(148, 163, 184, 0.13);
   background:
     linear-gradient(180deg, rgba(12, 18, 32, 0.72), rgba(8, 13, 25, 0.56)),
@@ -2283,8 +2260,7 @@ button {
   grid-template-columns: minmax(280px, 1fr) minmax(180px, 260px);
 }
 
-.app-site-footer .site-footer-main,
-.auth-site-footer .site-footer-main {
+.app-site-footer .site-footer-main {
   grid-template-columns: minmax(280px, 1fr) auto;
   align-items: center;
   gap: 18px;
@@ -2299,8 +2275,7 @@ button {
   min-width: 0;
 }
 
-.app-site-footer .site-footer-brand-block,
-.auth-site-footer .site-footer-brand-block {
+.app-site-footer .site-footer-brand-block {
   flex-direction: row;
   align-items: center;
   gap: 14px;
@@ -2321,15 +2296,13 @@ button {
   text-transform: uppercase;
 }
 
-.app-site-footer .site-footer-logo,
-.auth-site-footer .site-footer-logo {
+.app-site-footer .site-footer-logo {
   flex: 0 0 auto;
   color: var(--text-strong);
   font-size: 12px;
 }
 
-.app-site-footer .site-footer-logo:hover,
-.auth-site-footer .site-footer-logo:hover {
+.app-site-footer .site-footer-logo:hover {
   color: var(--text-title);
 }
 
@@ -2350,8 +2323,7 @@ button {
   box-shadow: 0 0 16px currentColor;
 }
 
-.app-site-footer .site-footer-dots span,
-.auth-site-footer .site-footer-dots span {
+.app-site-footer .site-footer-dots span {
   box-shadow: none;
 }
 
@@ -2363,8 +2335,7 @@ button {
   line-height: 1.7;
 }
 
-.app-site-footer .site-footer-brand-copy,
-.auth-site-footer .site-footer-brand-copy {
+.app-site-footer .site-footer-brand-copy {
   max-width: none;
   color: var(--text-soft);
   font-size: 12px;
@@ -2383,8 +2354,7 @@ button {
   justify-content: end;
 }
 
-.app-site-footer .site-footer-nav-grid,
-.auth-site-footer .site-footer-nav-grid {
+.app-site-footer .site-footer-nav-grid {
   grid-template-columns: auto;
   justify-content: end;
 }
@@ -2397,8 +2367,7 @@ button {
   min-width: 0;
 }
 
-.app-site-footer .site-footer-column,
-.auth-site-footer .site-footer-column {
+.app-site-footer .site-footer-column {
   flex-direction: row;
   align-items: center;
   gap: 14px;
@@ -2415,8 +2384,7 @@ button {
   text-transform: uppercase;
 }
 
-.app-site-footer .site-footer-column-title,
-.auth-site-footer .site-footer-column-title {
+.app-site-footer .site-footer-column-title {
   margin-bottom: 0;
   color: var(--text-strong);
   font-size: 9px;
@@ -2431,17 +2399,13 @@ button {
 }
 
 .app-site-footer .site-footer-column a,
-.app-site-footer .site-footer-column span,
-.auth-site-footer .site-footer-column a,
-.auth-site-footer .site-footer-column span {
+.app-site-footer .site-footer-column span {
   color: var(--text-soft);
   font-size: 11.5px;
 }
 
 .app-site-footer .site-footer-column a:hover,
-.auth-site-footer .site-footer-column a:hover,
-.app-site-footer .site-footer-social-link:hover,
-.auth-site-footer .site-footer-social-link:hover {
+.app-site-footer .site-footer-social-link:hover {
   color: var(--text-strong);
 }
 
@@ -2472,8 +2436,7 @@ button {
   color: #a78bfa;
 }
 
-.app-site-footer .site-footer-social-icon,
-.auth-site-footer .site-footer-social-icon {
+.app-site-footer .site-footer-social-icon {
   width: 14px;
   height: 14px;
   flex-basis: 14px;
@@ -2497,8 +2460,7 @@ button {
   grid-template-columns: minmax(180px, 0.75fr) minmax(260px, 1fr);
 }
 
-.app-site-footer .site-footer-bottom,
-.auth-site-footer .site-footer-bottom {
+.app-site-footer .site-footer-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -2517,8 +2479,7 @@ button {
   text-decoration: none;
 }
 
-.app-site-footer .site-footer-bottom span,
-.auth-site-footer .site-footer-bottom span {
+.app-site-footer .site-footer-bottom span {
   color: var(--text-soft);
   font-size: 10px;
 }
@@ -2552,27 +2513,22 @@ button {
     justify-content: start;
   }
 
-  .app-site-footer .site-footer-main,
-  .auth-site-footer .site-footer-main {
+  .app-site-footer .site-footer-main {
     grid-template-columns: 1fr;
     gap: 14px;
     padding: 16px 18px;
   }
 
   .app-site-footer .site-footer-brand-block,
-  .auth-site-footer .site-footer-brand-block,
-  .app-site-footer .site-footer-column,
-  .auth-site-footer .site-footer-column {
+  .app-site-footer .site-footer-column {
     flex-wrap: wrap;
   }
 
-  .app-site-footer .site-footer-brand-copy,
-  .auth-site-footer .site-footer-brand-copy {
+  .app-site-footer .site-footer-brand-copy {
     white-space: normal;
   }
 
-  .app-site-footer .site-footer-nav-grid,
-  .auth-site-footer .site-footer-nav-grid {
+  .app-site-footer .site-footer-nav-grid {
     justify-content: start;
   }
 
@@ -2619,36 +2575,25 @@ button {
 }
 
 @media (max-width: 760px) {
-  .app-site-footer .site-footer-main,
-  .auth-site-footer .site-footer-main {
+  .app-site-footer .site-footer-main {
     grid-template-columns: 1fr;
     gap: 14px;
     padding: 16px;
   }
 
-  .app-site-footer .site-footer-brand-block,
-  .auth-site-footer .site-footer-brand-block {
+  .app-site-footer .site-footer-brand-block {
     align-items: flex-start;
   }
 
-  .app-site-footer .site-footer-column,
-  .auth-site-footer .site-footer-column {
+  .app-site-footer .site-footer-column {
     gap: 10px 14px;
   }
 
-  .app-site-footer .site-footer-nav-grid,
-  .auth-site-footer .site-footer-nav-grid {
+  .app-site-footer .site-footer-nav-grid {
     justify-content: start;
   }
 
-  .app-site-footer .site-footer-bottom,
-  .auth-site-footer .site-footer-bottom {
+  .app-site-footer .site-footer-bottom {
     padding: 10px 18px 14px;
-  }
-
-  .auth-site-footer {
-    width: 100%;
-    max-width: 480px;
-    margin: 0 auto;
   }
 }
