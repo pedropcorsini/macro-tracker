@@ -8,6 +8,7 @@ export default function AlimentosRapidos({ refeicaoAtiva, onAdicionar }) {
   const { isDark } = useTema()
   const { t } = useTranslation()
   const [quantidades, setQuantidades] = useState({})
+  const [aberto, setAberto] = useState(false)
 
   const favoritos = state.favoritos
   const d = isDark
@@ -43,48 +44,58 @@ export default function AlimentosRapidos({ refeicaoAtiva, onAdicionar }) {
 
   return (
     <div className={d ? "quick-access" : "quick-access light"}>
-      <div className="quick-access-header">
-        <div className="quick-access-label" style={{ marginBottom: 0 }}>
+      <button
+        type="button"
+        className={d ? "quick-access-toggle" : "quick-access-toggle light"}
+        onClick={() => setAberto((valor) => !valor)}
+        aria-expanded={aberto}
+      >
+        <span className="quick-access-label" style={{ marginBottom: 0 }}>
           <span style={{ color: "#ef4444" }}>♥</span>
           {t("favorites")}
-        </div>
-        <span className="quick-access-count">({favoritos.length})</span>
-      </div>
+        </span>
+        <span className="quick-access-toggle-meta">
+          <span className="quick-access-count">({favoritos.length})</span>
+          <span className={aberto ? "quick-access-chevron open" : "quick-access-chevron"} />
+        </span>
+      </button>
 
-      <div className="quick-access-list">
-        {favoritos.map((item) => {
-          const qty = quantidades[item.name] || 100
-          const ratio = qty / 100
-          const fav = isFavorito(item.name)
+      {aberto && (
+        <div className="quick-access-list">
+          {favoritos.map((item) => {
+            const qty = quantidades[item.name] || 100
+            const ratio = qty / 100
+            const fav = isFavorito(item.name)
 
-          return (
-            <div key={item.name} className={d ? "fav-item" : "fav-item light"}>
-              <button className="fav-heart" onClick={() => toggleFavorito(item)}>
-                {fav ? "♥" : "♡"}
-              </button>
+            return (
+              <div key={item.name} className={d ? "fav-item" : "fav-item light"}>
+                <button className="fav-heart" onClick={() => toggleFavorito(item)}>
+                  {fav ? "♥" : "♡"}
+                </button>
 
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div className={d ? "fav-name" : "fav-name light"}>{item.name}</div>
-                <div className="fav-meta">
-                  {Math.round(item.cal * ratio)} kcal · {Math.round(item.p * ratio * 10) / 10}g P
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div className={d ? "fav-name" : "fav-name light"}>{item.name}</div>
+                  <div className="fav-meta">
+                    {Math.round(item.cal * ratio)} kcal · {Math.round(item.p * ratio * 10) / 10}g P
+                  </div>
                 </div>
+
+                <input
+                  type="number"
+                  value={qty}
+                  onChange={(e) => setQuantidades((prev) => ({ ...prev, [item.name]: Number(e.target.value) }))}
+                  className={d ? "fav-qty-input" : "fav-qty-input light"}
+                />
+                <span className="quick-access-unit">g</span>
+
+                <button className="fav-add-btn" onClick={() => adicionarRapido(item)}>
+                  +
+                </button>
               </div>
-
-              <input
-                type="number"
-                value={qty}
-                onChange={(e) => setQuantidades((prev) => ({ ...prev, [item.name]: Number(e.target.value) }))}
-                className={d ? "fav-qty-input" : "fav-qty-input light"}
-              />
-              <span className="quick-access-unit">g</span>
-
-              <button className="fav-add-btn" onClick={() => adicionarRapido(item)}>
-                +
-              </button>
-            </div>
-          )
-        })}
-      </div>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

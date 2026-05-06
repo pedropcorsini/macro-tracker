@@ -441,12 +441,34 @@
 /* ---------- QUICK ACCESS ---------- */
 .quick-access {
   background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.07);
-  border-radius: 16px; padding: 16px; margin-bottom: 12px;
+  border-radius: 16px; padding: 10px; margin-bottom: 12px;
 }
 .quick-access.light { background: #fafafa; border-color: #f0f0f0; }
 .quick-access-label {
   font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
   color: #52525b; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+}
+.quick-access-toggle {
+  width: 100%; min-height: 44px; display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; border: 1px solid rgba(255,255,255,0.08); border-radius: 14px;
+  background: rgba(255,255,255,0.03); padding: 0 12px; cursor: pointer;
+}
+.quick-access-toggle.light {
+  background: #fff; border-color: #e4e4e7;
+}
+.quick-access-toggle:focus-visible {
+  outline: none; border-color: rgba(167,139,250,0.55);
+  box-shadow: 0 0 0 4px rgba(124,58,237,0.10);
+}
+.quick-access-toggle-meta {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+.quick-access-chevron {
+  width: 8px; height: 8px; border-right: 2px solid #7c3aed; border-bottom: 2px solid #7c3aed;
+  transform: rotate(45deg); transition: transform 0.18s ease;
+}
+.quick-access-chevron.open {
+  transform: rotate(225deg);
 }
 .quick-access-header {
   display: flex; align-items: center; justify-content: space-between;
@@ -454,8 +476,11 @@
 }
 .quick-access-count { font-size: 11px; color: #52525b; }
 .quick-access-list {
-  display: flex; flex-direction: column; gap: 8px;
-  max-height: 256px; overflow-y: auto;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 8px;
+  max-height: 280px; overflow-y: auto; margin-top: 10px;
+}
+.quick-access .fav-item {
+  margin-bottom: 0; min-width: 0;
 }
 .quick-access-unit { font-size: 11px; color: #52525b; }
 
@@ -2017,6 +2042,29 @@ button {
   .goals-save-btn {
     width: 100%;
     justify-content: center;
+  }
+
+  .quick-access {
+    padding: 8px;
+  }
+
+  .quick-access-list {
+    grid-template-columns: 1fr;
+    max-height: 320px;
+  }
+
+  .quick-access .fav-item {
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .quick-access .fav-item > div {
+    flex: 1 1 calc(100% - 34px);
+  }
+
+  .quick-access .fav-qty-input {
+    margin-left: 28px;
   }
 }
 
