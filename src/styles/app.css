@@ -2029,6 +2029,42 @@ button {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .macro-grid {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .macro-card {
+    min-height: 110px;
+    padding: 14px 12px;
+    border-radius: 18px;
+  }
+
+  .macro-card-label {
+    margin-bottom: 6px;
+    font-size: 8.5px;
+    letter-spacing: 0.15em;
+  }
+
+  .macro-card-value {
+    margin-bottom: 2px;
+    font-size: 30px;
+  }
+
+  .macro-card-meta {
+    margin-bottom: 8px;
+    font-size: 10px;
+  }
+
+  .macro-progress {
+    height: 4px;
+  }
+
+  .macro-pct {
+    margin-top: 3px;
+    font-size: 9px;
+  }
+
   .water-header,
   .water-input-row,
   .chart-card-header,
@@ -2069,7 +2105,6 @@ button {
 }
 
 @media (max-width: 480px) {
-  .macro-grid,
   .chart-summary-grid,
   .goals-preview {
     grid-template-columns: 1fr;
