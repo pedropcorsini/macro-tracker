@@ -1,6 +1,9 @@
 import foodsData from "../data/foods"
 import i18n from "../i18n"
 
+const BASE_URL = "https://api.nal.usda.gov/fdc/v1"
+const API_KEY = import.meta.env.VITE_USDA_API_KEY
+
 function getLang() {
   const lang = i18n.language || "pt"
   if (lang.startsWith("en")) return "en"
@@ -17,11 +20,11 @@ export async function buscarAlimentos(query) {
 
   const termo = query.toLowerCase().trim()
   const foods = getFoods()
-  const locais = foods.filter((f) => f.name.toLowerCase().includes(termo))
+  const locais = foods
+    .filter((f) => f.name.toLowerCase().includes(termo))
+    .map((f) => ({ ...f, fonte: "local" }))
 
-  if (locais.length > 0) {
-    return locais.map((f) => ({ ...f, fonte: "local" }))
-  }
+  if (!API_KEY) return locais
 
   try {
     const response = await fetch(
@@ -30,7 +33,7 @@ export async function buscarAlimentos(query) {
     if (!response.ok) throw new Error("Erro na API")
     const data = await response.json()
 
-    return data.foods.map((food) => ({
+    const usda = (data.foods || []).map((food) => ({
       id: food.fdcId,
       name: food.description,
       brand: food.brandOwner || null,
@@ -40,12 +43,26 @@ export async function buscarAlimentos(query) {
       f: getNutrient(food, 1004),
       fonte: "usda",
     }))
+
+    return deduplicarAlimentos([...locais, ...usda])
   } catch {
-    return []
+    return locais
   }
 }
 
 function getNutrient(food, id) {
   const nutrient = food.foodNutrients?.find((n) => n.nutrientId === id)
   return Math.round((nutrient?.value || 0) * 10) / 10
+}
+
+function deduplicarAlimentos(foods) {
+  const vistos = new Set()
+
+  return foods.filter((food) => {
+    const key = `${food.name}-${food.brand || ""}`.toLowerCase()
+    if (vistos.has(key)) return false
+
+    vistos.add(key)
+    return true
+  })
 }
