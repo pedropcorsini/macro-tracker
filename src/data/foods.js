@@ -1,3 +1,6 @@
+import foodsExtraData from "./foodsExtra.js"
+import foodsBrandsData from "./foodsBrands.js"
+
 const foodsData = {
   pt: [
     // Carnes e aves
@@ -492,4 +495,11 @@ const foodsData = {
   ],
 }
 
-export default foodsData
+const mergedFoodsData = Object.fromEntries(
+  Object.entries(foodsData).map(([lang, foods]) => [
+    lang,
+    [...foods, ...(foodsExtraData[lang] || []), ...(foodsBrandsData[lang] || [])],
+  ])
+)
+
+export default mergedFoodsData

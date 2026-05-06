@@ -94,7 +94,7 @@ Todas as tabelas usam Row Level Security, garantindo que cada usuário acesse ap
 
 ## Banco de Alimentos
 
-O projeto inclui uma base local com **148 alimentos** em português, inglês e espanhol. Cada item guarda calorias, proteína, carboidratos e gordura por 100g. Alguns alimentos também têm unidade prática, como fatia, unidade, dente ou porção equivalente, usando `unit` e `gramsPerUnit`.
+O projeto inclui uma base local com **554 alimentos** e busca por nomes/aliases em português, inglês e espanhol. Cada item guarda calorias, proteína, carboidratos e gordura por 100g. Alguns alimentos também têm unidade prática, como fatia, unidade, dente ou porção equivalente, usando `unit` e `gramsPerUnit`.
 
 Categorias contempladas: carnes, peixes, ovos, proteínas, laticínios, cereais, pães, massas, leguminosas, tubérculos, frutas, vegetais, oleaginosas, gorduras, bebidas e itens complementares.
 
