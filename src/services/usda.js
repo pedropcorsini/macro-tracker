@@ -13,8 +13,7 @@ function getLang() {
 
 export function getFoods() {
   return foodsData[getLang()] || foodsData.pt
-}
-
+  }
 export async function buscarAlimentos(query) {
   if (!query || query.trim().length < 2) return []
 
