@@ -2036,13 +2036,16 @@ button {
   }
 }
 
-@media (max-width: 1023px) {
-  .dashboard-greeting {
-    display: none;
-  }
-}
-
 @media (max-width: 760px) {
+  .dashboard-header {
+    margin-bottom: 14px;
+  }
+
+  .page-title.dashboard-greeting {
+    font-size: 28px;
+    line-height: 1.08;
+  }
+
   .macro-grid,
   .chart-summary-grid,
   .goals-preview {
@@ -2370,12 +2373,13 @@ button {
     linear-gradient(135deg, var(--accent-violet), var(--accent-green), var(--accent-blue)) border-box;
   border: 2px solid transparent;
   box-shadow: 0 20px 44px rgba(124, 58, 237, 0.18);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .account-avatar {
   width: 100%;
   height: 100%;
+  border-radius: 50%;
   object-fit: cover;
 }
 
@@ -2385,11 +2389,53 @@ button {
   display: grid;
   place-items: center;
   background: linear-gradient(135deg, rgba(124, 58, 237, 0.94), rgba(14, 165, 233, 0.84));
+  border-radius: 50%;
   color: #fff;
   font-family: var(--font-display, "Space Grotesk", sans-serif);
   font-size: 36px;
   font-weight: 800;
   letter-spacing: 0;
+}
+
+.account-avatar-edit {
+  position: absolute;
+  right: -10px;
+  bottom: 2px;
+  z-index: 2;
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.56);
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.82);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 12px 24px rgba(2, 6, 23, 0.26);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.account-avatar-edit:hover {
+  background: rgba(124, 58, 237, 0.94);
+  transform: translateY(-1px);
+}
+
+.account-avatar-edit:disabled {
+  cursor: wait;
+  opacity: 0.76;
+}
+
+.account-avatar-input {
+  display: none;
+}
+
+.account-avatar-spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.45);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin2 0.7s linear infinite;
 }
 
 .account-identity {
@@ -2646,6 +2692,13 @@ button {
     flex-basis: 92px;
   }
 
+  .account-avatar-edit {
+    right: -8px;
+    bottom: -2px;
+    width: 32px;
+    height: 32px;
+  }
+
   .account-avatar-fallback {
     font-size: 30px;
   }
@@ -2684,6 +2737,13 @@ button {
     width: 78px;
     height: 78px;
     flex-basis: 78px;
+  }
+
+  .account-avatar-edit {
+    right: -7px;
+    bottom: -4px;
+    width: 30px;
+    height: 30px;
   }
 
   .account-avatar-fallback {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useTema } from "../context/ThemeContext"
 import { useTranslation } from "react-i18next"
 import { supabase } from "../services/supabase"
@@ -154,6 +154,15 @@ function PencilIcon() {
   )
 }
 
+function CameraIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z" />
+      <circle cx="12" cy="13" r="3" />
+    </svg>
+  )
+}
+
 function DetailItem({ label, value }) {
   return (
     <div className="account-detail-item">
@@ -161,6 +170,41 @@ function DetailItem({ label, value }) {
       <strong className="account-detail-value">{value}</strong>
     </div>
   )
+}
+
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const image = new Image()
+    image.onload = () => resolve(image)
+    image.onerror = reject
+    image.src = src
+  })
+}
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = reject
+    reader.readAsDataURL(file)
+  })
+}
+
+async function imageFileToAvatarUrl(file) {
+  const dataUrl = await readFileAsDataUrl(file)
+  const image = await loadImage(dataUrl)
+  const size = 320
+  const scale = Math.max(size / image.width, size / image.height)
+  const width = image.width * scale
+  const height = image.height * scale
+  const canvas = document.createElement("canvas")
+  const context = canvas.getContext("2d")
+
+  canvas.width = size
+  canvas.height = size
+  context.drawImage(image, (size - width) / 2, (size - height) / 2, width, height)
+
+  return canvas.toDataURL("image/jpeg", 0.82)
 }
 
 export default function Conta({ usuario }) {
@@ -176,20 +220,72 @@ export default function Conta({ usuario }) {
   const [editando, setEditando] = useState("")
   const [rascunho, setRascunho] = useState("")
   const [salvandoCampo, setSalvandoCampo] = useState("")
+  const [salvandoFoto, setSalvandoFoto] = useState(false)
+  const [fotoPerfil, setFotoPerfil] = useState("")
   const [erro, setErro] = useState("")
   const [sucesso, setSucesso] = useState("")
+  const fotoInputRef = useRef(null)
 
   const displayName = nome.trim() || getDisplayName(usuario)
-  const avatarUrl = getAvatarUrl(usuario)
+  const avatarUrl = fotoPerfil || getAvatarUrl(usuario)
 
   useEffect(() => {
     setNome(getProfileName(usuario))
     setTelefone(getPhone(usuario))
+    setFotoPerfil(getAvatarUrl(usuario))
     setEditando("")
     setRascunho("")
     setErro("")
     setSucesso("")
   }, [usuario])
+
+  async function alterarFoto(event) {
+    const file = event.target.files?.[0]
+    event.target.value = ""
+    if (!file) return
+
+    if (!file.type.startsWith("image/")) {
+      setErro(t("account_photo_format_error"))
+      return
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      setErro(t("account_photo_size_error"))
+      return
+    }
+
+    setErro("")
+    setSucesso("")
+    setSalvandoFoto(true)
+
+    try {
+      const nextAvatarUrl = await imageFileToAvatarUrl(file)
+
+      if (nextAvatarUrl.length > 350000) {
+        throw new Error(t("account_photo_size_error"))
+      }
+
+      const nextMetadata = {
+        ...metadata,
+        full_name: nome.trim(),
+        name: nome.trim(),
+        phone: telefone,
+        avatar_url: nextAvatarUrl,
+        picture: nextAvatarUrl,
+        photo_url: nextAvatarUrl,
+      }
+
+      const { error } = await supabase.auth.updateUser({ data: nextMetadata })
+      if (error) throw error
+
+      setFotoPerfil(nextAvatarUrl)
+      setSucesso(t("account_photo_saved"))
+    } catch (error) {
+      setErro(error.message || t("account_save_error"))
+    } finally {
+      setSalvandoFoto(false)
+    }
+  }
 
   function iniciarEdicao(campo) {
     setErro("")
@@ -228,6 +324,7 @@ export default function Conta({ usuario }) {
         full_name: campo === "nome" ? valorLimpo : nome.trim(),
         name: campo === "nome" ? valorLimpo : nome.trim(),
         phone: campo === "telefone" ? valorLimpo : telefone,
+        ...(avatarUrl ? { avatar_url: avatarUrl, picture: avatarUrl, photo_url: avatarUrl } : {}),
       }
 
       const { error } = await supabase.auth.updateUser({ data: nextMetadata })
@@ -331,6 +428,24 @@ export default function Conta({ usuario }) {
                 {getInitials(displayName, email)}
               </div>
             )}
+
+            <button
+              type="button"
+              className="account-avatar-edit"
+              onClick={() => fotoInputRef.current?.click()}
+              aria-label={t("account_change_photo")}
+              disabled={salvandoFoto}
+            >
+              {salvandoFoto ? <span className="account-avatar-spinner" /> : <CameraIcon />}
+            </button>
+
+            <input
+              ref={fotoInputRef}
+              type="file"
+              accept="image/*"
+              className="account-avatar-input"
+              onChange={alterarFoto}
+            />
           </div>
 
           <div className="account-identity">
