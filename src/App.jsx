@@ -11,6 +11,7 @@ import Calendario from "./pages/Calendario"
 import Metas from "./pages/Metas"
 import Graficos from "./pages/Graficos"
 import Favoritos from "./pages/Favoritos"
+import Conta from "./pages/Conta"
 import LanguageSelect from "./components/LanguageSelect"
 import SiteFooter from "./components/SiteFooter"
 
@@ -120,7 +121,21 @@ function AppInner() {
           <div className="app-sidebar-footer px-3 pb-5 space-y-1 border-t border-gray-100 dark:border-[#2a2a2a] pt-3 flex-shrink-0">
             <p className="text-[10px] text-gray-300 dark:text-zinc-700 px-3 truncate mb-2">{usuario.email}</p>
 
-            <LanguageSelect variant={isDark ? "dark" : "light"} fullWidth />
+            <div className="app-sidebar-user-tools">
+              <button
+                onClick={() => { setAbaAtiva("conta"); setSidebarAberta(false) }}
+                aria-label={t("nav_account")}
+                className={`app-account-shortcut${abaAtiva === "conta" ? " is-active" : ""}`}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M20 21a8 8 0 0 0-16 0" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                <span>{t("nav_account")}</span>
+              </button>
+
+              <LanguageSelect variant={isDark ? "dark" : "light"} compact />
+            </div>
 
             <button
               onClick={alternarTema}
@@ -179,6 +194,7 @@ function AppInner() {
               {abaAtiva === "metas" && <Metas />}
               {abaAtiva === "graficos" && <Graficos />}
               {abaAtiva === "favoritos" && <Favoritos />}
+              {abaAtiva === "conta" && <Conta usuario={usuario} />}
               <SiteFooter className="app-site-footer" />
             </div>
           </main>

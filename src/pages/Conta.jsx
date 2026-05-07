@@ -1,0 +1,388 @@
+import { useEffect, useState } from "react"
+import { useTema } from "../context/ThemeContext"
+import { useTranslation } from "react-i18next"
+import { supabase } from "../services/supabase"
+import "../styles/app.css"
+
+const PROVIDER_LABELS = {
+  email: "Email",
+  github: "GitHub",
+  google: "Google",
+}
+
+const BR_PHONE_RE = /^(\+55\s*)?\(?\d{2}\)?[\s.-]?\d{4,5}[\s.-]?\d{4}$/
+const US_PHONE_RE = /^(\+1\s*)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/
+
+function getMetadata(usuario) {
+  return usuario?.user_metadata || {}
+}
+
+function getProfileName(usuario) {
+  const metadata = getMetadata(usuario)
+  return (
+    metadata.full_name ||
+    metadata.name ||
+    metadata.user_name ||
+    metadata.preferred_username ||
+    ""
+  )
+}
+
+function getDisplayName(usuario) {
+  return getProfileName(usuario) || usuario?.email?.split("@")[0] || ""
+}
+
+function getAvatarUrl(usuario) {
+  const metadata = getMetadata(usuario)
+  return metadata.avatar_url || metadata.picture || metadata.photo_url || ""
+}
+
+function getPhone(usuario) {
+  const metadata = getMetadata(usuario)
+  return metadata.phone || metadata.phone_number || usuario?.phone || ""
+}
+
+function getProviders(usuario) {
+  const providers = Array.isArray(usuario?.app_metadata?.providers)
+    ? usuario.app_metadata.providers
+    : []
+  const provider = usuario?.app_metadata?.provider
+
+  return [...new Set([...providers, provider].filter(Boolean))]
+}
+
+function getLocale(language = "") {
+  if (language.startsWith("en")) return "en-US"
+  if (language.startsWith("es")) return "es-ES"
+  return "pt-BR"
+}
+
+function formatDate(value, language) {
+  if (!value) return ""
+
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return ""
+
+  return new Intl.DateTimeFormat(getLocale(language), {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date)
+}
+
+function getInitials(name, email) {
+  const base = name || email || "U"
+  const words = base
+    .replace(/@.*/, "")
+    .split(/[.\s_-]+/)
+    .filter(Boolean)
+
+  return words
+    .slice(0, 2)
+    .map((word) => word[0])
+    .join("")
+    .toUpperCase()
+}
+
+function providerLabel(provider) {
+  return PROVIDER_LABELS[provider] || provider
+}
+
+function onlyDigits(value) {
+  return value.replace(/\D/g, "")
+}
+
+function formatBrPhone(digits, withCountry = false) {
+  const area = digits.slice(0, 2)
+  const local = digits.slice(2)
+  const prefix = withCountry ? "+55 " : ""
+
+  if (local.length === 9) {
+    return `${prefix}(${area}) ${local.slice(0, 5)}-${local.slice(5)}`
+  }
+
+  return `${prefix}(${area}) ${local.slice(0, 4)}-${local.slice(4)}`
+}
+
+function formatUsPhone(digits, withCountry = false) {
+  const local = digits.slice(0, 10)
+  const prefix = withCountry ? "+1 " : ""
+  return `${prefix}(${local.slice(0, 3)}) ${local.slice(3, 6)}-${local.slice(6)}`
+}
+
+function formatPhone(value) {
+  const text = value.trim()
+  const digits = onlyDigits(value)
+
+  if (!digits) return ""
+  if (BR_PHONE_RE.test(text)) {
+    const brDigits = digits.startsWith("55") ? digits.slice(2) : digits
+    return formatBrPhone(brDigits, digits.startsWith("55"))
+  }
+  if (US_PHONE_RE.test(text)) {
+    const usDigits = digits.startsWith("1") && digits.length === 11 ? digits.slice(1) : digits
+    return formatUsPhone(usDigits, digits.startsWith("1") && digits.length === 11)
+  }
+  if (digits.startsWith("55") && (digits.length === 12 || digits.length === 13)) {
+    return formatBrPhone(digits.slice(2), true)
+  }
+  if (digits.startsWith("1") && digits.length === 11) {
+    return formatUsPhone(digits.slice(1), true)
+  }
+  if (digits.length === 11) return formatBrPhone(digits)
+  if (digits.length === 10) return formatUsPhone(digits)
+
+  return value.trim()
+}
+
+function isValidPhone(value) {
+  const text = value.trim()
+  const digits = onlyDigits(value)
+
+  if (!digits) return true
+  if (BR_PHONE_RE.test(text) || US_PHONE_RE.test(text)) return true
+  if (digits.startsWith("55")) return digits.length === 12 || digits.length === 13
+  if (digits.startsWith("1")) return digits.length === 11
+  return digits.length === 10 || digits.length === 11
+}
+
+function PencilIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M12 20h9" />
+      <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+    </svg>
+  )
+}
+
+function DetailItem({ label, value }) {
+  return (
+    <div className="account-detail-item">
+      <span className="account-detail-label">{label}</span>
+      <strong className="account-detail-value">{value}</strong>
+    </div>
+  )
+}
+
+export default function Conta({ usuario }) {
+  const { isDark } = useTema()
+  const { t, i18n } = useTranslation()
+  const d = isDark
+  const metadata = getMetadata(usuario)
+  const providers = getProviders(usuario)
+  const email = usuario?.email || metadata.email || t("account_not_available")
+  const fallback = t("account_not_available")
+  const [nome, setNome] = useState("")
+  const [telefone, setTelefone] = useState("")
+  const [editando, setEditando] = useState("")
+  const [rascunho, setRascunho] = useState("")
+  const [salvandoCampo, setSalvandoCampo] = useState("")
+  const [erro, setErro] = useState("")
+  const [sucesso, setSucesso] = useState("")
+
+  const displayName = nome.trim() || getDisplayName(usuario)
+  const avatarUrl = getAvatarUrl(usuario)
+
+  useEffect(() => {
+    setNome(getProfileName(usuario))
+    setTelefone(getPhone(usuario))
+    setEditando("")
+    setRascunho("")
+    setErro("")
+    setSucesso("")
+  }, [usuario])
+
+  function iniciarEdicao(campo) {
+    setErro("")
+    setSucesso("")
+    setEditando(campo)
+    setRascunho(campo === "nome" ? nome : telefone)
+  }
+
+  function cancelarEdicao() {
+    setEditando("")
+    setRascunho("")
+    setErro("")
+  }
+
+  async function salvarCampo(campo) {
+    const valorAtual = campo === "nome" ? nome : telefone
+    const valorLimpo = campo === "telefone" ? formatPhone(rascunho) : rascunho.trim()
+
+    if (campo === "telefone" && !isValidPhone(rascunho)) {
+      setErro(t("account_phone_format_error"))
+      return
+    }
+
+    if (valorLimpo === valorAtual) {
+      cancelarEdicao()
+      return
+    }
+
+    setErro("")
+    setSucesso("")
+    setSalvandoCampo(campo)
+
+    try {
+      const nextMetadata = {
+        ...metadata,
+        full_name: campo === "nome" ? valorLimpo : nome.trim(),
+        name: campo === "nome" ? valorLimpo : nome.trim(),
+        phone: campo === "telefone" ? valorLimpo : telefone,
+      }
+
+      const { error } = await supabase.auth.updateUser({ data: nextMetadata })
+      if (error) throw error
+
+      if (campo === "nome") setNome(valorLimpo)
+      if (campo === "telefone") setTelefone(valorLimpo)
+
+      setEditando("")
+      setRascunho("")
+      setSucesso(t("account_inline_saved"))
+    } catch (error) {
+      setErro(error.message || t("account_save_error"))
+    } finally {
+      setSalvandoCampo("")
+    }
+  }
+
+  function handleInputKeyDown(event, campo) {
+    if (event.key === "Enter") {
+      event.preventDefault()
+      salvarCampo(campo)
+    }
+
+    if (event.key === "Escape") {
+      cancelarEdicao()
+    }
+  }
+
+  function editableRow({ campo, label, value, emptyText, inputType = "text", placeholder }) {
+    const isEditing = editando === campo
+    const isSaving = salvandoCampo === campo
+
+    return (
+      <div className="account-detail-item account-detail-item--editable">
+        <span className="account-detail-label">{label}</span>
+        <div className="account-editable-control">
+          {isEditing ? (
+            <input
+              autoFocus
+              type={inputType}
+              value={rascunho}
+              onChange={(event) => setRascunho(event.target.value)}
+              onBlur={() => salvarCampo(campo)}
+              onKeyDown={(event) => handleInputKeyDown(event, campo)}
+              placeholder={placeholder}
+              className={d ? "account-inline-input" : "account-inline-input light"}
+            />
+          ) : (
+            <strong className={`account-detail-value account-editable-value${value ? "" : " is-empty"}`}>
+              {value || emptyText}
+            </strong>
+          )}
+
+          <button
+            type="button"
+            className="account-edit-button"
+            onMouseDown={(event) => event.preventDefault()}
+            onClick={() => (isEditing ? salvarCampo(campo) : iniciarEdicao(campo))}
+            aria-label={t(campo === "nome" ? "account_edit_name" : "account_edit_phone")}
+            disabled={isSaving}
+          >
+            <PencilIcon />
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  const details = [
+    { label: t("account_email"), value: email },
+    {
+      label: t("account_provider"),
+      value: providers.length ? providers.map(providerLabel).join(", ") : t("account_provider_unknown"),
+    },
+    { label: t("account_created"), value: formatDate(usuario?.created_at, i18n.language) || fallback },
+    { label: t("account_last_sign_in"), value: formatDate(usuario?.last_sign_in_at, i18n.language) || fallback },
+    { label: t("account_user_id"), value: usuario?.id || fallback },
+  ]
+
+  return (
+    <div className="page-shell account-page">
+      <div className="page-header">
+        <div className="page-tag">{t("account_tag")}</div>
+        <h1 className={d ? "page-title" : "page-title light"}>{t("account_title")}</h1>
+        <p className="page-sub">{t("account_subtitle")}</p>
+      </div>
+
+      <section className={d ? "app-card account-profile-card" : "app-card light account-profile-card"}>
+        <div className="account-hero">
+          <div className="account-avatar-wrap" aria-label={avatarUrl ? t("account_avatar_alt") : t("account_no_photo")}>
+            {avatarUrl ? (
+              <img
+                className="account-avatar"
+                src={avatarUrl}
+                alt={t("account_avatar_alt")}
+                referrerPolicy="no-referrer"
+              />
+            ) : (
+              <div className="account-avatar-fallback">
+                {getInitials(displayName, email)}
+              </div>
+            )}
+          </div>
+
+          <div className="account-identity">
+            <span className="app-card-label">{t("account_logged_as")}</span>
+            <h2 className={d ? "account-name" : "account-name light"}>{displayName || t("account_no_name")}</h2>
+            <p className="account-email">{email}</p>
+
+            <div className="account-provider-row" aria-label={t("account_providers")}>
+              {providers.length > 0 ? providers.map((provider) => (
+                <span key={provider} className="account-provider-pill">
+                  <span className="account-provider-dot" />
+                  {providerLabel(provider)}
+                </span>
+              )) : (
+                <span className="account-provider-pill">
+                  <span className="account-provider-dot" />
+                  {t("account_provider_unknown")}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className={d ? "app-card" : "app-card light"}>
+        <div className="app-card-label">{t("account_details")}</div>
+        <div className="account-detail-grid">
+          {editableRow({
+            campo: "nome",
+            label: t("account_name"),
+            value: nome.trim(),
+            emptyText: t("account_no_name"),
+            placeholder: t("account_name_placeholder"),
+          })}
+
+          {editableRow({
+            campo: "telefone",
+            label: t("account_phone"),
+            value: telefone,
+            emptyText: t("account_phone_empty"),
+            inputType: "tel",
+            placeholder: t("account_phone_placeholder"),
+          })}
+
+          {details.map((item) => (
+            <DetailItem key={item.label} label={item.label} value={item.value} />
+          ))}
+        </div>
+
+        {erro && <div className="account-alert error">{erro}</div>}
+        {sucesso && <div className="account-alert success">{sucesso}</div>}
+      </section>
+    </div>
+  )
+}

@@ -13,7 +13,7 @@ function normalizeLanguage(language = "") {
   return "pt"
 }
 
-export default function LanguageSelect({ variant = "dark", fullWidth = false }) {
+export default function LanguageSelect({ variant = "dark", fullWidth = false, compact = false }) {
   const { i18n } = useTranslation()
   const containerRef = useRef(null)
   const [isOpen, setIsOpen] = useState(false)
@@ -46,6 +46,7 @@ export default function LanguageSelect({ variant = "dark", fullWidth = false }) 
     "language-select-wrap",
     `language-select-wrap--${variant}`,
     fullWidth ? "language-select-wrap--full" : "",
+    compact ? "language-select-wrap--compact" : "",
     isOpen ? "is-open" : "",
   ].filter(Boolean).join(" ")
 
