@@ -47,6 +47,7 @@ export default {
   meal_breakfast: "Breakfast",
   meal_lunch: "Lunch",
   meal_snack: "Afternoon snack",
+  meal_pre_workout: "Pre-workout",
   meal_dinner: "Dinner",
   added_to: "Added to",
   search_placeholder: "Search food (e.g. chicken, rice, banana)...",

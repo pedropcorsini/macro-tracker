@@ -17,7 +17,7 @@ function getToday() {
 }
 
 const REFEICOES_PADRAO = {
-  "Café da manhã": [], "Almoço": [], "Lanche da tarde": [], "Jantar": [],
+  "Café da manhã": [], "Almoço": [], "Lanche da tarde": [], "Pré treino": [], "Jantar": [],
 }
 
 function atualizarRecentes(recentes, item) {

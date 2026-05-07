@@ -29,12 +29,18 @@ function getGreetingKey(date) {
   return "greeting_evening"
 }
 
+function getDateLocale(language = "") {
+  if (language.startsWith("en")) return "en-US"
+  if (language.startsWith("es")) return "es-ES"
+  return "pt-BR"
+}
+
 function Hoje({ usuario }) {
   const { state, dispatch } = useTracker()
   const { isDark } = useTema()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
-  const REFEICOES = [t("meal_breakfast"), t("meal_lunch"), t("meal_snack"), t("meal_dinner")]
+  const REFEICOES = [t("meal_breakfast"), t("meal_lunch"), t("meal_snack"), t("meal_pre_workout"), t("meal_dinner")]
 
   const CONFIG_MACROS = [
     { key: "cal", lbl: t("calories"), unit: "kcal", color: "#a78bfa" },
@@ -56,7 +62,11 @@ function Hoje({ usuario }) {
 
   const hoje = new Date().toISOString().split("T")[0]
   const logHoje = state.logs[hoje] || {
-    [t("meal_breakfast")]: [], [t("meal_lunch")]: [], [t("meal_snack")]: [], [t("meal_dinner")]: [],
+    [t("meal_breakfast")]: [],
+    [t("meal_lunch")]: [],
+    [t("meal_snack")]: [],
+    [t("meal_pre_workout")]: [],
+    [t("meal_dinner")]: [],
   }
 
   const totais = Object.values(logHoje).flat().reduce(
@@ -76,6 +86,9 @@ function Hoje({ usuario }) {
   const d = isDark
   const primeiroNome = getFirstName(usuario) || t("greeting_user_fallback")
   const saudacao = t(getGreetingKey(agora))
+  const dataHoje = new Intl.DateTimeFormat(getDateLocale(i18n.language), {
+    dateStyle: "long",
+  }).format(agora)
 
   useEffect(() => {
     if (busca.trim().length < 2) { setResultados([]); return }
@@ -149,6 +162,7 @@ function Hoje({ usuario }) {
           <h1 className={d ? "page-title dashboard-greeting" : "page-title light dashboard-greeting"}>
             {saudacao}, {primeiroNome}!
           </h1>
+          <p className="page-sub">{dataHoje}</p>
         </div>
 
         {/* Macros */}

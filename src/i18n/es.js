@@ -47,6 +47,7 @@ export default {
   meal_breakfast: "Desayuno",
   meal_lunch: "Almuerzo",
   meal_snack: "Merienda",
+  meal_pre_workout: "Pre entreno",
   meal_dinner: "Cena",
   added_to: "Agregado a",
   search_placeholder: "Buscar alimento (ej: pollo, arroz, banana)...",

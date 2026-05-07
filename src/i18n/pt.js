@@ -52,6 +52,7 @@ export default {
   meal_breakfast: "Café da manhã",
   meal_lunch: "Almoço",
   meal_snack: "Lanche da tarde",
+  meal_pre_workout: "Pré treino",
   meal_dinner: "Jantar",
   added_to: "Adicionado em",
   search_placeholder: "Buscar alimento (ex: frango, arroz, banana)...",

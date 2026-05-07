@@ -19,7 +19,7 @@ export default function Favoritos() {
 
   const d = isDark
 
-  const REFEICOES = [t("meal_breakfast"), t("meal_lunch"), t("meal_snack"), t("meal_dinner")]
+  const REFEICOES = [t("meal_breakfast"), t("meal_lunch"), t("meal_snack"), t("meal_pre_workout"), t("meal_dinner")]
   const refeicaoSelecionada = refeicaoAtiva || REFEICOES[0]
 
   function toggleFavorito(item) {
