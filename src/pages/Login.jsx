@@ -11,6 +11,7 @@ function Login({ onVoltar, modo }) {
   const { t } = useTranslation()
   const { tema, isDark, alternandoTema, alternarTema } = useTema()
   const [modoAtivo, setModoAtivo] = useState(modo === "cadastro" ? MODO.CADASTRO : MODO.LOGIN)
+  const [nome, setNome] = useState("")
   const [email, setEmail] = useState("")
   const [senha, setSenha] = useState("")
   const [carregando, setCarregando] = useState(false)
@@ -23,7 +24,10 @@ function Login({ onVoltar, modo }) {
     setErro("")
     setSucesso("")
 
-    if (!email || !senha) {
+    const nomeLimpo = nome.trim()
+    const emailLimpo = email.trim()
+
+    if (!emailLimpo || !senha || (modoAtivo === MODO.CADASTRO && !nomeLimpo)) {
       setErro(t("login_fill_fields"))
       return
     }
@@ -31,10 +35,19 @@ function Login({ onVoltar, modo }) {
     setCarregando(true)
     try {
       if (modoAtivo === MODO.LOGIN) {
-        const { error } = await supabase.auth.signInWithPassword({ email, password: senha })
+        const { error } = await supabase.auth.signInWithPassword({ email: emailLimpo, password: senha })
         if (error) throw error
       } else {
-        const { error } = await supabase.auth.signUp({ email, password: senha })
+        const { error } = await supabase.auth.signUp({
+          email: emailLimpo,
+          password: senha,
+          options: {
+            data: {
+              full_name: nomeLimpo,
+              name: nomeLimpo,
+            },
+          },
+        })
         if (error) throw error
         setSucesso(t("login_success"))
       }
@@ -171,6 +184,21 @@ function Login({ onVoltar, modo }) {
           </div>
 
           <div className="auth-field-group">
+            {modoAtivo === MODO.CADASTRO && (
+              <div>
+                <label className="auth-field-label">{t("login_name")}</label>
+                <input
+                  type="text"
+                  value={nome}
+                  onChange={(e) => setNome(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleEmailSenha()}
+                  placeholder={t("login_name_placeholder")}
+                  autoComplete="name"
+                  className={d ? "app-input" : "app-input light"}
+                />
+              </div>
+            )}
+
             <div>
               <label className="auth-field-label">{t("login_email")}</label>
               <input
@@ -179,6 +207,7 @@ function Login({ onVoltar, modo }) {
                 onChange={(e) => setEmail(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleEmailSenha()}
                 placeholder={t("login_email_placeholder")}
+                autoComplete="email"
                 className={d ? "app-input" : "app-input light"}
               />
             </div>
@@ -191,6 +220,7 @@ function Login({ onVoltar, modo }) {
                 onChange={(e) => setSenha(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleEmailSenha()}
                 placeholder={t("login_password_placeholder")}
+                autoComplete={modoAtivo === MODO.LOGIN ? "current-password" : "new-password"}
                 className={d ? "app-input" : "app-input light"}
               />
             </div>

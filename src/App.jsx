@@ -189,7 +189,7 @@ function AppInner() {
 
           <main className="app-main-content flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
             <div className="app-main-inner max-w-5xl mx-auto">
-              {abaAtiva === "hoje" && <Hoje />}
+              {abaAtiva === "hoje" && <Hoje usuario={usuario} />}
               {abaAtiva === "calendario" && <Calendario />}
               {abaAtiva === "metas" && <Metas />}
               {abaAtiva === "graficos" && <Graficos />}

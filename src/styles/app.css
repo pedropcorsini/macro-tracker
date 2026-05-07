@@ -36,6 +36,20 @@
 }
 
 /* ---------- MACRO GRID ---------- */
+.dashboard-greeting,
+.page-title.dashboard-greeting {
+  font-family: var(--font-display, "Space Grotesk", sans-serif);
+  color: #f8fafc;
+  font-size: clamp(26px, 2.4vw, 34px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0;
+}
+.dashboard-greeting.light { color: #0f172a; }
+.dashboard-header {
+  margin-bottom: 18px;
+}
+
 .macro-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -2019,6 +2033,12 @@ button {
 
   .app-main-content {
     padding: 34px 38px;
+  }
+}
+
+@media (max-width: 1023px) {
+  .dashboard-greeting {
+    display: none;
   }
 }
 

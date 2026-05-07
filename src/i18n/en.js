@@ -10,6 +10,10 @@ export default {
   sign_out: "Sign out",
   dark_mode: "Dark mode",
   light_mode: "Light mode",
+  greeting_morning: "Good morning",
+  greeting_afternoon: "Good afternoon",
+  greeting_evening: "Good evening",
+  greeting_user_fallback: "user",
 
   nav_today: "Today",
   nav_calendar: "Calendar",
@@ -20,8 +24,10 @@ export default {
 
   login_enter: "Sign in",
   login_register: "Create account",
+  login_name: "Name",
   login_email: "Email",
   login_password: "Password",
+  login_name_placeholder: "Your name",
   login_email_placeholder: "your@email.com",
   login_password_placeholder: "••••••••",
   login_loading: "Please wait...",

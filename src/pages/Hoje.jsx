@@ -6,7 +6,30 @@ import AlimentosRapidos from "../components/AlimentosRapidos"
 import { useTranslation } from "react-i18next"
 import "../styles/app.css"
 
-function Hoje() {
+function getAccountName(usuario) {
+  const metadata = usuario?.user_metadata || {}
+  return (
+    metadata.full_name ||
+    metadata.name ||
+    metadata.user_name ||
+    metadata.preferred_username ||
+    usuario?.email?.split("@")[0] ||
+    ""
+  )
+}
+
+function getFirstName(usuario) {
+  return getAccountName(usuario).trim().split(/\s+/)[0] || ""
+}
+
+function getGreetingKey(date) {
+  const hour = date.getHours()
+  if (hour >= 5 && hour < 12) return "greeting_morning"
+  if (hour >= 12 && hour < 18) return "greeting_afternoon"
+  return "greeting_evening"
+}
+
+function Hoje({ usuario }) {
   const { state, dispatch } = useTracker()
   const { isDark } = useTema()
   const { t } = useTranslation()
@@ -28,6 +51,7 @@ function Hoje() {
   const [quantidade, setQuantidade] = useState(100)
   const [modoUnidade, setModoUnidade] = useState(false)
   const [mlManual, setMlManual] = useState("")
+  const [agora, setAgora] = useState(() => new Date())
   const debounceRef = useRef(null)
 
   const hoje = new Date().toISOString().split("T")[0]
@@ -50,6 +74,8 @@ function Hoje() {
   const waterMetaDisplay = waterUnit === "L" ? (goals.water / 1000).toFixed(1) + "L" : goals.water + "ml"
 
   const d = isDark
+  const primeiroNome = getFirstName(usuario) || t("greeting_user_fallback")
+  const saudacao = t(getGreetingKey(agora))
 
   useEffect(() => {
     if (busca.trim().length < 2) { setResultados([]); return }
@@ -61,6 +87,11 @@ function Hoje() {
       finally { setCarregando(false) }
     }, 500)
   }, [busca])
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setAgora(new Date()), 60000)
+    return () => window.clearInterval(timer)
+  }, [])
 
   function selecionarAlimento(alimento) {
     setAlimentoSelecionado(alimento)
@@ -112,6 +143,13 @@ function Hoje() {
 
       {/* COLUNA PRINCIPAL */}
       <div className="dashboard-main">
+
+        <div className="page-header dashboard-header">
+          <div className="page-tag">{t("nav_today")}</div>
+          <h1 className={d ? "page-title dashboard-greeting" : "page-title light dashboard-greeting"}>
+            {saudacao}, {primeiroNome}!
+          </h1>
+        </div>
 
         {/* Macros */}
         <div className="macro-grid">
