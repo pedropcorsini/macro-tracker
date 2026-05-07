@@ -2467,35 +2467,37 @@ button {
   white-space: nowrap;
 }
 
-.account-provider-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 14px;
-}
-
-.account-provider-pill {
+.account-provider-icons {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
+  flex-wrap: wrap;
+  gap: 8px;
   max-width: 100%;
-  min-height: 32px;
-  padding: 7px 10px;
+  vertical-align: middle;
+}
+
+.account-provider-symbol {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 20px;
+  height: 20px;
+  color: var(--text-strong);
+  line-height: 1;
+}
+
+.account-provider-symbol.compact {
+  width: 24px;
+  height: 24px;
   border: 1px solid rgba(167, 139, 250, 0.22);
   border-radius: 999px;
   background: rgba(124, 58, 237, 0.08);
-  color: var(--text-strong);
-  font-size: 12px;
-  font-weight: 800;
-  overflow: hidden;
 }
 
-.account-provider-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--accent-green);
-  box-shadow: 0 0 14px rgba(52, 211, 153, 0.72);
+.account-provider-icon {
+  display: block;
+  width: 18px;
+  height: 18px;
 }
 
 .account-editable-control {
@@ -2710,6 +2712,20 @@ button {
   .account-detail-item {
     padding: 12px;
   }
+
+  .account-provider-icons {
+    gap: 6px;
+  }
+
+  .account-provider-symbol.compact {
+    width: 28px;
+    height: 28px;
+  }
+
+  .account-provider-symbol.compact .account-provider-icon {
+    width: 17px;
+    height: 17px;
+  }
 }
 
 @media (max-width: 420px) {
@@ -2758,13 +2774,17 @@ button {
     font-size: 13px;
   }
 
-  .account-provider-pill {
-    min-height: 30px;
-    padding: 6px 9px;
-  }
-
   .account-detail-item--editable {
     padding: 11px 12px;
+  }
+
+  .account-provider-icons {
+    gap: 5px;
+  }
+
+  .account-provider-symbol.compact {
+    width: 26px;
+    height: 26px;
   }
 
   .account-editable-control {
