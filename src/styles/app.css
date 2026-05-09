@@ -796,11 +796,34 @@ body { min-height: 100vh; background: #f8fafc; }
 
 .app-sidebar {
   overscroll-behavior-y: contain;
-  -webkit-overflow-scrolling: touch;
 }
 
 .app-sidebar-nav {
   min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.42) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.app-sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.app-sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.app-sidebar-nav::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.34);
+}
+
+.dark .app-sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.26);
 }
 
 .dark .app-sidebar,
@@ -1443,7 +1466,7 @@ body { min-height: 100vh; background: #f8fafc; }
   .app-sidebar {
     height: 100dvh;
     max-height: 100dvh;
-    overflow-y: auto;
+    overflow: hidden;
     touch-action: pan-y;
   }
 
@@ -1453,7 +1476,7 @@ body { min-height: 100vh; background: #f8fafc; }
 
   .app-sidebar-nav {
     flex: 1 1 auto;
-    overflow: visible;
+    overflow-y: auto;
   }
 
   .app-sidebar-footer {

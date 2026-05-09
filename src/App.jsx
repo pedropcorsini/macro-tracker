@@ -70,7 +70,7 @@ function AppInner() {
 
         {/* SIDEBAR */}
         <aside className={`
-          app-sidebar fixed top-0 left-0 z-30 flex flex-col w-64 h-screen overflow-y-auto
+          app-sidebar fixed top-0 left-0 z-30 flex flex-col w-64 h-screen overflow-hidden
           border-r border-gray-100 dark:border-[#2a2a2a]
           transition-transform duration-300 flex-shrink-0
           ${sidebarAberta ? "translate-x-0" : "-translate-x-full"}
@@ -99,7 +99,7 @@ function AppInner() {
           </div>
 
           {/* Navegação */}
-          <nav className="app-sidebar-nav flex-1 min-h-0 px-3 py-4 space-y-1">
+          <nav className="app-sidebar-nav flex-1 min-h-0 overflow-y-auto px-3 py-4 space-y-1">
             {ABAS.map((aba) => (
               <button
                 key={aba.id}
