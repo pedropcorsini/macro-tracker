@@ -25,7 +25,7 @@ function Metas() {
     { key: "c",     label: t("carbs"),     unit: "g",           color: "#fbbf24" },
     { key: "f",     label: t("fat"),       unit: "g",           color: "#f87171" },
     { key: "water", label: t("water"),     unit: "ml",          color: "#60a5fa" },
-    { key: "cupMl", label: t("cup_size"),  unit: "ml",          color: "#818cf8" },
+    { key: "cupMl", label: t("cup_size"),  unit: "",            color: "#818cf8" },
   ]
 
   return (
