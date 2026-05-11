@@ -191,7 +191,7 @@ function Hoje({ usuario }) {
         {/* Água */}
         <div className={d ? "app-card" : "app-card light"}>
           <div className="water-header">
-            <span className="app-card-label" style={{ margin: 0 }}>{t("water_intake")}</span>
+            <span className="app-card-label" style={{ margin: 0, fontSize: "13px" }}>{t("water_intake")}</span>
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
               <span style={{ fontSize: "13px", fontWeight: 600, color: "#60a5fa" }}>{waterDisplay} / {waterMetaDisplay}</span>
               <div className={d ? "water-unit-toggle" : "water-unit-toggle light"}>
@@ -343,7 +343,7 @@ function Hoje({ usuario }) {
       {/* PAINEL LATERAL */}
       <div className="dashboard-sidebar">
         <div className={d?"summary-panel":"summary-panel light"}>
-          <div className="app-card-label">{t("day_summary")}</div>
+          <div className="app-card-label" style={{ fontSize: "13px" }}>{t("day_summary")}</div>
           {!refeicaoTemItens ? (
             <div style={{ textAlign:"center", padding:"32px 0", color:"#3f3f46", fontSize:"13px" }}>{t("no_meals")}</div>
           ) : (

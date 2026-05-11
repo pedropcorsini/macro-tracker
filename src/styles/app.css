@@ -796,11 +796,34 @@ body { min-height: 100vh; background: #f8fafc; }
 
 .app-sidebar {
   overscroll-behavior-y: contain;
-  -webkit-overflow-scrolling: touch;
 }
 
 .app-sidebar-nav {
   min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.42) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.app-sidebar-nav::-webkit-scrollbar {
+  width: 6px;
+}
+
+.app-sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.app-sidebar-nav::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.34);
+}
+
+.dark .app-sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.26);
 }
 
 .dark .app-sidebar,
@@ -1443,7 +1466,7 @@ body { min-height: 100vh; background: #f8fafc; }
   .app-sidebar {
     height: 100dvh;
     max-height: 100dvh;
-    overflow-y: auto;
+    overflow: hidden;
     touch-action: pan-y;
   }
 
@@ -1453,7 +1476,7 @@ body { min-height: 100vh; background: #f8fafc; }
 
   .app-sidebar-nav {
     flex: 1 1 auto;
-    overflow: visible;
+    overflow-y: auto;
   }
 
   .app-sidebar-footer {
@@ -2526,6 +2549,36 @@ button {
   color: var(--text-soft);
 }
 
+.account-sensitive-control {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 7px;
+}
+
+.account-sensitive-control .account-detail-value {
+  margin-top: 0;
+}
+
+.account-sensitive-value {
+  min-width: 0;
+  flex: 1;
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 12px;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+}
+
+.account-sensitive-value.is-hidden {
+  overflow-wrap: normal;
+}
+
+.account-visibility-button svg {
+  width: 16px;
+  height: 16px;
+}
+
 .account-inline-input {
   min-width: 0;
   flex: 1;
@@ -2788,6 +2841,10 @@ button {
   }
 
   .account-editable-control {
+    gap: 8px;
+  }
+
+  .account-sensitive-control {
     gap: 8px;
   }
 }

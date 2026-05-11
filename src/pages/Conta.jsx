@@ -201,11 +201,64 @@ function CameraIcon() {
   )
 }
 
+function EyeIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  )
+}
+
+function EyeOffIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="m3 3 18 18" />
+      <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+      <path d="M9.9 4.2A10.6 10.6 0 0 1 12 4c6.5 0 10 8 10 8a17.7 17.7 0 0 1-3.1 4.2" />
+      <path d="M6.1 6.1A17.7 17.7 0 0 0 2 12s3.5 8 10 8a10.8 10.8 0 0 0 4.3-.9" />
+    </svg>
+  )
+}
+
+function maskUserId(value) {
+  return value ? "\u2022".repeat(14) : ""
+}
+
 function DetailItem({ label, value }) {
   return (
     <div className="account-detail-item">
       <span className="account-detail-label">{label}</span>
       <strong className="account-detail-value">{value}</strong>
+    </div>
+  )
+}
+
+function UserIdDetailItem({ label, value, hidden, canToggle, onToggle, showLabel, hideLabel }) {
+  const displayValue = hidden ? maskUserId(value) : value
+  const toggleLabel = hidden ? showLabel : hideLabel
+
+  return (
+    <div className="account-detail-item account-user-id-item">
+      <span className="account-detail-label">{label}</span>
+      <div className="account-sensitive-control">
+        <strong className={`account-detail-value account-sensitive-value${hidden ? " is-hidden" : ""}`}>
+          {displayValue}
+        </strong>
+
+        {canToggle && (
+          <button
+            type="button"
+            className="account-edit-button account-visibility-button"
+            onClick={onToggle}
+            aria-label={toggleLabel}
+            aria-pressed={!hidden}
+            title={toggleLabel}
+          >
+            {hidden ? <EyeIcon /> : <EyeOffIcon />}
+          </button>
+        )}
+      </div>
     </div>
   )
 }
@@ -260,6 +313,7 @@ export default function Conta({ usuario }) {
   const [salvandoCampo, setSalvandoCampo] = useState("")
   const [salvandoFoto, setSalvandoFoto] = useState(false)
   const [fotoPerfil, setFotoPerfil] = useState("")
+  const [mostrarUserId, setMostrarUserId] = useState(false)
   const [erro, setErro] = useState("")
   const [sucesso, setSucesso] = useState("")
   const fotoInputRef = useRef(null)
@@ -273,6 +327,7 @@ export default function Conta({ usuario }) {
     setFotoPerfil(getAvatarUrl(usuario))
     setEditando("")
     setRascunho("")
+    setMostrarUserId(false)
     setErro("")
     setSucesso("")
   }, [usuario])
@@ -432,6 +487,7 @@ export default function Conta({ usuario }) {
     )
   }
 
+  const userId = usuario?.id || ""
   const details = [
     { label: t("account_email"), value: email },
     {
@@ -446,7 +502,6 @@ export default function Conta({ usuario }) {
     },
     { label: t("account_created"), value: formatDate(usuario?.created_at, i18n.language) || fallback },
     { label: t("account_last_sign_in"), value: formatDate(usuario?.last_sign_in_at, i18n.language) || fallback },
-    { label: t("account_user_id"), value: usuario?.id || fallback },
   ]
 
   return (
@@ -523,6 +578,16 @@ export default function Conta({ usuario }) {
           {details.map((item) => (
             <DetailItem key={item.label} label={item.label} value={item.value} />
           ))}
+
+          <UserIdDetailItem
+            label={t("account_user_id")}
+            value={userId || fallback}
+            hidden={Boolean(userId) && !mostrarUserId}
+            canToggle={Boolean(userId)}
+            onToggle={() => setMostrarUserId((isVisible) => !isVisible)}
+            showLabel={t("account_show_user_id")}
+            hideLabel={t("account_hide_user_id")}
+          />
         </div>
 
         {erro && <div className="account-alert error">{erro}</div>}

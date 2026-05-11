@@ -116,6 +116,8 @@ export default {
   account_created: "Creada en",
   account_last_sign_in: "Último acceso",
   account_user_id: "ID del usuario",
+  account_show_user_id: "Mostrar ID del usuario",
+  account_hide_user_id: "Ocultar ID del usuario",
   account_phone: "Teléfono",
   account_phone_empty: "Agregar teléfono",
   account_phone_format_error: "Usa un teléfono en formato BR o USA.",
