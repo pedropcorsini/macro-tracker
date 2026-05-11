@@ -17,7 +17,24 @@ function getToday() {
 }
 
 const REFEICOES_PADRAO = {
-  "Café da manhã": [], "Almoço": [], "Lanche da tarde": [], "Pré treino": [], "Jantar": [],
+  "meal_breakfast": [], "meal_lunch": [], "meal_snack": [], "meal_pre_workout": [], "meal_dinner": [],
+}
+
+const MEAL_KEY_MAP = {
+  "Café da manhã": "meal_breakfast", "Almoço": "meal_lunch",
+  "Lanche da tarde": "meal_snack", "Pré treino": "meal_pre_workout", "Jantar": "meal_dinner",
+  "Breakfast": "meal_breakfast", "Lunch": "meal_lunch",
+  "Afternoon snack": "meal_snack", "Pre-workout": "meal_pre_workout", "Dinner": "meal_dinner",
+  "Desayuno": "meal_breakfast", "Almuerzo": "meal_lunch",
+  "Merienda": "meal_snack", "Pre entreno": "meal_pre_workout", "Cena": "meal_dinner",
+}
+
+function normalizeMeals(meals) {
+  const result = {}
+  for (const [key, val] of Object.entries(meals)) {
+    result[MEAL_KEY_MAP[key] || key] = val
+  }
+  return result
 }
 
 function atualizarRecentes(recentes, item) {
@@ -103,7 +120,7 @@ export function TrackerProvider({ children, userId }) {
       const logsFormatado = {}
       const waterLogFormatado = {}
       logs.forEach((l) => {
-        logsFormatado[l.date] = l.meals || { ...REFEICOES_PADRAO }
+        logsFormatado[l.date] = normalizeMeals(l.meals || { ...REFEICOES_PADRAO })
         waterLogFormatado[l.date] = l.water_ml || 0
       })
 

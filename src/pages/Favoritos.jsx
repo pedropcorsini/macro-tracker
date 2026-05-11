@@ -19,8 +19,8 @@ export default function Favoritos() {
 
   const d = isDark
 
-  const REFEICOES = [t("meal_breakfast"), t("meal_lunch"), t("meal_snack"), t("meal_pre_workout"), t("meal_dinner")]
-  const refeicaoSelecionada = refeicaoAtiva || REFEICOES[0]
+  const MEAL_KEYS = ["meal_breakfast", "meal_lunch", "meal_snack", "meal_pre_workout", "meal_dinner"]
+  const refeicaoSelecionada = refeicaoAtiva || MEAL_KEYS[0]
 
   function toggleFavorito(item) {
     dispatch({ type: "TOGGLE_FAVORITO", item })
@@ -135,10 +135,10 @@ export default function Favoritos() {
       <div className={d?"app-card":"app-card light"} style={{ marginBottom:"12px" }}>
         <div className="app-card-label">{t("add_to")}</div>
         <div className="pill-tabs" style={{ marginBottom: 0 }}>
-          {REFEICOES.map((r) => (
-            <button key={r}
-              className={`pill-tab${!d?" light":""}${refeicaoSelecionada===r?" active":""}`}
-              onClick={() => setRefeicaoAtiva(r)}>{r}</button>
+          {MEAL_KEYS.map((key) => (
+            <button key={key}
+              className={`pill-tab${!d?" light":""}${refeicaoSelecionada===key?" active":""}`}
+              onClick={() => setRefeicaoAtiva(key)}>{t(key)}</button>
           ))}
         </div>
       </div>

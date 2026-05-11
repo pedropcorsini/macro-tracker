@@ -40,7 +40,7 @@ function Hoje({ usuario }) {
   const { isDark } = useTema()
   const { t, i18n } = useTranslation()
 
-  const REFEICOES = [t("meal_breakfast"), t("meal_lunch"), t("meal_snack"), t("meal_pre_workout"), t("meal_dinner")]
+  const MEAL_KEYS = ["meal_breakfast", "meal_lunch", "meal_snack", "meal_pre_workout", "meal_dinner"]
 
   const CONFIG_MACROS = [
     { key: "cal", lbl: t("calories"), unit: "kcal", color: "#a78bfa" },
@@ -49,7 +49,7 @@ function Hoje({ usuario }) {
     { key: "f",   lbl: t("fat"),      unit: "g",    color: "#f87171" },
   ]
 
-  const [refeicaoAtiva, setRefeicaoAtiva] = useState(REFEICOES[0])
+  const [refeicaoAtiva, setRefeicaoAtiva] = useState(MEAL_KEYS[0])
   const [busca, setBusca] = useState("")
   const [resultados, setResultados] = useState([])
   const [carregando, setCarregando] = useState(false)
@@ -62,11 +62,7 @@ function Hoje({ usuario }) {
 
   const hoje = new Date().toISOString().split("T")[0]
   const logHoje = state.logs[hoje] || {
-    [t("meal_breakfast")]: [],
-    [t("meal_lunch")]: [],
-    [t("meal_snack")]: [],
-    [t("meal_pre_workout")]: [],
-    [t("meal_dinner")]: [],
+    meal_breakfast: [], meal_lunch: [], meal_snack: [], meal_pre_workout: [], meal_dinner: [],
   }
 
   const totais = Object.values(logHoje).flat().reduce(
@@ -148,7 +144,7 @@ function Hoje({ usuario }) {
     )
   }
 
-  const refeicaoTemItens = REFEICOES.some((r) => (logHoje[r] || []).length > 0)
+  const refeicaoTemItens = MEAL_KEYS.some((k) => (logHoje[k] || []).length > 0)
   const gramas = alimentoSelecionado ? (modoUnidade ? quantidade * (alimentoSelecionado.gramsPerUnit || 100) : quantidade) : 0
   const isLiquid = alimentoSelecionado?.liquid ?? false
   const qtyUnit = isLiquid ? "ml" : "g"
@@ -235,9 +231,9 @@ function Hoje({ usuario }) {
         {/* Refeições */}
         <div className={d ? "app-card" : "app-card light"}>
           <div className="pill-tabs">
-            {REFEICOES.map((r) => (
-              <button key={r} className={`pill-tab${!d?" light":""}${refeicaoAtiva===r?" active":""}`}
-                onClick={() => { setRefeicaoAtiva(r); setAlimentoSelecionado(null); setBusca(""); setResultados([]) }}>{r}</button>
+            {MEAL_KEYS.map((key) => (
+              <button key={key} className={`pill-tab${!d?" light":""}${refeicaoAtiva===key?" active":""}`}
+                onClick={() => { setRefeicaoAtiva(key); setAlimentoSelecionado(null); setBusca(""); setResultados([]) }}>{t(key)}</button>
             ))}
           </div>
 
@@ -322,7 +318,7 @@ function Hoje({ usuario }) {
           {logHoje[refeicaoAtiva]?.length > 0 && (
             <div>
               <div style={{ fontSize:"10px", fontWeight:600, letterSpacing:"0.1em", textTransform:"uppercase", color:"#52525b", marginBottom:"10px" }}>
-                {t("added_to")} {refeicaoAtiva}
+                {t("added_to")} {t(refeicaoAtiva)}
               </div>
               {logHoje[refeicaoAtiva].map((item) => (
                 <div key={item.id} className={d?"added-item":"added-item light"}>
@@ -348,13 +344,13 @@ function Hoje({ usuario }) {
             <div style={{ textAlign:"center", padding:"32px 0", color:"#3f3f46", fontSize:"13px" }}>{t("no_meals")}</div>
           ) : (
             <div>
-              {REFEICOES.map((r) => {
-                const items = logHoje[r] || []
+              {MEAL_KEYS.map((key) => {
+                const items = logHoje[key] || []
                 if (!items.length) return null
-                const tot = totaisRefeicao(r)
+                const tot = totaisRefeicao(key)
                 return (
-                  <div key={r} style={{ marginBottom:"20px" }}>
-                    <div className="summary-meal-title">{r}</div>
+                  <div key={key} style={{ marginBottom:"20px" }}>
+                    <div className="summary-meal-title">{t(key)}</div>
                     {items.map((item) => (
                       <div key={item.id} className="summary-item">
                         <span className="summary-item-name">{item.name}</span>
