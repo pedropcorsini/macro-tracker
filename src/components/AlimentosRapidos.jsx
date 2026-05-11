@@ -30,7 +30,7 @@ export default function AlimentosRapidos({ refeicaoAtiva, onAdicionar }) {
       item: {
         id: Date.now(),
         name: item.name,
-        qty: `${qty}g`,
+        qty: `${qty}${item.liquid ? "ml" : "g"}`,
         cal: Math.round(item.cal * ratio),
         p: Math.round(item.p * ratio * 10) / 10,
         c: Math.round(item.c * ratio * 10) / 10,
@@ -86,7 +86,7 @@ export default function AlimentosRapidos({ refeicaoAtiva, onAdicionar }) {
                   onChange={(e) => setQuantidades((prev) => ({ ...prev, [item.name]: Number(e.target.value) }))}
                   className={d ? "fav-qty-input" : "fav-qty-input light"}
                 />
-                <span className="quick-access-unit">g</span>
+                <span className="quick-access-unit">{item.liquid ? "ml" : "g"}</span>
 
                 <button className="fav-add-btn" onClick={() => adicionarRapido(item)}>
                   +

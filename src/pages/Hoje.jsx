@@ -122,7 +122,7 @@ function Hoje({ usuario }) {
       type: "ADD_FOOD", meal: refeicaoAtiva,
       item: {
         id: Date.now(), name: alimentoSelecionado.name,
-        qty: modoUnidade ? `${quantidade} ${alimentoSelecionado.unit}(s)` : `${quantidade}g`,
+        qty: modoUnidade ? `${quantidade} ${alimentoSelecionado.unit}(s)` : `${quantidade}${qtyUnit}`,
         cal: Math.round(alimentoSelecionado.cal * ratio),
         p: Math.round(alimentoSelecionado.p * ratio * 10) / 10,
         c: Math.round(alimentoSelecionado.c * ratio * 10) / 10,
@@ -150,6 +150,8 @@ function Hoje({ usuario }) {
 
   const refeicaoTemItens = REFEICOES.some((r) => (logHoje[r] || []).length > 0)
   const gramas = alimentoSelecionado ? (modoUnidade ? quantidade * (alimentoSelecionado.gramsPerUnit || 100) : quantidade) : 0
+  const isLiquid = alimentoSelecionado?.liquid ?? false
+  const qtyUnit = isLiquid ? "ml" : "g"
 
   return (
     <div className="page-shell dashboard-page">
@@ -297,7 +299,7 @@ function Hoje({ usuario }) {
               <input type="number" value={quantidade} min={modoUnidade?0.5:1} step={modoUnidade?0.5:1}
                 onChange={(e) => setQuantidade(Number(e.target.value))}
                 className={d?"qty-input":"qty-input light"} />
-              <span className="qty-unit">{modoUnidade?`${alimentoSelecionado.unit}(s) = ${Math.round(gramas)}g`:"g"}</span>
+              <span className="qty-unit">{modoUnidade?`${alimentoSelecionado.unit}(s) = ${Math.round(gramas)}${qtyUnit}`:qtyUnit}</span>
               {quantidade > 0 && (
                 <div className="qty-preview">
                   {[

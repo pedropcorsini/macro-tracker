@@ -58,7 +58,7 @@ export default function Favoritos() {
       type: "ADD_FOOD",
       meal: refeicaoSelecionada,
       item: {
-        id: Date.now(), name: item.name, qty: `${qty}g`,
+        id: Date.now(), name: item.name, qty: `${qty}${item.liquid ? "ml" : "g"}`,
         cal: Math.round(item.cal * ratio),
         p: Math.round(item.p * ratio * 10) / 10,
         c: Math.round(item.c * ratio * 10) / 10,
@@ -183,7 +183,7 @@ export default function Favoritos() {
                     onChange={(e) => setQuantidades((prev) => ({ ...prev, [item.name]: Number(e.target.value) }))}
                     className={d?"fav-qty-input":"fav-qty-input light"}
                   />
-                  <span style={{ fontSize:"11px", color:"#52525b" }}>g</span>
+                  <span style={{ fontSize:"11px", color:"#52525b" }}>{item.liquid ? "ml" : "g"}</span>
                   <button
                     className={`fav-add-btn${foiAdicionado?" done":""}`}
                     onClick={() => adicionarRapido(item)}
