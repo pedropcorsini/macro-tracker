@@ -1,14 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\conta\\\\macro-tracker\" -Recurse -Directory)",
-      "Bash(Select-Object FullName)",
-      "Bash(node -e \"const s = require\\('fs'\\).readFileSync\\('c:/Users/conta/macro-tracker/src/services/foodSwapAgent.js','utf8'\\); const line = s.split\\('\\\\n'\\)[27]; console.log\\(JSON.stringify\\(line\\)\\)\")",
-      "Bash(node -e ' *)",
-      "Bash(Remove-Item \"c:\\\\Users\\\\conta\\\\macro-tracker\\\\src\\\\services\\\\foodSwapAgent.js\" -Force)",
-      "Bash(Remove-Item \"c:\\\\Users\\\\conta\\\\macro-tracker\\\\src\\\\components\\\\AIFoodSwapToast.jsx\" -Force)",
-      "Bash(Write-Host \"Deleted\")",
-      "PowerShell(\"Deleted\")"
+      "Bash(npx vite *)"
     ]
   }
 }

@@ -64,6 +64,9 @@ export default function Landing({ onLogin }) {
       process_tag: "Operating Flow",
       f_title: "Um ecossistema completo para decisões melhores.",
       f_sub: "Registro, metas, favoritos, calendário e gráficos trabalhando como uma camada única de inteligência nutricional.",
+      ai_badge: "Novo",
+      ai_title: "Macro - AI",
+      ai_desc: "Assistente de nutrição com IA integrado ao app. Tire dúvidas sobre dieta, macros e hidratação diretamente no chat, com respostas personalizadas às suas metas.",
       how_title: "Do registro ao insight, sem atrito.",
       how_sub: "A navegação foi pensada para reduzir esforço e manter o foco no próximo passo.",
       cta2: "Pronto para operar sua rotina com mais clareza?",
@@ -95,6 +98,9 @@ export default function Landing({ onLogin }) {
       process_tag: "Operating Flow",
       f_title: "A complete ecosystem for better decisions.",
       f_sub: "Logging, goals, favorites, calendar and charts working as one nutrition intelligence layer.",
+      ai_badge: "New",
+      ai_title: "Macro - AI",
+      ai_desc: "AI-powered nutrition assistant built into the app. Ask questions about diet, macros and hydration directly in the chat, with answers tailored to your personal goals.",
       how_title: "From log to insight, without friction.",
       how_sub: "Navigation is designed to reduce effort and keep the next step obvious.",
       cta2: "Ready to operate your routine with more clarity?",
@@ -126,6 +132,9 @@ export default function Landing({ onLogin }) {
       process_tag: "Operating Flow",
       f_title: "Un ecosistema completo para mejores decisiones.",
       f_sub: "Registro, metas, favoritos, calendario y gráficos trabajando como una capa única de inteligencia nutricional.",
+      ai_badge: "Nuevo",
+      ai_title: "Macro - AI",
+      ai_desc: "Asistente de nutrición con IA integrado en la app. Resuelve dudas sobre dieta, macros e hidratación directamente en el chat, con respuestas personalizadas a tus metas.",
       how_title: "Del registro al insight, sin fricción.",
       how_sub: "La navegación fue pensada para reducir esfuerzo y mantener claro el próximo paso.",
       cta2: "¿Listo para operar tu rutina con más claridad?",
@@ -212,6 +221,7 @@ export default function Landing({ onLogin }) {
             { val: "550+", label: { pt: "Alimentos locais", en: "Local foods", es: "Alimentos locales" }, color: "#a78bfa" },
             { val: "300k+", label: { pt: "Base USDA", en: "USDA database", es: "Base USDA" }, color: "#34d399" },
             { val: "3", label: { pt: "Idiomas", en: "Languages", es: "Idiomas" }, color: "#60a5fa" },
+            { val: "🤖", label: { pt: "Chatbot IA", en: "AI Chatbot", es: "Chatbot IA" }, color: "#f472b6" },
           ].map((s, i) => (
             <div className="stat-card" data-reveal="scale" style={revealStyle(360 + i * 80)} key={i}>
               <div className="stat-val" style={{ color: s.color }}>{s.val}</div>
@@ -241,6 +251,16 @@ export default function Landing({ onLogin }) {
                 <div className="feature-line" style={{ background: `linear-gradient(90deg, ${f.color}60, transparent)` }} />
               </div>
             ))}
+          </div>
+
+          <div data-reveal="up" style={{ ...revealStyle(560), marginTop: "24px", borderRadius: "18px", border: "1px solid rgba(139,92,246,0.25)", background: "rgba(139,92,246,0.06)", padding: "28px 32px", display: "flex", alignItems: "center", gap: "24px", flexWrap: "wrap" }}>
+            <div style={{ flex: 1, minWidth: "200px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "6px" }}>
+                <span style={{ color: "white", fontWeight: "700", fontSize: "15px" }}>{tx.ai_title}</span>
+                <span style={{ background: "rgba(139,92,246,0.25)", color: "#a78bfa", fontSize: "10px", fontWeight: "700", padding: "2px 8px", borderRadius: "20px", letterSpacing: "0.05em", textTransform: "uppercase" }}>{tx.ai_badge}</span>
+              </div>
+              <p style={{ color: "rgba(255,255,255,0.5)", fontSize: "13px", lineHeight: "1.6", margin: 0 }}>{tx.ai_desc}</p>
+            </div>
           </div>
         </div>
       </section>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { supabase } from "./services/supabase"
-import { TrackerProvider } from "./context/TrackerContext"
+import { TrackerProvider, useTracker } from "./context/TrackerContext"
 import { useTema } from "./context/ThemeContext"
 import { useTranslation } from "react-i18next"
 import "./styles/app.css"
@@ -14,6 +14,12 @@ import Favoritos from "./pages/Favoritos"
 import Conta from "./pages/Conta"
 import LanguageSelect from "./components/LanguageSelect"
 import SiteFooter from "./components/SiteFooter"
+import Chatbot from "./components/Chatbot"
+
+function ChatbotWrapper({ usuario }) {
+  const { state } = useTracker()
+  return <Chatbot usuario={usuario} goals={state.goals} />
+}
 
 function AppInner() {
   const [abaAtiva, setAbaAtiva] = useState("hoje")
@@ -62,6 +68,7 @@ function AppInner() {
 
   return (
     <TrackerProvider userId={usuario.id}>
+      <ChatbotWrapper usuario={usuario} />
       <div className="app-shell h-screen flex overflow-hidden transition-colors">
 
         {sidebarAberta && (

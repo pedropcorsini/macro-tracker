@@ -16,12 +16,14 @@ O projeto demonstra construção de uma SPA com React, persistência em nuvem co
 | i18next-browser-languagedetector | Persistência do idioma no `localStorage` |
 | Tailwind CSS 3 + CSS customizado | Base visual, layout responsivo, landing page e dashboard |
 | USDA FoodData Central API | Fonte complementar para busca de alimentos |
+| Groq API (llama-3.3-70b) | Macro - AI, assistente de nutrição por chat |
 
 ## Funcionalidades
 
 ### Experiência Geral
 
 - Landing page institucional com navegação, CTA, animações de entrada e seletor de idioma.
+- **Macro - AI** — assistente de nutrição por chat com IA (Groq / llama-3.3-70b), disponível a usuários autenticados. Responde sobre dieta, macros e hidratação com contexto das metas individuais do usuário.
 - Login e cadastro com email/senha via Supabase Auth.
 - OAuth com Google e GitHub.
 - Área autenticada com sidebar no desktop e menu deslizante no mobile.
@@ -141,9 +143,16 @@ Crie um arquivo `.env` na raiz do projeto:
 VITE_SUPABASE_URL=https://SEU_PROJETO.supabase.co
 VITE_SUPABASE_ANON_KEY=SUA_CHAVE_PUBLICA_ANON
 VITE_USDA_API_KEY=SUA_CHAVE_USDA
+VITE_GROQ_API_KEY=SUA_CHAVE_GROQ
 ```
 
-O `.env` está no `.gitignore` e não deve ser versionado.
+O `.env` está no `.gitignore` e **nunca deve ser versionado**.
+
+| Variável | Serviço | Link |
+|---|---|---|
+| `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` | Supabase | [supabase.com](https://supabase.com) |
+| `VITE_USDA_API_KEY` | USDA FoodData Central | [fdc.nal.usda.gov/api-key-signup](https://fdc.nal.usda.gov/api-key-signup.html) |
+| `VITE_GROQ_API_KEY` | Groq (gratuito) | [console.groq.com/keys](https://console.groq.com/keys) |
 
 ## Scripts
 
