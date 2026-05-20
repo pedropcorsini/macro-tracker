@@ -10,6 +10,16 @@ export default defineConfig(({ mode }) => {
     plugins: [react()],
     server: {
       proxy: {
+        "/api/chat": {
+          target: "https://api.groq.com",
+          changeOrigin: true,
+          rewrite: () => "/openai/v1/chat/completions",
+          configure: (proxy) => {
+            proxy.on("proxyReq", (proxyReq) => {
+              proxyReq.setHeader("Authorization", `Bearer ${env.VITE_GROQ_API_KEY}`)
+            })
+          },
+        },
         "/api/usda": {
           target: "https://api.nal.usda.gov",
           changeOrigin: true,

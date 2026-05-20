@@ -1,8 +1,6 @@
-const ENDPOINT = "https://api.groq.com/openai/v1/chat/completions"
 const MODEL = "llama-3.3-70b-versatile"
 
 export async function enviarMensagem(historico, novaMensagem, contextoUsuario) {
-  const apiKey = import.meta.env.VITE_GROQ_API_KEY
   const { nome, goals = {} } = contextoUsuario
 
   const systemPrompt = `Você é um assistente especializado em nutrição e alimentação saudável do app Macro Tracker.
@@ -26,11 +24,10 @@ Nunca use formatação markdown (sem asteriscos, sem #, sem **, sem _, sem lista
       content: m.parts[0].text,
     }))
 
-  const response = await fetch(ENDPOINT, {
+  const response = await fetch("/api/chat", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
       model: MODEL,
