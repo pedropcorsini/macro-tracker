@@ -25,7 +25,7 @@ function Metas() {
     { key: "c",     label: t("carbs"),     unit: "g",           color: "#fbbf24" },
     { key: "f",     label: t("fat"),       unit: "g",           color: "#f87171" },
     { key: "water", label: t("water"),     unit: "ml",          color: "#60a5fa" },
-    { key: "cupMl", label: t("cup_size"),  unit: "",            color: "#818cf8" },
+    { key: "cupMl", label: t("cup_size"),  unit: "ml",          color: "#818cf8" },
   ]
 
   return (
@@ -65,7 +65,8 @@ function Metas() {
           ].map((m) => (
             <div key={m.lbl} className="goals-preview-item">
               <div className="goals-preview-val" style={{ color: m.color }}>{m.val}</div>
-              <div className="goals-preview-label">{m.lbl}<br /><span style={{ color: "#3f3f46" }}>{m.unit}</span></div>
+              <div className="goals-preview-label">{m.lbl}</div>
+              <div className="goals-preview-unit">{m.unit}</div>
             </div>
           ))}
         </div>
