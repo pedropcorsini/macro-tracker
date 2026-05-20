@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react"
-import { enviarMensagem } from "../services/gemini"
+import { enviarMensagem } from "../services/groq"
 import { useTema } from "../context/ThemeContext"
 
 function formatHora(date) {
@@ -21,7 +21,6 @@ export default function Chatbot({ usuario, goals }) {
   const primeiroNome = nomeCompleto.includes("@")
     ? nomeCompleto.split("@")[0]
     : nomeCompleto.split(" ")[0]
-  const inicial = primeiroNome[0]?.toUpperCase() || "U"
 
   const msgBoasVindas = `Olá, ${primeiroNome}! 👋 Tudo bem? Como posso te ajudar hoje?`
 
