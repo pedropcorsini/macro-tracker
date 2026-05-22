@@ -1318,6 +1318,41 @@ body { min-height: 100vh; background: #f8fafc; }
   gap: 14px;
 }
 
+.auth-password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.auth-password-wrapper .app-input {
+  padding-right: 40px;
+}
+
+.auth-password-toggle {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  color: #71717a;
+  transition: color 0.2s;
+}
+
+.auth-password-toggle:hover {
+  color: #a78bfa;
+}
+
+.auth-password-toggle.light {
+  color: #a1a1aa;
+}
+
+.auth-password-toggle.light:hover {
+  color: #7c3aed;
+}
+
 .auth-field-label {
   display: block;
   margin-bottom: 8px;
