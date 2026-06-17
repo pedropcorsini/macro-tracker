@@ -1,0 +1,201 @@
+import { useState } from "react"
+import { useTracker } from "../context/TrackerContext"
+import { useTema } from "../context/ThemeContext"
+import { buscarAlimentos } from "../services/usda"
+import { useTranslation } from "react-i18next"
+import "../styles/app.css"
+
+export default function Favoritos() {
+  const { state, dispatch } = useTracker()
+  const { isDark } = useTema()
+  const { t } = useTranslation()
+  const [quantidades, setQuantidades] = useState({})
+  const [refeicaoAtiva, setRefeicaoAtiva] = useState("")
+  const [adicionado, setAdicionado] = useState(null)
+  const [busca, setBusca] = useState("")
+  const [resultadosBusca, setResultadosBusca] = useState([])
+  const [buscando, setBuscando] = useState(false)
+  const [buscaExecutada, setBuscaExecutada] = useState(false)
+
+  const d = isDark
+
+  const MEAL_KEYS = ["meal_breakfast", "meal_lunch", "meal_snack", "meal_pre_workout", "meal_dinner"]
+  const refeicaoSelecionada = refeicaoAtiva || MEAL_KEYS[0]
+
+  function toggleFavorito(item) {
+    dispatch({ type: "TOGGLE_FAVORITO", item })
+  }
+
+  async function pesquisarAlimentos() {
+    const termo = busca.trim()
+    setBuscaExecutada(true)
+
+    if (termo.length < 2) {
+      setResultadosBusca([])
+      return
+    }
+
+    setBuscando(true)
+    try {
+      const dados = await buscarAlimentos(termo)
+      setResultadosBusca(dados)
+    } catch {
+      setResultadosBusca([])
+    } finally {
+      setBuscando(false)
+    }
+  }
+
+  function salvarFavorito(item) {
+    const jaSalvo = state.favoritos.some((fav) => fav.name === item.name)
+    if (!jaSalvo) dispatch({ type: "TOGGLE_FAVORITO", item })
+  }
+
+  function adicionarRapido(item) {
+    const qty = quantidades[item.name] || 100
+    const ratio = qty / 100
+    dispatch({
+      type: "ADD_FOOD",
+      meal: refeicaoSelecionada,
+      item: {
+        id: Date.now(), name: item.name, qty: `${qty}${item.liquid ? "ml" : "g"}`,
+        cal: Math.round(item.cal * ratio),
+        p: Math.round(item.p * ratio * 10) / 10,
+        c: Math.round(item.c * ratio * 10) / 10,
+        f: Math.round(item.f * ratio * 10) / 10,
+      },
+    })
+    setAdicionado(item.name)
+    setTimeout(() => setAdicionado(null), 1500)
+  }
+
+  return (
+    <div className="page-shell">
+      <div className="page-header">
+        <div className="page-tag">Saved</div>
+        <h1 className={d?"page-title":"page-title light"}>{t("favorites_title")}</h1>
+        <p className="page-sub">{t("favorites_subtitle")}</p>
+      </div>
+
+      {/* Pesquisa de alimentos */}
+      <div className={d?"app-card":"app-card light"} style={{ marginBottom:"12px" }}>
+        <div className="app-card-label">{t("search_foods")}</div>
+        <div className="fav-search-row">
+          <input
+            type="text"
+            value={busca}
+            onChange={(e) => {
+              setBusca(e.target.value)
+              setBuscaExecutada(false)
+            }}
+            onKeyDown={(e) => e.key === "Enter" && pesquisarAlimentos()}
+            placeholder={t("search_placeholder")}
+            className={d?"app-input":"app-input light"}
+          />
+          <button className="app-btn-primary fav-search-btn" onClick={pesquisarAlimentos} disabled={buscando}>
+            {buscando ? t("login_loading") : t("search")}
+          </button>
+        </div>
+
+        {resultadosBusca.length > 0 && (
+          <div className={d?"food-list-wrap fav-search-results":"food-list-wrap light fav-search-results"}>
+            {resultadosBusca.map((item) => {
+              const jaSalvo = state.favoritos.some((fav) => fav.name === item.name)
+
+              return (
+                <div key={item.id} className={d?"food-item":"food-item light"}>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <div className={d?"food-item-name":"food-item-name light"}>{item.name}</div>
+                    <div style={{ display:"flex", alignItems:"center", gap:"6px", marginTop:"3px", flexWrap:"wrap" }}>
+                      {item.fonte === "local"
+                        ? <span className="food-item-badge local">{t("local_db")}</span>
+                        : item.brand ? <span className="food-item-meta">{item.brand}</span>
+                        : <span className="food-item-badge usda">USDA</span>}
+                      <span className="food-item-meta">{item.cal} kcal · {item.p}g P · {item.c}g C · {item.f}g G</span>
+                    </div>
+                  </div>
+                  <button
+                    className={`fav-add-btn${jaSalvo ? " done" : ""}`}
+                    onClick={() => salvarFavorito(item)}
+                    disabled={jaSalvo}
+                  >
+                    {jaSalvo ? "✓" : "+"}
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+        )}
+
+        {buscaExecutada && !buscando && resultadosBusca.length === 0 && (
+          <p className="fav-search-empty">{t("no_results")}</p>
+        )}
+      </div>
+
+      <div className={d?"app-card":"app-card light"} style={{ marginBottom:"12px" }}>
+        <div className="app-card-label">{t("add_to")}</div>
+        <div className="pill-tabs" style={{ marginBottom: 0 }}>
+          {MEAL_KEYS.map((key) => (
+            <button key={key}
+              className={`pill-tab${!d?" light":""}${refeicaoSelecionada===key?" active":""}`}
+              onClick={() => setRefeicaoAtiva(key)}>{t(key)}</button>
+          ))}
+        </div>
+      </div>
+
+      {/* Lista de favoritos */}
+      <div className={d?"app-card":"app-card light"}>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:"16px" }}>
+          <div className="app-card-label" style={{ margin:0, display:"flex", alignItems:"center", gap:"6px" }}>
+            <span style={{ color:"#ef4444" }}>♥</span> {t("favorites")}
+          </div>
+          <span style={{ fontSize:"11px", color:"#52525b" }}>
+            {state.favoritos.length} {t("items")}
+          </span>
+        </div>
+
+        {state.favoritos.length === 0 ? (
+          <div style={{ textAlign:"center", padding:"48px 0" }}>
+            <div style={{ fontSize:"40px", marginBottom:"12px", opacity:0.3 }}>♥</div>
+            <p style={{ fontSize:"14px", color:"#52525b", marginBottom:"4px" }}>{t("no_favorites")}</p>
+            <p style={{ fontSize:"12px", color:"#3f3f46" }}>
+              {t("no_favorites")}
+            </p>
+          </div>
+        ) : (
+          <div>
+            {state.favoritos.map((item) => {
+              const qty = quantidades[item.name] || 100
+              const ratio = qty / 100
+              const foiAdicionado = adicionado === item.name
+              return (
+                <div key={item.name} className={d?"fav-item":"fav-item light"}>
+                  <button className="fav-heart" onClick={() => toggleFavorito(item)}>♥</button>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <div className={d?"fav-name":"fav-name light"}>{item.name}</div>
+                    <div className="fav-meta">
+                      {Math.round(item.cal*ratio)} kcal · {Math.round(item.p*ratio*10)/10}g P · {Math.round(item.c*ratio*10)/10}g C · {Math.round(item.f*ratio*10)/10}g G
+                    </div>
+                  </div>
+                  <input
+                    type="number"
+                    value={qty}
+                    onChange={(e) => setQuantidades((prev) => ({ ...prev, [item.name]: Number(e.target.value) }))}
+                    className={d?"fav-qty-input":"fav-qty-input light"}
+                  />
+                  <span style={{ fontSize:"11px", color:"#52525b" }}>{item.liquid ? "ml" : "g"}</span>
+                  <button
+                    className={`fav-add-btn${foiAdicionado?" done":""}`}
+                    onClick={() => adicionarRapido(item)}
+                  >
+                    {foiAdicionado ? "✓" : "+"}
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
